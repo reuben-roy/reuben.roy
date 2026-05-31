@@ -5,7 +5,7 @@ import TimeManagementDashboard from '@/components/time-management/TimeManagement
 import styles from './page.module.css';
 
 export const metadata = {
-    title: 'Time Management Analysis | explosion.fun',
+    title: 'Time Management Analysis',
     description: 'An interactive D3.js dashboard analyzing 31 days of tracked time usage — focus patterns, distraction gravity, circadian rhythms, and sleep-productivity correlations.',
 };
 

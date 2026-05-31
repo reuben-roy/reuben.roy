@@ -3,6 +3,8 @@ export const PROJECTS = [
         id: 'explosion-fun',
         title: 'explosion.fun',
         tagline: 'Personal blog, portfolio, and interactive tools hub',
+        featured: true,
+        featuredOrder: 1,
         why: [
             'A creative and interactive portfolio website featuring dynamic visual effects and engaging user experiences.',
             'Demonstrates front-end development capabilities, creative coding, and performance-conscious interactions.'
@@ -18,10 +20,10 @@ export const PROJECTS = [
         liveUrl: 'https://explosion.fun/',
         previewPath: null,
         embedAllowed: false,
-        githubUrl: 'https://github.com/reuben-roy/explosion.fun',
+        githubUrl: 'https://github.com/reuben-roy/reuben.roy',
         links: [
             { label: 'Live site', href: 'https://explosion.fun/' },
-            { label: 'GitHub', href: 'https://github.com/reuben-roy/explosion.fun' },
+            { label: 'GitHub', href: 'https://github.com/reuben-roy/reuben.roy' },
         ],
         mermaid: null,
         architectureFallback: null,
@@ -30,6 +32,8 @@ export const PROJECTS = [
         id: 'time-management',
         title: 'Time Management Analysis',
         tagline: '31 days of screen-time analytics',
+        featured: true,
+        featuredOrder: 2,
         why: [
             'I wanted to understand where my attention actually goes — not where I think it goes.',
             'This D3 dashboard turns raw activity logs into actionable patterns: focus fragmentation, distraction gravity, circadian rhythms, and sleep-productivity correlations.'
@@ -56,6 +60,8 @@ export const PROJECTS = [
         id: 'youtube-scholar',
         title: 'YouTube Scholar',
         tagline: 'Curiosity velocity from YouTube Takeout data',
+        featured: true,
+        featuredOrder: 3,
         why: [
             'My YouTube history is a map of how I learn — rabbit holes, research spirals, and format-driven curiosity.',
             'This case study turns Takeout data into a dark-theme research dashboard about learning loops and information diet.'
@@ -82,6 +88,8 @@ export const PROJECTS = [
         id: 'side-track',
         title: 'Side-Track',
         tagline: 'iOS weight-training with smart fatigue tracking',
+        featured: true,
+        featuredOrder: 4,
         why: [
             'Generic workout apps don\'t account for muscle-specific fatigue or the chaos of picking what to train next.',
             'Side-Track uses a random workout picker, per-muscle fatigue tracking, local leaderboards, and Apple Health integration.'

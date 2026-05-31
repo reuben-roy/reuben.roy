@@ -95,7 +95,7 @@ export default function ProjectDetailPanel({ project, isMobile }) {
     );
 }
 
-function WhyContent({ why }) {
+export function WhyContent({ why }) {
     const paragraphs = Array.isArray(why) ? why : [why];
 
     return (
@@ -107,7 +107,7 @@ function WhyContent({ why }) {
     );
 }
 
-function DetailsContent({ project }) {
+export function DetailsContent({ project }) {
     return (
         <div className={styles.details}>
             {project.awards?.length > 0 ? (

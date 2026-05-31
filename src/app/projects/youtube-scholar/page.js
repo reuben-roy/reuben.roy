@@ -5,7 +5,7 @@ import YoutubeScholarExperience from '@/components/youtube-scholar/YoutubeSchola
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Chief Information Aggregator & YouTube Scholar | explosion.fun',
+  title: 'Chief Information Aggregator & YouTube Scholar',
   description: 'An interactive D3.js audit of YouTube search, subscriptions, playlists, comments, and rabbit holes.',
 };
 

@@ -4,9 +4,9 @@
 
 .frame {
   width: 100%;
-  height: min(420px, 55vh);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  height: min(460px, 58vh);
+  border: 1px solid rgba(255, 226, 176, 0.12);
+  border-radius: 0.9rem;
   background: #000;
 }
 
@@ -16,15 +16,15 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 226, 176, 0.1);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .collapsedText {
   margin: 0;
-  color: #a1a1aa;
-  font-size: 0.9rem;
+  color: rgba(238, 229, 212, 0.76);
+  font-size: 0.95rem;
 }
 
 .expandButton,
@@ -44,25 +44,25 @@
 
 .expandButton,
 .collapseButton {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: rgba(255, 227, 181, 0.08);
+  border: 1px solid rgba(255, 227, 181, 0.16);
+  color: #fff7e7;
 }
 
 .expandButton:hover,
 .collapseButton:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 227, 181, 0.14);
 }
 
 .linkButton {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #e4e4e7;
+  border: 1px solid rgba(106, 223, 255, 0.2);
+  color: #d9f8ff;
 }
 
 .linkButton:hover {
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(106, 223, 255, 0.35);
 }
 
 .controls {
@@ -74,9 +74,9 @@
 
 .fallback {
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 226, 176, 0.1);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
   text-align: center;
 }
 
@@ -86,17 +86,17 @@
 }
 
 .fallbackTitle {
-  color: #ffffff;
-  font-size: 0.95rem;
+  color: #fff7e7;
+  font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.35rem;
 }
 
 .fallbackText {
-  color: #a1a1aa;
-  font-size: 0.85rem;
+  color: rgba(238, 229, 212, 0.72);
+  font-size: 0.88rem;
   margin: 0 0 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .linkRow {
@@ -108,6 +108,6 @@
 
 @media (max-width: 768px) {
   .frame {
-    height: min(280px, 45vh);
+    height: min(320px, 45vh);
   }
 }

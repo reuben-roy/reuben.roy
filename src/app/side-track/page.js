@@ -3,7 +3,7 @@ import styles from './side-track.module.css';
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'Side-Track | explosion.fun',
+    title: 'Side-Track',
     description: 'Side-Track - Your workout tracking companion. Track exercises, set personal records, and compete on leaderboards.',
 };
 

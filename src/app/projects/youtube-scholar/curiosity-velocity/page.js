@@ -5,7 +5,7 @@ import CuriosityVelocityExperience from '@/components/youtube-scholar/CuriosityV
 import styles from '../page.module.css';
 
 export const metadata = {
-  title: 'Curiosity Velocity | explosion.fun',
+  title: 'Curiosity Velocity',
   description: 'A sequence-aware breakdown of how YouTube interests broaden, narrow, deepen, and pivot over time.',
 };
 

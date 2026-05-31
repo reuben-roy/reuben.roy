@@ -1,0 +1,136 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--foreground);
+}
+
+.copy {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  line-height: 1;
+}
+
+.title {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--foreground);
+}
+
+.domain {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.iconBadge {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.4rem;
+  background: #000;
+  border: 1px solid var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 0 18px var(--accent-soft);
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.iconPlate {
+  fill: #000;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1.2;
+}
+
+.iconDoor {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconStride {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.iconFigure {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav .iconBadge {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.hero {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hero .iconBadge {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1.2rem;
+}
+
+.hero .icon {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.hero .title {
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+}
+
+.hero .domain {
+  font-size: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  .root {
+    gap: 0.7rem;
+  }
+
+  .nav .iconBadge {
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 0.82rem;
+  }
+
+  .nav .title {
+    font-size: 0.68rem;
+  }
+
+  .nav .domain {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+  }
+
+  .hero .iconBadge {
+    width: 3.35rem;
+    height: 3.35rem;
+  }
+
+  .hero .title {
+    font-size: 1.18rem;
+  }
+}

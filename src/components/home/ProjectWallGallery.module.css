@@ -1,0 +1,35 @@
+.headerFrame h3 {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  margin: 0 0 0.55rem;
+  color: var(--foreground);
+}
+
+.headerFrame p {
+  font-size: 1rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.65;
+}
+
+.loading {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.liveFrame {
+  min-height: 100%;
+}
+
+.mobileProjectBlock {
+  margin-bottom: 2.2rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mobileProjectBlock:last-child {
+  border-bottom: none;
+}

@@ -1,0 +1,526 @@
+/* Black + neon pixel runner. All colors read off the global --background /
+   --foreground / --accent tokens (overridden per-runner via toThemeVars). */
+.runnerRoot {
+  --runner-bg: var(--background, #050506);
+  --runner-fg: var(--foreground, #f4f4f5);
+  --runner-accent: var(--accent, #7cffb2);
+  --runner-accent-soft: var(--accent-soft, rgba(124, 255, 178, 0.16));
+  --runner-accent-glow: var(--accent-glow, rgba(124, 255, 178, 0.45));
+  --runner-grid: rgba(255, 255, 255, 0.03);
+  --nav-h: 64px;
+  --floor-h: 15%;
+
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--runner-bg);
+  color: var(--runner-fg);
+}
+
+.runnerRootFullPage {
+  height: calc(100svh - var(--nav-h));
+  margin-top: var(--nav-h);
+}
+
+.runnerStrip {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--runner-bg);
+}
+
+.world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  will-change: transform;
+  transition: none;
+}
+
+/* faint pixel grid on the wall */
+.wall {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--floor-h);
+  background:
+    repeating-linear-gradient(0deg, var(--runner-grid) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--runner-grid) 0 1px, transparent 1px 40px),
+    var(--runner-bg);
+}
+
+.parallaxGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 8%, var(--runner-accent-soft), transparent 38%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* unused decorative band kept hidden for compatibility */
+.wainscot {
+  display: none;
+}
+
+.floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--floor-h);
+  background: var(--runner-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.floorLane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--floor-h);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--runner-accent), transparent);
+  box-shadow: 0 0 16px var(--runner-accent-glow);
+  opacity: 0.85;
+}
+
+/* blends the top of the stage into solid black so the page top merges in */
+.topFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 34%;
+  background: linear-gradient(180deg, var(--runner-bg) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 22;
+}
+
+.playerSlot {
+  position: absolute;
+  bottom: calc(var(--floor-h) - 4%);
+  width: 84px;
+  height: 120px;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.stickCanvas {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 10px var(--runner-accent-glow));
+}
+
+/* ---------- HUD ---------- */
+.hudLink {
+  position: absolute;
+  top: 0.95rem;
+  right: 0.95rem;
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--runner-accent);
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--runner-fg);
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.hintBar {
+  position: absolute;
+  top: 0.95rem;
+  left: 0.95rem;
+  z-index: 30;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.56rem;
+  line-height: 1.5;
+  color: var(--runner-fg);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(8px);
+  max-width: calc(100% - 10rem);
+}
+
+.snapNav {
+  position: absolute;
+  top: 3.4rem;
+  left: 0.95rem;
+  right: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  z-index: 20;
+  max-height: 5rem;
+  overflow-y: auto;
+}
+
+.projectNavBtn {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.52rem;
+  padding: 0.42rem 0.6rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  color: var(--runner-fg);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.projectNavBtn:hover {
+  border-color: var(--runner-accent);
+  color: var(--runner-accent);
+}
+
+/* ---------- Doors ---------- */
+.door {
+  position: absolute;
+  bottom: var(--floor-h);
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.doorSign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.7rem;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--runner-fg);
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
+  white-space: nowrap;
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doorFrame {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* the blocky neon-outlined jamb/arch */
+.doorArch {
+  position: absolute;
+  inset: 0;
+  border: 6px solid var(--runner-fg);
+  border-bottom: none;
+  background: #000;
+  box-shadow:
+    inset 0 0 0 2px #000,
+    inset 0 0 0 4px rgba(255, 255, 255, 0.06);
+}
+
+/* dark interior opening with the direction arrow */
+.doorOpening {
+  position: absolute;
+  inset: 14px 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), #000 60%);
+  color: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 1.4rem;
+}
+
+.doorReturn .doorArch {
+  border-color: var(--muted, #a1a1aa);
+}
+
+.doorActive .doorArch {
+  border-color: var(--runner-accent);
+  box-shadow:
+    inset 0 0 0 2px #000,
+    inset 0 0 24px var(--runner-accent-soft),
+    0 0 28px var(--runner-accent-glow);
+}
+
+.doorActive .doorOpening {
+  color: var(--runner-accent);
+  background: linear-gradient(180deg, var(--runner-accent-soft), #000 60%);
+}
+
+.doorActive .doorSign {
+  border-color: var(--runner-accent);
+  color: var(--runner-accent);
+}
+
+.enterHint {
+  position: absolute;
+  bottom: -2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  color: #000;
+  background: var(--runner-accent);
+  border: none;
+  padding: 0.4rem 0.6rem;
+  white-space: nowrap;
+  cursor: pointer;
+  animation: enterPulse 1s steps(2, end) infinite;
+}
+
+@keyframes enterPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.doorFallbackLink {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.56rem;
+  color: var(--runner-accent);
+  border: 1px solid var(--runner-accent);
+  padding: 0.5rem 0.7rem;
+  margin-top: 0.5rem;
+}
+
+/* ---------- Frames ---------- */
+.wallFrame {
+  position: absolute;
+  bottom: var(--floor-h);
+  z-index: 8;
+  left: calc(var(--frame-x) - var(--frame-w) / 2);
+  width: var(--frame-w);
+  height: min(78svh, var(--frame-h));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.framePlaque {
+  align-self: flex-start;
+  margin: 0 0 0.5rem 0;
+  padding: 0.5rem 0.8rem;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: #000;
+  background: var(--runner-accent);
+}
+
+.frameHang {
+  display: none;
+}
+
+/* thick blocky double pixel border on a near-black mat */
+.frameShell {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: 6px;
+  background: #000;
+  border: 4px solid var(--runner-fg);
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 6px rgba(255, 255, 255, 0.08),
+    0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* corner accents */
+.frameShell::before,
+.frameShell::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 3px solid var(--runner-accent);
+  z-index: 2;
+}
+
+.frameShell::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.frameShell::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+.frameMat {
+  height: 100%;
+  padding: 4px;
+  background: #050506;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.frameInner {
+  height: 100%;
+  background: var(--runner-bg);
+  padding: 1rem 1.15rem;
+  overflow: auto;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--runner-fg);
+  scrollbar-width: thin;
+}
+
+.frameScroll {
+  height: 100%;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  color: inherit;
+  scrollbar-width: thin;
+}
+
+.frameScroll section {
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+}
+
+.frameScroll h2 {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 1.3rem !important;
+  margin-bottom: 0.7rem !important;
+}
+
+.frameScroll h3,
+.frameScroll h4 {
+  font-size: 1rem !important;
+}
+
+/* ---------- Section intro (career/projects header) ---------- */
+.sectionIntro {
+  display: none;
+}
+
+/* ---------- Mobile controls ---------- */
+.mobileControls {
+  display: none;
+}
+
+.runButton {
+  flex: 1;
+  min-height: 52px;
+  padding: 0.78rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
+  color: var(--runner-fg);
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  touch-action: manipulation;
+  user-select: none;
+  backdrop-filter: blur(8px);
+}
+
+.runButtonAccent {
+  border-color: var(--runner-accent);
+  color: var(--runner-accent);
+}
+
+.runButton:active {
+  background: var(--runner-accent-soft);
+}
+
+/* ---------- Reduced-motion stacked fallback ---------- */
+.mobileContentZone {
+  padding: calc(var(--nav-h) + 1rem) 1rem 1rem;
+}
+
+.reducedMotionNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.wallFrameMobile {
+  margin-bottom: 1.75rem;
+}
+
+.wallFrameMobile .framePlaque {
+  margin-bottom: 0.5rem;
+}
+
+.wallFrameMobile .frameShell {
+  flex: none;
+}
+
+.wallFrameMobile .frameInner {
+  height: auto;
+  max-height: none;
+}
+
+/* ---------- Mobile playable ---------- */
+@media (max-width: 768px) {
+  .runnerRoot {
+    --floor-h: 16%;
+  }
+
+  .mobileControls {
+    display: flex;
+    gap: 0.6rem;
+    position: absolute;
+    bottom: 0.6rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 25;
+  }
+
+  .wallFrame {
+    --frame-w: min(92vw, 540px);
+    height: min(80svh, var(--frame-h));
+  }
+
+  .hintBar {
+    top: 0.6rem;
+    left: 0.6rem;
+    right: 5rem;
+    max-width: none;
+  }
+
+  .hudLink {
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .snapNav {
+    display: none;
+  }
+
+  .doorSign {
+    font-size: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world {
+    will-change: auto;
+  }
+}

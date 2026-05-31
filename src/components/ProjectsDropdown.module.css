@@ -6,28 +6,29 @@
 .dropdownButton {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(246, 239, 225, 0.8);
     font-size: 0.95rem;
-    font-weight: 450;
-    padding: 0.5rem 1rem;
+    font-weight: 500;
+    padding: 0.7rem 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
     font-family: inherit;
-    border-radius: 8px;
+    border-radius: 999px;
 }
 
 .dropdownButton:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
+    color: #fff7e7;
+    background: rgba(255, 227, 181, 0.08);
 }
 
 .arrow {
     font-size: 0.65rem;
     transition: transform 0.25s ease;
-    opacity: 0.6;
+    opacity: 0.75;
+    color: var(--accent-soft);
 }
 
 .up {
@@ -39,12 +40,12 @@
     top: calc(100% + 8px);
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(180deg, rgba(28, 28, 30, 0.98) 0%, rgba(18, 18, 20, 0.99) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, rgba(29, 22, 20, 0.98) 0%, rgba(12, 10, 10, 0.99) 100%);
+    border: 1px solid rgba(239, 180, 107, 0.16);
     border-radius: 14px;
     padding: 0.5rem;
     min-width: 180px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -66,7 +67,7 @@
     display: flex;
     align-items: center;
     padding: 0.7rem 1rem;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(246, 239, 225, 0.84);
     text-decoration: none;
     transition: all 0.15s ease;
     border-radius: 10px;
@@ -74,8 +75,8 @@
 }
 
 .menuItem:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 227, 181, 0.09);
+    color: #fff7e7;
 }
 
 @media (max-width: 768px) {
@@ -91,15 +92,15 @@
         width: 100%;
         justify-content: center;
         gap: 0.75rem;
-        padding: 1rem 2rem;
-        font-size: 1.2rem;
-        border-radius: 8px;
+        padding: 0.95rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.9rem;
         transition: background-color 0.2s ease, transform 0.2s ease;
     }
 
     .dropdownButton:hover,
     .dropdownButton:active {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 227, 181, 0.08);
     }
 
     .arrow {
@@ -108,9 +109,9 @@
 
     .menu {
         position: static;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(239, 180, 107, 0.12);
+        border-radius: 0.9rem;
         box-shadow: none;
         padding: 0.5rem;
         margin-top: 0.5rem;
@@ -120,14 +121,14 @@
     .menuItem {
         font-size: 1rem;
         padding: 0.75rem 1rem;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(246, 239, 225, 0.82);
         text-align: center;
-        border-radius: 6px;
+        border-radius: 0.75rem;
     }
 
     .menuItem:hover,
     .menuItem:active {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        background: rgba(255, 227, 181, 0.08);
+        color: #fff7e7;
     }
 }

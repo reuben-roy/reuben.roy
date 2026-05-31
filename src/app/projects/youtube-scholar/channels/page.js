@@ -6,7 +6,7 @@ import { YoutubeScholarChannelsExplorer } from '@/components/youtube-scholar/You
 import styles from '../page.module.css';
 
 export const metadata = {
-  title: 'YouTube Scholar Channels | explosion.fun',
+  title: 'YouTube Scholar Channels',
   description: 'Expanded channel watch-proxy explorer across years and quarters.',
 };
 

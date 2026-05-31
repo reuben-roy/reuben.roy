@@ -45,10 +45,11 @@
 }
 
 .sectionHeader h2 {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(to right, #ffffff, #a1a1aa);
+  background: linear-gradient(to right, #fff7e7, #efb46b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -56,14 +57,14 @@
 
 .subtitle {
   font-size: 1rem;
-  color: #a1a1aa;
+  color: rgba(238, 229, 212, 0.72);
   margin: 0.5rem 0;
   line-height: 1.5;
 }
 
 .subtext {
   font-size: 0.9rem;
-  color: #71717a;
+  color: rgba(238, 229, 212, 0.58);
   margin-bottom: 1rem;
 }
 
@@ -78,15 +79,15 @@
 
 .skillCategory {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 226, 176, 0.1);
+  border-radius: 1rem;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .skillCategory.open {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 227, 181, 0.05);
+  border-color: rgba(255, 227, 181, 0.18);
 }
 
 .skillHeader {
@@ -97,7 +98,7 @@
   padding: 0.75rem 1rem;
   background: transparent;
   border: none;
-  color: #e4e4e7;
+  color: #f2e6d2;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -106,7 +107,7 @@
 }
 
 .skillHeader:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 227, 181, 0.03);
 }
 
 .skillHeaderMeta {
@@ -122,11 +123,11 @@
 }
 
 .skillCount {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 227, 181, 0.08);
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   font-size: 0.8rem;
-  color: #a1a1aa;
+  color: rgba(255, 232, 197, 0.74);
 }
 
 .skillToggleIcon {
@@ -139,7 +140,7 @@
 .skillToggleIcon::after {
   content: '';
   position: absolute;
-  background-color: #a1a1aa;
+  background-color: rgba(255, 232, 197, 0.72);
   transition: transform 0.3s ease;
 }
 
@@ -181,20 +182,20 @@
 }
 
 .skillPill {
-  background: rgba(255, 255, 255, 0.05);
-  color: #d4d4d8;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
+  background: rgba(106, 223, 255, 0.07);
+  color: #d9f8ff;
+  padding: 0.35rem 0.68rem;
+  border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(106, 223, 255, 0.12);
   transition: all 0.2s;
 }
 
 .skillPill:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(106, 223, 255, 0.12);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(106, 223, 255, 0.22);
 }
 
 /* Experience Section */
@@ -211,58 +212,59 @@
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  color: #ffffff;
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 1.3rem;
+  color: #fff7e7;
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 226, 176, 0.1);
 }
 
 .experienceCard {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 1.25rem;
+  border: 1px solid rgba(255, 226, 176, 0.1);
+  border-radius: 1rem;
+  padding: 1.3rem;
   transition: all 0.2s ease;
 }
 
 .experienceCard:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 227, 181, 0.05);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 227, 181, 0.2);
 }
 
 .experienceCard h4 {
-  font-size: 1.1rem;
-  color: #ffffff;
+  font-size: 1.15rem;
+  color: #fff7e7;
   margin-bottom: 0.35rem;
 }
 
 .experienceDate {
   font-family: var(--font-geist-mono);
-  color: #a1a1aa;
+  color: rgba(255, 232, 197, 0.66);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
 
 .experienceDescription {
-  color: #d4d4d8;
-  line-height: 1.5;
-  font-size: 0.9rem;
+  color: rgba(238, 229, 212, 0.84);
+  line-height: 1.7;
+  font-size: 0.95rem;
   margin-bottom: 0.75rem;
 }
 
 .jobSkills {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 226, 176, 0.1);
 }
 
 .jobSkillsHeader {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #71717a;
+  color: rgba(255, 232, 197, 0.58);
   margin-bottom: 0.5rem;
 }
 
@@ -275,8 +277,8 @@
 
 .certCard {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 226, 176, 0.1);
+  border-radius: 0.9rem;
   padding: 1rem;
   transition: all 0.2s ease;
   display: flex;
@@ -286,8 +288,8 @@
 }
 
 .certCard:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 227, 181, 0.05);
+  border-color: rgba(255, 227, 181, 0.2);
   transform: translateY(-2px);
 }
 
@@ -295,18 +297,18 @@
 .certCard span {
   font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #fff7e7;
   margin-bottom: 0.25rem;
   display: block;
 }
 
 .certCard a:hover {
   text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.5);
+  text-decoration-color: rgba(255, 227, 181, 0.5);
 }
 
 .certCard p {
-  color: #a1a1aa;
+  color: rgba(238, 229, 212, 0.72);
   font-size: 0.9rem;
 }
 
@@ -314,34 +316,35 @@
 .portfolioProject {
   margin-bottom: 2.5rem;
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.3rem;
+  border: 1px solid rgba(255, 226, 176, 0.08);
 }
 
 .portfolioProject h3 {
-  font-size: 1.5rem;
-  color: #ffffff;
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-size: 1.55rem;
+  color: #fff7e7;
   margin-bottom: 0.5rem;
 }
 
 .portfolioProject p {
-  color: #d4d4d8;
-  line-height: 1.5;
-  font-size: 0.9rem;
+  color: rgba(238, 229, 212, 0.84);
+  line-height: 1.65;
+  font-size: 0.95rem;
   margin-bottom: 0.25rem;
 }
 
 .portfolioProject h4 {
-  font-size: 1.1rem;
-  color: #ffffff;
+  font-size: 1.15rem;
+  color: #fff7e7;
   margin: 1rem 0 0.5rem 0;
 }
 
 .divider {
   border: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 226, 176, 0.1);
   margin: 1rem 0;
 }
 
@@ -354,10 +357,10 @@
 
 .featureGroup h5 {
   font-size: 0.95rem;
-  color: #ffffff;
+  color: #fff7e7;
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 226, 176, 0.1);
 }
 
 .featureList {

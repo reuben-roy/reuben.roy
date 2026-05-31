@@ -444,7 +444,7 @@ node scripts/process-data.js   # Bird migration lite JSON
 ## Repository Layout
 
 ```
-explosion.fun/
+reuben.roy/
 ├── src/
 │   ├── app/                 # App Router pages
 │   ├── components/          # UI, D3 experiences, Greatness nav/auth

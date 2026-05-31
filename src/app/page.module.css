@@ -1,8 +1,10 @@
 /* Global & Container */
 .container {
-  min-height: 100vh;
-  background-color: #030303;
-  color: #ffffff;
+  min-height: 100svh;
+  height: 100svh;
+  background: #090b0d;
+  color: var(--foreground);
   font-family: var(--font-geist-sans);
   overflow-x: hidden;
+  overflow-y: hidden;
 }
