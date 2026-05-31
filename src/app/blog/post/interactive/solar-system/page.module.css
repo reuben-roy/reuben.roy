@@ -1,0 +1,112 @@
+/* Dark theme page wrapper */
+.page {
+  background: #030303;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+}
+
+/* Section holding solar system */
+.solarSection {
+  padding: 48px 24px 28px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Centered bounded box for the solar system */
+.solarBox {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Adjust container: fixed-height adaptive card */
+.container {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 60vh, 640px);
+  background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+  color: #ffffff;
+  overflow: hidden;
+  font-family: var(--font-geist-sans);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark theme info panel */
+.infoPanel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 14px;
+  border-radius: 8px;
+  max-width: 220px;
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  z-index: 10;
+}
+
+.infoPanel h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.infoPanel p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+/* Controls */
+.controls {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.controlButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s;
+}
+
+.controlButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Content below */
+.contentSection {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.contentSection h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.contentSection p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #a1a1aa;
+  margin-bottom: 1.5rem;
+}

@@ -1,0 +1,40 @@
+.diagram {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+.diagram.visible {
+  opacity: 1;
+}
+
+.diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.placeholder {
+  padding: 1.25rem;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+}
+
+.placeholderTitle {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  margin: 0 0 0.35rem;
+}
+
+.placeholderText {
+  color: #71717a;
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}

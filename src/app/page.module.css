@@ -1,0 +1,8 @@
+/* Global & Container */
+.container {
+  min-height: 100vh;
+  background-color: #030303;
+  color: #ffffff;
+  font-family: var(--font-geist-sans);
+  overflow-x: hidden;
+}

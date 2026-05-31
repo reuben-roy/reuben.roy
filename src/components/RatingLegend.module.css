@@ -1,0 +1,160 @@
+.legend {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+.legend.whiteTheme {
+  color: #111827;
+  border-color: #e5e7eb;
+  background: #ffffff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem 0.2rem 0;
+}
+
+.whiteTheme .header {
+  background: #f9fafb;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.content {
+  padding: 0.5rem 0 0 0;
+}
+
+.scaleBar {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.scoreItem {
+  position: relative;
+  flex: 1;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Active state for mobile tap */
+.scoreItem.active .score {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+.whiteTheme .scoreItem.active .score {
+  background: #111827;
+  color: #ffffff;
+}
+
+.whiteTheme .score {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.scoreItem:hover .score {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+.whiteTheme .scoreItem:hover .score {
+  background: #111827;
+  color: #ffffff;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 0.75rem;
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.75rem;
+  width: 200px;
+  text-align: center;
+  border-radius: 6px;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tooltip strong {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.tooltip span {
+  color: #d1d5db;
+  line-height: 1.4;
+}
+
+.whiteTheme .tooltip {
+  background: #1f2937;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #000000;
+}
+
+.whiteTheme .tooltip::after {
+  border-top-color: #1f2937;
+}
+
+.labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #71717a;
+}
+
+.whiteTheme .labels {
+  color: #9ca3af;
+}
+
+@media (max-width: 480px) {
+  .score {
+    font-size: 0.7rem;
+    height: 28px;
+  }
+  
+  .labels {
+    font-size: 0.65rem;
+  }
+  
+  .tooltip {
+    width: 160px;
+    font-size: 0.7rem;
+  }
+}

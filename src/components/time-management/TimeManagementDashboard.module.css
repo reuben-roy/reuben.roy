@@ -1,0 +1,364 @@
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 8rem 1.5rem 5rem;
+  display: grid;
+  gap: 3rem;
+  color: #f3f2ef;
+  font-family: var(--font-geist-sans);
+}
+
+/* Header */
+.header {
+  margin-bottom: 0.5rem;
+}
+
+.header h1 {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  color: #f3f2ef;
+  margin: 0 0 1.25rem;
+}
+
+.header p {
+  color: #d0d6de;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 62ch;
+}
+
+/* Section Title */
+.sectionTitle {
+  font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: #f3f2ef;
+  margin: 0 0 1.25rem 0;
+}
+
+/* KPI Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* Cards */
+.card,
+.findingCard,
+.recCard,
+.kpiCard {
+  position: relative;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(143, 184, 222, 0.14),
+      transparent 36%
+    ),
+    linear-gradient(180deg, rgba(17, 22, 29, 0.96), rgba(8, 10, 14, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.kpiCard {
+  padding: 1.1rem 1rem;
+  text-align: left;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.kpiValue {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.kpiLabel {
+  font-size: 0.95rem;
+  color: #eef2f7;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kpiSub {
+  font-size: 0.86rem;
+  color: #8f98a7;
+  margin-top: 0.45rem;
+  line-height: 1.5;
+}
+
+/* Grid layouts */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.gridFull {
+  grid-column: 1 / -1;
+}
+
+.card {
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.findingCard {
+  padding: 1.5rem;
+}
+
+.findingCard p {
+  color: #c8ced7;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0.75rem 0 0;
+}
+
+.recCard {
+  padding: 1.5rem;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.recCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(79, 70, 229, 0.4);
+}
+
+.recCard h3 {
+  font-size: 1.1rem;
+  color: #f3f2ef;
+  margin: 0 0 0.5rem;
+}
+
+.recCard p {
+  color: #c8ced7;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.tagRed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.tagGreen {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+/* Chart Container */
+.chartContainer {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.chartContainer svg {
+  display: block;
+  width: 100%;
+}
+
+.chartSubtitle {
+  color: #8f98a7;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(6, 10, 14, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 0.8rem 0.95rem;
+  font-size: 0.9rem;
+  color: #c8ced7;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.28);
+  line-height: 1.5;
+}
+
+.tooltip strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #f3f2ef;
+}
+
+/* Legend */
+.legendRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: center;
+  padding-top: 1.25rem;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #c8ced7;
+  font-size: 0.85rem;
+}
+
+.legendDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.8rem 0.95rem;
+  color: #8f98a7;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table td {
+  padding: 0.8rem 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.table tbody tr {
+  transition: background 160ms ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+/* Mini bar for tables */
+.miniBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.miniBarFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Insight items */
+.insightItem {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.insightItem:last-child {
+  border-bottom: none;
+}
+
+.insightIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.insightContent {
+  font-size: 0.95rem;
+  color: #c8ced7;
+  line-height: 1.7;
+}
+
+.insightContent strong {
+  color: #f3f2ef;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .kpiGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 7rem 1rem 4rem;
+    gap: 2rem;
+  }
+
+  .header h1 {
+    font-size: clamp(2.5rem, 8vw, 3rem);
+  }
+
+  .kpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid,
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+
+  .card,
+  .findingCard,
+  .recCard,
+  .kpiCard {
+    border-radius: 20px;
+    padding: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+}
