@@ -7,8 +7,9 @@ export function generateStaticParams() {
   return PROJECTS.map((project) => ({ id: project.id }));
 }
 
-export function generateMetadata({ params }) {
-  const project = getProjectById(params.id);
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const project = getProjectById(id);
   if (!project) return { title: 'Project not found' };
   return {
     title: project.title,
@@ -16,8 +17,9 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function ProjectRoomPage({ params }) {
-  const project = getProjectById(params.id);
+export default async function ProjectRoomPage({ params }) {
+  const { id } = await params;
+  const project = getProjectById(id);
   if (!project) notFound();
 
   return (
