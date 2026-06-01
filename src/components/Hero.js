@@ -8,7 +8,7 @@ import SpotifyCard from '@/components/SpotifyCard';
 import HabiticaCard from '@/components/HabiticaCard';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import WallFrame from '@/components/runner/WallFrame';
-import { HOME_CORRIDOR } from '@/data/runnerWorlds';
+import { HOME_CORRIDOR, SITE_SECTIONS } from '@/data/runnerWorlds';
 
 const PHRASES = [
   'Generalist software engineer',
@@ -92,6 +92,7 @@ export default function Hero() {
       doors={HOME_CORRIDOR.doors}
       fullPage
       theme={HOME_CORRIDOR.theme}
+      sectionNav={SITE_SECTIONS}
       hint={HOME_CORRIDOR.hint}
       initialX={HOME_CORRIDOR.playerStartX}
       runSpeed={HOME_CORRIDOR.runSpeed}

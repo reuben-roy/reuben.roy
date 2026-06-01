@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import { PROJECTS } from '@/data/projects';
-import { buildProjectsDoorWorld } from '@/data/runnerWorlds';
+import { buildProjectsDoorWorld, SITE_SECTIONS } from '@/data/runnerWorlds';
 
 export default function ProjectWallGallery() {
   const world = useMemo(() => buildProjectsDoorWorld(PROJECTS), []);
@@ -15,6 +15,7 @@ export default function ProjectWallGallery() {
       fullPage
       snapPoints={world.snapPoints}
       theme={world.theme}
+      sectionNav={SITE_SECTIONS}
       hudLink={world.hudLink}
       hint={world.hint}
       initialX={world.playerStartX}

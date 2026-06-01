@@ -30,6 +30,16 @@ export const RUNNER_DEFAULTS = {
   returnDoorWidth: 130,
 };
 
+// Primary cross-page navigation surfaced inside every runner world, so visitors
+// can jump between sections without running the character to a door.
+export const SITE_SECTIONS = [
+  { id: 'home', label: 'Home', href: '/' },
+  { id: 'projects', label: 'Projects', href: '/projects' },
+  { id: 'career', label: 'Work Experience', href: '/career' },
+  { id: 'blog', label: 'Blog', href: '/blog' },
+  { id: 'about', label: 'About', href: '/about' },
+];
+
 export const HOME_CORRIDOR = {
   worldWidth: 3320,
   playerStartX: 220,
@@ -50,13 +60,15 @@ export const HOME_CORRIDOR = {
 };
 
 export function buildProjectsDoorWorld(projects) {
-  const startX = 760;
-  const spacing = 460;
+  const startX = 700;
+  const spacing = 330;
   const doors = projects.map((project, i) => ({
     id: project.id,
     label: project.title,
+    blurb: project.tagline,
     href: `/projects/${project.id}`,
     x: startX + i * spacing,
+    height: 300,
   }));
 
   return {

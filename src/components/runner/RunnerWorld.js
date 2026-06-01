@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import StickFigure from './StickFigure';
 import Door from './Door';
 import { useRunnerLoop } from './useRunnerLoop';
@@ -44,8 +44,10 @@ export default function RunnerWorld({
   initialX,
   runSpeed,
   playerScreenRatio,
+  sectionNav = [],
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const viewportRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(800);
   const [isMobile, setIsMobile] = useState(false);
@@ -122,10 +124,34 @@ export default function RunnerWorld({
 
   const runnerHint = hint || 'Use ← → or A / D to run · press Enter at a glowing door';
 
+  const isSectionActive = (href) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
+
+  const sectionNavEl =
+    sectionNav.length > 0 ? (
+      <nav className={styles.sectionNav} aria-label="Site sections">
+        {sectionNav.map((item) => {
+          const active = isSectionActive(item.href);
+          return (
+            <button
+              key={item.id || item.href}
+              type="button"
+              className={`${styles.sectionNavBtn} ${active ? styles.sectionNavBtnActive : ''}`}
+              onClick={() => router.push(item.href)}
+              aria-current={active ? 'page' : undefined}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+    ) : null;
+
   // Reduced-motion: drop the animated stage entirely for a readable static layout.
   if (reducedMotion) {
     return (
       <section className={rootClass} aria-label="Interactive corridor" style={toThemeVars(theme)}>
+        {sectionNavEl}
         {mobileContent ? <div className={styles.mobileContentZone}>{mobileContent}</div> : null}
         {reducedMotionDoors.length > 0 || hudLink ? (
           <nav className={styles.reducedMotionNav} aria-label="Quick navigation">
@@ -158,6 +184,8 @@ export default function RunnerWorld({
           ) : null}
 
           <div className={styles.hintBar}>{runnerHint}</div>
+
+          {sectionNavEl}
 
           {hasLeft ? (
             <div className={`${styles.edgeArrow} ${styles.edgeArrowLeft}`} aria-hidden="true">

@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import WallFrame from '@/components/runner/WallFrame';
 import { ProjectFrameContent } from '@/components/home/ProjectFrameContent';
-import { buildProjectRoomWorld } from '@/data/runnerWorlds';
+import { buildProjectRoomWorld, SITE_SECTIONS } from '@/data/runnerWorlds';
 import galleryStyles from './ProjectWallGallery.module.css';
 
 export default function ProjectRoom({ project }) {
@@ -17,6 +17,7 @@ export default function ProjectRoom({ project }) {
       fullPage
       snapPoints={world.snapPoints}
       theme={world.theme}
+      sectionNav={SITE_SECTIONS}
       hudLink={world.hudLink}
       hint={world.hint}
       initialX={world.playerStartX}

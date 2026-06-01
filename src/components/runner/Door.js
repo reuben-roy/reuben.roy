@@ -6,7 +6,7 @@ import styles from './runner.module.css';
 
 export default function Door({ door, isActive, reducedMotion }) {
   const router = useRouter();
-  const { label, href, x, variant = 'entry' } = door;
+  const { label, href, x, blurb, variant = 'entry' } = door;
   const width =
     door.width ||
     (variant === 'return' ? RUNNER_DEFAULTS.returnDoorWidth : RUNNER_DEFAULTS.doorWidth);
@@ -21,6 +21,7 @@ export default function Door({ door, isActive, reducedMotion }) {
       style={{ left: x - width / 2, width, height }}
     >
       <div className={styles.doorSign}>{label}</div>
+      {blurb ? <div className={styles.doorBlurb}>{blurb}</div> : null}
       <button
         type="button"
         className={styles.doorFrame}

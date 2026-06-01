@@ -153,12 +153,61 @@
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   backdrop-filter: blur(8px);
-  max-width: calc(100% - 10rem);
+  max-width: 16rem;
+}
+
+/* ---------- Primary section nav (cross-page) ---------- */
+.sectionNav {
+  position: absolute;
+  top: 0.95rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  gap: 0.35rem;
+  max-width: min(60rem, calc(100% - 2rem));
+  padding: 0.35rem;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid var(--runner-accent);
+  box-shadow: 0 0 18px var(--runner-accent-glow);
+  backdrop-filter: blur(10px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sectionNav::-webkit-scrollbar {
+  display: none;
+}
+
+.sectionNavBtn {
+  flex: 0 0 auto;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 0.8rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--runner-fg);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sectionNavBtn:hover {
+  border-color: var(--runner-accent);
+  color: var(--runner-accent);
+}
+
+.sectionNavBtnActive,
+.sectionNavBtnActive:hover {
+  background: var(--runner-accent);
+  border-color: var(--runner-accent);
+  color: #050506;
 }
 
 .snapNav {
   position: absolute;
-  top: 3.4rem;
+  top: 5.6rem;
   left: 0.95rem;
   right: 0.95rem;
   display: flex;
@@ -173,17 +222,19 @@
   font-family: var(--font-pixel), var(--font-geist-mono), monospace;
   font-size: 0.52rem;
   padding: 0.42rem 0.6rem;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  color: var(--runner-fg);
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid var(--runner-accent);
+  color: var(--runner-accent);
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(124, 255, 178, 0.08);
   transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 
 .projectNavBtn:hover {
+  background: var(--runner-accent);
   border-color: var(--runner-accent);
-  color: var(--runner-accent);
+  color: #050506;
 }
 
 /* ---------- Directional edge arrows ---------- */
@@ -246,7 +297,29 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   line-height: 1.4;
-  max-width: 14ch;
+  max-width: 18ch;
+}
+
+/* brief project explainer shown under the title, above the door */
+.doorBlurb {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.5rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--muted, #a1a1aa);
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  padding: 0.35rem 0.5rem;
+  max-width: 160px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.doorActive .doorBlurb {
+  border-color: var(--runner-accent);
+  color: var(--runner-fg);
 }
 
 .doorFrame {
@@ -515,7 +588,9 @@
 /* ---------- Mobile playable ---------- */
 @media (max-width: 768px) {
   .runnerRoot {
-    --floor-h: 16%;
+    /* taller floor keeps doors (and their ENTER button) above the bottom
+       control dock so the two never overlap */
+    --floor-h: 24%;
   }
 
   .mobileControls {
@@ -538,20 +613,56 @@
     overflow-y: auto;
   }
 
-  .hintBar {
+  /* section nav becomes a full-width scrollable strip at the very top */
+  .sectionNav {
     top: 0.6rem;
     left: 0.6rem;
-    right: 5rem;
+    right: 0.6rem;
+    transform: none;
+    max-width: none;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hintBar {
+    top: 3.3rem;
+    left: 0.6rem;
+    right: 0.6rem;
     max-width: none;
   }
 
+  /* back-link is redundant on mobile — the section nav covers it */
   .hudLink {
-    top: 0.6rem;
-    right: 0.6rem;
+    display: none;
+  }
+
+  /* keep the door's ENTER button tight to the door, clear of the dock */
+  .enterHint {
+    bottom: -1.5rem;
   }
 
   .snapNav {
+    top: auto;
+    bottom: 4.4rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .snapNav::-webkit-scrollbar {
     display: none;
+  }
+
+  .projectNavBtn {
+    flex: 0 0 auto;
   }
 
   .doorSign {

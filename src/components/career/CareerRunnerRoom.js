@@ -6,7 +6,7 @@ import ExperienceSection from '@/components/career/ExperienceSection';
 import SkillsSection from '@/components/career/SkillsSection';
 import CertificationsSection from '@/components/career/CertificationsSection';
 import CareerPortfolioSection from '@/components/career/CareerPortfolioSection';
-import { buildCareerWorld } from '@/data/runnerWorlds';
+import { buildCareerWorld, SITE_SECTIONS } from '@/data/runnerWorlds';
 import styles from '@/components/runner/runner.module.css';
 
 const careerWorld = buildCareerWorld();
@@ -47,6 +47,7 @@ export default function CareerRunnerRoom() {
       intro={intro}
       mobileContent={<CareerMobileStack />}
       theme={careerWorld.theme}
+      sectionNav={SITE_SECTIONS}
       hudLink={careerWorld.hudLink}
       hint={careerWorld.hint}
       initialX={careerWorld.playerStartX}
