@@ -19,7 +19,7 @@ export const PROJECTS = [
         techStack: ['Next.js', 'React', 'Three.js', 'D3.js', 'GraphQL', 'WordPress', 'Vercel'],
         liveUrl: 'https://explosion.fun/',
         previewPath: null,
-        embedAllowed: false,
+        embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/reuben.roy',
         links: [
             { label: 'Live site', href: 'https://explosion.fun/' },
@@ -47,7 +47,7 @@ export const PROJECTS = [
         awards: [],
         techStack: ['D3.js', 'Next.js', 'Python'],
         liveUrl: null,
-        previewPath: '/projects/time-management',
+        previewPath: '/projects/time-management/view',
         embedAllowed: true,
         githubUrl: null,
         links: [
@@ -75,7 +75,7 @@ export const PROJECTS = [
         awards: [],
         techStack: ['D3.js', 'Next.js', 'JavaScript'],
         liveUrl: null,
-        previewPath: '/projects/youtube-scholar',
+        previewPath: '/projects/youtube-scholar/view',
         embedAllowed: true,
         githubUrl: null,
         links: [
@@ -355,7 +355,7 @@ export const PROJECTS = [
         techStack: ['Next.js', 'Go', 'PostgreSQL', 'React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
         liveUrl: 'https://kali.aureole10.com',
         previewPath: null,
-        embedAllowed: false,
+        embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/kali',
         links: [
             { label: 'Live site', href: 'https://kali.aureole10.com/' },
@@ -432,7 +432,7 @@ export const PROJECTS = [
         techStack: ['Gemini', 'Node.js', 'JavaScript', 'Vercel'],
         liveUrl: 'https://answers.explosion.fun/',
         previewPath: null,
-        embedAllowed: false,
+        embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/job-answer-app',
         links: [
             { label: 'Live demo', href: 'https://answers.explosion.fun/' },
@@ -457,7 +457,7 @@ export const PROJECTS = [
         techStack: ['Next.js', 'D3.js', 'Three.js', 'GraphQL', 'Firebase', 'PostHog', 'Vercel'],
         liveUrl: 'https://auto.explosion.fun',
         previewPath: null,
-        embedAllowed: false,
+        embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/Auto-Explosion',
         links: [
             { label: 'Live site', href: 'https://auto.explosion.fun' },

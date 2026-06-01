@@ -3,14 +3,8 @@ import Navbar from '@/components/Navbar';
 import ProjectRoom from '@/components/home/ProjectRoom';
 import { PROJECTS, getProjectById } from '@/data/projects';
 
-// Projects with their own bespoke static routes take precedence over this
-// dynamic segment, so we don't pre-generate them here.
-const STATIC_ROUTE_IDS = new Set(['time-management', 'youtube-scholar']);
-
 export function generateStaticParams() {
-  return PROJECTS.filter((project) => !STATIC_ROUTE_IDS.has(project.id)).map((project) => ({
-    id: project.id,
-  }));
+  return PROJECTS.map((project) => ({ id: project.id }));
 }
 
 export function generateMetadata({ params }) {

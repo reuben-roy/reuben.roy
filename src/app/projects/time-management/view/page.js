@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import Navbar from '@/components/Navbar';
 import TimeManagementDashboard from '@/components/time-management/TimeManagementDashboard';
-import styles from './page.module.css';
+import styles from '../page.module.css';
 
 export const metadata = {
     title: 'Time Management Analysis',

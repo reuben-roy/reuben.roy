@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import Navbar from '@/components/Navbar';
 import YoutubeScholarExperience from '@/components/youtube-scholar/YoutubeScholarExperience';
-import styles from './page.module.css';
+import styles from '../page.module.css';
 
 export const metadata = {
   title: 'Chief Information Aggregator & YouTube Scholar',
