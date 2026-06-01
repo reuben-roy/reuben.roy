@@ -29,7 +29,7 @@ export default function WallFrame({
       className={styles.wallFrame}
       style={{
         '--frame-x': `${x}px`,
-        '--frame-w': `${width}px`,
+        '--frame-w-base': `${width}px`,
         '--frame-h': `${height}px`,
       }}
       id={id}

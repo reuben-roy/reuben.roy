@@ -87,21 +87,27 @@ export const PROJECTS = [
     {
         id: 'side-track',
         title: 'Side-Track',
-        tagline: 'iOS weight-training with smart fatigue tracking',
+        tagline: 'Local-first iOS workout app with muscle-specific fatigue engine and global leaderboard',
         featured: true,
         featuredOrder: 4,
         why: [
-            'Generic workout apps don\'t account for muscle-specific fatigue or the chaos of picking what to train next.',
-            'Side-Track uses a random workout picker, per-muscle fatigue tracking, local leaderboards, and Apple Health integration.'
+            'Generic workout apps don\'t account for muscle-specific fatigue or decision fatigue. The Randomize button solves both — it picks an exercise, weight, and rep target aligned to your training goal and current muscle freshness, filtering out any exercise targeting muscles below 30% capacity.',
+            'Every set you log drains muscle capacity using a science-based formula: cost = involvement × C₀ × (%1RM²) × reps × MET. Capacity then recovers exponentially at different rates per muscle size — large muscles like quads at ~1.2%/hour, small muscles like biceps at ~2.5%/hour. Users can override both involvement maps and recovery rates from the settings.',
+            'After each set, four 1RM estimation formulas (Epley, Brzycki, Lombardi, O\'Conner) run in parallel. If the new estimate beats the stored personal record it updates the exercise limit — which feeds back into the workout generator\'s weight targets and syncs debounced to Supabase to drive global and location-based leaderboard rankings with Wilks score and weekly calorie comparisons.',
+            'All workout data, fatigue state, and 1RM estimates live in a per-user on-device SQLite database — the app is entirely local-first. Supabase handles Google OAuth and native Apple Sign-In alongside aggregated leaderboard scores only. A full JSON backup and restore system lets users migrate all history between devices.',
         ],
         highlights: [
-            'React Native iOS app',
-            'Muscle-specific fatigue model',
-            'Random workout picker',
-            'Apple Health integration'
+            'Random workout generator filters exercises targeting muscles below 30% capacity',
+            'Fatigue engine: exponential drain formula (C₀, %1RM², reps, MET) with per-muscle recovery rates',
+            '1RM auto-estimation via 4 parallel formulas (Epley, Brzycki, Lombardi, O\'Conner) — updates every qualifying set',
+            'Local-first: per-user SQLite on-device; Supabase for auth and leaderboard scores only',
+            'Global leaderboard with Wilks score, weekly calories, and location-based filtering',
+            'Apple HealthKit bi-directional sync (iOS); Android Health Connect support planned',
+            '5-step onboarding wizard with experience-level 1RM scaling (beginner ×0.7 → advanced ×1.3)',
+            '~30 exercises with per-muscle involvement maps and customizable recovery rates in settings',
         ],
         awards: [],
-        techStack: ['React Native', 'TypeScript', 'Go', 'PostgreSQL', 'SQLite'],
+        techStack: ['React Native', 'Expo', 'TypeScript', 'SQLite', 'Supabase', 'HealthKit', 'Expo Router'],
         liveUrl: 'https://apps.apple.com/app/side-track/id6755348971',
         previewPath: '/side-track',
         embedAllowed: true,
@@ -113,6 +119,145 @@ export const PROJECTS = [
         ],
         mermaid: null,
         architectureFallback: null,
+        diagrams: [
+            {
+                label: 'System Architecture',
+                chart: `flowchart TB
+  subgraph Client["React Native App (Expo)"]
+    UI["Screens & Components"]
+    CTX["Context Providers"]
+    LIB["lib/ — Database, Health, Leaderboard"]
+    UI --> CTX --> LIB
+  end
+  subgraph Local["On-Device Storage"]
+    SQLITE[("SQLite — sidetrack_userId.db")]
+    LIB --> SQLITE
+  end
+  subgraph Remote["Supabase Cloud"]
+    AUTH["Auth (Google / Apple)"]
+    LB[("user_strength table")]
+    LIB --> AUTH
+    LIB --> LB
+  end
+  subgraph Platform["Native Platforms"]
+    HK["Apple HealthKit (iOS)"]
+    HC["Health Connect (Android)"]
+    LOC["expo-location"]
+    LIB --> HK
+    LIB --> HC
+    LIB --> LOC
+  end`,
+            },
+            {
+                label: 'Context Provider Hierarchy',
+                chart: `flowchart TD
+  ROOT["RootLayout"] --> SAUTH["SupabaseAuthProvider\nsession · user · databaseReady"]
+  SAUTH --> PROT["ProtectedLayout"]
+  PROT --> PROF["ProfileProvider\nweight · height · gender · goals"]
+  PROF --> CAP["UserCapacityProvider\n1RM limits · Supabase sync"]
+  CAP --> SCREENS["Screens: tabs · workout · settings · onboarding"]`,
+            },
+            {
+                label: 'Random Workout Generator',
+                chart: `flowchart TD
+  A([User taps Randomize]) --> B["Load current muscle capacity from SQLite"]
+  B --> C["Filter: skip exercises with any muscle below 30% capacity"]
+  C --> D{Any exercises left?}
+  D -->|No| E["Fallback: use all exercises"]
+  D -->|Yes| F["Use filtered pool"]
+  E --> G["Pick random exercise"]
+  F --> G
+  G --> H["Pick goal: strength / hypertrophy / endurance"]
+  H --> I["Calculate target weight as % of user 1RM for goal"]
+  I --> J["Snap to nearest available weight on plate list"]
+  J --> K["Pick reps in goal rep range"]
+  K --> L["Animate slot pickers → WorkoutScreen"]`,
+            },
+            {
+                label: 'Fatigue Engine & Set Logging',
+                chart: `flowchart TD
+  A([Log Set]) --> B["addWorkoutLog() to workout_logs"]
+  B --> C["calculateCapacityDrain() per muscle\ncost = involvement x C0 x pct1RM^p x reps^q x MET\ndrain = 100 x (1 - e^-cost)"]
+  C --> D["Subtract drain from muscle_capacity"]
+  D --> E["updateCapacityFromWorkout() — re-estimate 1RM"]
+  E --> F{Health sync enabled?}
+  F -->|Yes| G["Buffer set in session\nflushWorkoutSession() on close/background"]
+  F -->|No| H["Done"]
+  G --> I["Write aggregated workout to HealthKit"]
+  I --> J["Debounced syncStrengthToSupabase()"]
+  E --> J
+  H --> J`,
+            },
+            {
+                label: '1RM Estimation',
+                chart: `flowchart TD
+  A([New set logged]) --> B["Run 4 formulas on weight x reps"]
+  B --> C["Epley: W x (1 + R/30)"]
+  B --> D["Brzycki: W / (1.0278 - 0.0278R)"]
+  B --> E["Lombardi: W x R^0.10"]
+  B --> F["O'Conner: W x (1 + R/40)"]
+  C --> G["Average formulas"]
+  D --> G
+  E --> G
+  F --> G
+  G --> H{New estimate > stored 1RM?}
+  H -->|Yes| I["saveExerciseLimit()"]
+  H -->|No| J["Keep existing"]
+  I --> K["Recalculate total_score and wilks_score"]
+  J --> K
+  K --> L["Debounced upsert to Supabase user_strength"]`,
+            },
+            {
+                label: 'Leaderboard System',
+                chart: `flowchart TD
+  A([Open Leaderboard]) --> B{Cache valid?}
+  B -->|Yes| C["Return cached entries"]
+  B -->|No| D["Query Supabase user_strength"]
+  D --> E["Apply filters: sort / time / location / score type"]
+  E --> F["Sort and display"]
+  F --> G["Store in cache with configurable TTL"]
+  H([1RM updated locally]) --> I["Wait debounce window (default 5 min)"]
+  I --> J["Calculate total_score, wilks_score, weekly_calories"]
+  J --> K["Upsert user_strength row"]
+  K --> L["invalidateCache()"]`,
+            },
+            {
+                label: 'Local Database Schema',
+                chart: `erDiagram
+  profile ||--o{ workout_logs : "has"
+  profile ||--o{ exercise_limits : "has"
+  profile ||--o{ muscle_capacity : "has"
+  profile ||--o{ user_preferences : "has"
+  profile {
+    int id PK
+    real weight
+    text height
+    int calorie_goal
+    text gender
+  }
+  workout_logs {
+    int id PK
+    text exercise_name
+    real weight
+    int reps
+    text created_at
+  }
+  exercise_limits {
+    int id PK
+    text exercise_name
+    real one_rm
+  }
+  muscle_capacity {
+    text muscle_name PK
+    real capacity
+    text updated_at
+  }
+  user_preferences {
+    text key PK
+    text value
+  }`,
+            },
+        ],
     },
     {
         id: 'interactive-visualizations',
@@ -494,18 +639,22 @@ export const PROJECTS = [
     {
         id: 'clackinator',
         title: 'Clackinator',
-        tagline: 'Mechanical keyboard sounds for macOS',
+        tagline: 'Native macOS menu bar utility that plays mechanical keyboard sounds via synthesized and sampled sound packs',
         why: [
-            'Typing satisfaction shouldn\'t require an expensive keyboard.',
-            'A native macOS menu bar utility that plays mechanical keyboard sounds as you type.'
+            'Typing satisfaction shouldn\'t require an expensive mechanical keyboard. Clackinator is a native macOS menu bar utility that plays mechanical-style sounds as you type — with five built-in packs (three synthesized from timbre recipes, two sliced from real recordings) and support for custom packs built from any audio file you provide.',
+            'The architecture is a thin SwiftUI shell over ClackinatorCore — all sound logic, key capture, permission handling, and pack rendering live in a shared framework powering both a Homebrew/notarized direct build and an App Store sandbox build. Key events are captured via a listen-only Quartz event tap on the direct build (never modifies events), with automatic fallback to NSEvent monitors if Input Monitoring permission is denied or the tap fails to initialize.',
+            'Synthesized packs (Linear, Tactile, Clicky) are procedurally generated from timbre recipes at startup. Sampled packs (Burst, Workbench) slice bundled MP3s. Custom packs import any user-provided audio file and use transient detection to automatically build per-key-class, per-phase PCM buffers stored under Application Support. Volume, active pack, and launch-at-login persist to UserDefaults; the coordinator is a @MainActor ObservableObject that owns the full keyboard source lifecycle.',
         ],
         highlights: [
-            'Native macOS menu bar app',
-            'AVAudioEngine sound synthesis',
-            'Swift implementation'
+            'Dual distribution: ClackinatorDirect (Homebrew/notarized) and ClackinatorAppStore share one ClackinatorCore framework',
+            'Listen-only Quartz event tap (direct build) — never modifies events; auto-fallback to NSEvent monitors',
+            'Synthesized packs (Linear, Tactile, Clicky) generated procedurally from timbre recipes at startup',
+            'Sampled packs (Burst, Workbench) and custom pack import with transient detection + PCM buffer slicing',
+            'Per-key-class, per-phase AVAudioPlayerNode buffer pools with configurable master volume',
+            'CI pipeline: project regen check + tests on every push; manual notarized release + Homebrew cask render',
         ],
         awards: [],
-        techStack: ['Swift', 'AVAudioEngine'],
+        techStack: ['Swift', 'SwiftUI', 'AVAudioEngine', 'AVAudioPlayerNode', 'Xcode', 'macOS'],
         liveUrl: null,
         previewPath: null,
         embedAllowed: false,
@@ -515,6 +664,113 @@ export const PROJECTS = [
         ],
         mermaid: null,
         architectureFallback: null,
+        diagrams: [
+            {
+                label: 'High-Level Architecture',
+                chart: `flowchart TB
+  subgraph Apps["App targets"]
+    Direct["ClackinatorDirect\nchannel: .direct"]
+    AppStore["ClackinatorAppStore\nchannel: .appStore"]
+  end
+  subgraph Shell["App shell"]
+    Delegate["NSApplicationDelegate"]
+    MenuBar["MenuBarExtra + MenuBarContentView"]
+    Settings["SettingsWindowController"]
+  end
+  subgraph Core["ClackinatorCore"]
+    Coord["ClackinatorCoordinator"]
+    Input["Keyboard event sources"]
+    Audio["AudioPlaybackEngine"]
+    Catalog["SoundPackCatalog"]
+    Perm["KeyboardPermissionManager"]
+    Login["LaunchAtLoginManager"]
+  end
+  Direct --> Delegate
+  AppStore --> Delegate
+  Delegate --> Coord
+  MenuBar --> Coord
+  Settings --> Coord
+  Coord --> Input
+  Coord --> Audio
+  Coord --> Catalog
+  Coord --> Perm
+  Coord --> Login
+  Catalog --> Audio`,
+            },
+            {
+                label: 'Keystroke to Sound',
+                chart: `flowchart TD
+  Start([User types a key]) --> Enabled{isEnabled?}
+  Enabled -->|no| End([No sound])
+  Enabled -->|yes| Capture["KeyboardEventSource\nglobal + local monitors or event tap"]
+  Capture --> Translate["Translate to KeyEvent\nkeyCode, phase, isRepeat, modifiers"]
+  Translate --> Handler["ClackinatorCoordinator.handleKeyEvent"]
+  Handler --> Play["AudioPlaybackEngine.play"]
+  Play --> Classify["KeyClassifier — KeyClass\nstandard, space, return, delete..."]
+  Classify --> Sample["SoundPack.randomBuffer\nfor key class + phase"]
+  Sample --> Pool["Pick AVAudioPlayerNode slot\nskip repeats when pool is busy"]
+  Pool --> Schedule["scheduleBuffer + play\nvolume = masterVolume x pack.gain"]
+  Schedule --> End2([Sound heard])`,
+            },
+            {
+                label: 'Keyboard Capture Backends',
+                chart: `flowchart TD
+  Factory([KeyboardEventSourceFactory.make]) --> Channel{channel.prefersEventTap?}
+  Channel -->|"App Store: no"| Monitor["MonitorKeyboardEventSource\nNSEvent global + local monitors"]
+  Channel -->|"Direct: yes"| Perm{permissionStatus == .granted?}
+  Perm -->|no| Monitor
+  Perm -->|yes| Tap["EventTapKeyboardEventSource\nlisten-only CGEvent tap"]
+  Tap --> TapOK{tap.start succeeded?}
+  TapOK -->|yes| UseTap([Use event tap])
+  TapOK -->|no| Monitor
+  Monitor --> UseMonitor([Use event monitors])`,
+            },
+            {
+                label: 'Sound Pack Pipeline',
+                chart: `flowchart LR
+  subgraph BuiltIn["Built-in packs"]
+    Synth["SoundSynthesizer\nLinear, Tactile, Clicky"]
+    Bundled["Bundled MP3s\nBurst, Workbench"]
+  end
+  subgraph Custom["Custom packs"]
+    Import["NSOpenPanel\nmp3, m4a, wav, aiff"]
+    Store["CustomSoundPackStore\nApplication Support"]
+    Slice["SampledSoundPackRenderer\ntransient detection + PCM buffers"]
+  end
+  Library["SoundPackLibrary.all"] --> Catalog["SoundPackCatalog"]
+  Synth --> Library
+  Bundled --> Library
+  Import --> Store --> Slice --> Catalog
+  Catalog --> Engine["AudioPlaybackEngine\nreplacePacks / activatePack"]`,
+            },
+            {
+                label: 'Coordinator State Machine',
+                chart: `stateDiagram-v2
+  [*] --> Idle: init + load UserDefaults
+  Idle --> Listening: start() — restartKeyboardEventSource
+  Listening --> Listening: permission / pack / enable changes
+  Listening --> SettingsOpen: presentSettings()
+  SettingsOpen --> Listening: close window
+  Listening --> [*]: shutdown() stops event source`,
+            },
+            {
+                label: 'CI & Release Pipeline',
+                chart: `flowchart TD
+  subgraph CI["CI — push / PR"]
+    Checkout --> Gen["generate_xcodeproj.rb"]
+    Gen --> Diff["git diff --exit-code\nfail if regen changed project"]
+    Diff --> TestDirect["xcodebuild test ClackinatorDirect"]
+    TestDirect --> BuildStore["xcodebuild build ClackinatorAppStore (unsigned)"]
+  end
+  subgraph Release["Direct Release — workflow_dispatch"]
+    RCheckout --> RGen["Regenerate project"]
+    RGen --> Package["package_direct_release.sh\narchive + sign + notarize"]
+    Package --> SHA["SHA256 zip"]
+    SHA --> Cask["render_homebrew_cask.rb"]
+    Cask --> GHRelease["GitHub release assets"]
+  end`,
+            },
+        ],
     },
     {
         id: 'switch-market',

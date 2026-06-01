@@ -22,7 +22,7 @@ export const THEME = {
 
 export const RUNNER_DEFAULTS = {
   playerStartX: 200,
-  runSpeed: 430,
+  runSpeed: 650,
   playerScreenRatio: 0.24,
   figureWidth: 32,
   doorWidth: 150,
@@ -33,7 +33,7 @@ export const RUNNER_DEFAULTS = {
 export const HOME_CORRIDOR = {
   worldWidth: 3320,
   playerStartX: 220,
-  runSpeed: 430,
+  runSpeed: 650,
   playerScreenRatio: 0.22,
   theme: THEME,
   hint: 'Use ← → or A / D to run · press Enter at a glowing door',
@@ -62,7 +62,7 @@ export function buildProjectsDoorWorld(projects) {
   return {
     worldWidth: startX + projects.length * spacing + 240,
     playerStartX: 220,
-    runSpeed: 430,
+    runSpeed: 650,
     playerScreenRatio: 0.22,
     theme: THEME,
     returnHref: '/',
@@ -108,7 +108,7 @@ export function buildProjectRoomWorld(project) {
   return {
     worldWidth: x + 240,
     playerStartX: 220,
-    runSpeed: 420,
+    runSpeed: 650,
     playerScreenRatio: 0.18,
     theme: THEME,
     returnHref: '/projects',
@@ -140,7 +140,7 @@ export function buildCareerWorld() {
   return {
     worldWidth: x + 240,
     playerStartX: 220,
-    runSpeed: 420,
+    runSpeed: 650,
     playerScreenRatio: 0.18,
     theme: THEME,
     returnHref: '/',

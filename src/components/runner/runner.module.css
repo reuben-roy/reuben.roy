@@ -340,6 +340,7 @@
 
 /* ---------- Frames ---------- */
 .wallFrame {
+  --frame-w: var(--frame-w-base, 760px);
   position: absolute;
   bottom: var(--floor-h);
   z-index: 8;
@@ -530,6 +531,11 @@
   .wallFrame {
     --frame-w: min(92vw, 540px);
     height: min(80svh, var(--frame-h));
+  }
+
+  .frameInner {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .hintBar {
