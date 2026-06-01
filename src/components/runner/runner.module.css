@@ -186,6 +186,39 @@
   color: var(--runner-accent);
 }
 
+/* ---------- Directional edge arrows ---------- */
+.edgeArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 28;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--runner-accent);
+  text-shadow: 0 0 14px var(--runner-accent-glow);
+  pointer-events: none;
+}
+
+.edgeArrowLeft {
+  left: 0.7rem;
+  animation: arrowNudgeLeft 1s ease-in-out infinite;
+}
+
+.edgeArrowRight {
+  right: 0.7rem;
+  animation: arrowNudgeRight 1s ease-in-out infinite;
+}
+
+@keyframes arrowNudgeRight {
+  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
+  50% { transform: translate(8px, -50%); opacity: 1; }
+}
+
+@keyframes arrowNudgeLeft {
+  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
+  50% { transform: translate(-8px, -50%); opacity: 1; }
+}
+
 /* ---------- Doors ---------- */
 .door {
   position: absolute;
@@ -209,10 +242,11 @@
   color: var(--runner-fg);
   background: rgba(0, 0, 0, 0.85);
   border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
-  white-space: nowrap;
-  max-width: 18ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+  max-width: 14ch;
 }
 
 .doorFrame {

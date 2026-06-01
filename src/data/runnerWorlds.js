@@ -22,7 +22,7 @@ export const THEME = {
 
 export const RUNNER_DEFAULTS = {
   playerStartX: 200,
-  runSpeed: 260,
+  runSpeed: 430,
   playerScreenRatio: 0.24,
   figureWidth: 32,
   doorWidth: 150,
@@ -31,19 +31,21 @@ export const RUNNER_DEFAULTS = {
 };
 
 export const HOME_CORRIDOR = {
-  worldWidth: 2720,
+  worldWidth: 3320,
   playerStartX: 220,
-  runSpeed: 260,
+  runSpeed: 430,
   playerScreenRatio: 0.22,
   theme: THEME,
   hint: 'Use ← → or A / D to run · press Enter at a glowing door',
   // The intro/headline frame (rendered by Hero) sits at this x.
   introFrame: { id: 'intro', x: 470, width: 820, height: 560 },
+  // A second frame with the live "now" widgets (Spotify + Habitica).
+  liveFrame: { id: 'now', x: 1180, width: 470, height: 470 },
   doors: [
-    { id: 'projects', label: 'Projects', href: '/projects', x: 1180 },
-    { id: 'career', label: 'Work Experience', href: '/career', x: 1640 },
-    { id: 'blog', label: 'Blog', href: '/blog', x: 2100 },
-    { id: 'about', label: 'About', href: '/about', x: 2540 },
+    { id: 'projects', label: 'Projects', href: '/projects', x: 1700 },
+    { id: 'career', label: 'Work Experience', href: '/career', x: 2160 },
+    { id: 'blog', label: 'Blog', href: '/blog', x: 2620 },
+    { id: 'about', label: 'About', href: '/about', x: 3080 },
   ],
 };
 
@@ -60,7 +62,7 @@ export function buildProjectsDoorWorld(projects) {
   return {
     worldWidth: startX + projects.length * spacing + 240,
     playerStartX: 220,
-    runSpeed: 260,
+    runSpeed: 430,
     playerScreenRatio: 0.22,
     theme: THEME,
     returnHref: '/',
@@ -106,7 +108,7 @@ export function buildProjectRoomWorld(project) {
   return {
     worldWidth: x + 240,
     playerStartX: 220,
-    runSpeed: 250,
+    runSpeed: 420,
     playerScreenRatio: 0.18,
     theme: THEME,
     returnHref: '/projects',
@@ -138,7 +140,7 @@ export function buildCareerWorld() {
   return {
     worldWidth: x + 240,
     playerStartX: 220,
-    runSpeed: 250,
+    runSpeed: 420,
     playerScreenRatio: 0.18,
     theme: THEME,
     returnHref: '/',

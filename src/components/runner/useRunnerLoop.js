@@ -26,9 +26,10 @@ export function useRunnerLoop({
 
   const playerScreenX = Math.max(80, viewportWidth * playerScreenRatio);
 
-  const cameraX = Math.max(
-    0,
-    Math.min(playerWorldX - playerScreenX, Math.max(0, worldWidth - viewportWidth))
+  // Round to whole pixels: a fractional translateX on the world blurs frame
+  // text, especially at high mobile device-pixel ratios.
+  const cameraX = Math.round(
+    Math.max(0, Math.min(playerWorldX - playerScreenX, Math.max(0, worldWidth - viewportWidth)))
   );
 
   useEffect(() => {

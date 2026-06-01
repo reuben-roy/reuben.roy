@@ -1,0 +1,80 @@
+.card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.18));
+  padding: 0.85rem 0.95rem;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--foreground);
+}
+
+.level {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.55rem;
+  color: #000;
+  background: var(--accent);
+  padding: 0.2rem 0.4rem;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.statIcon {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.5rem;
+  width: 1.8rem;
+  color: var(--muted);
+}
+
+.barContainer {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.hp {
+  background: #ff5d6c;
+}
+
+.xp {
+  background: var(--accent);
+}
+
+.mp {
+  background: #5db4ff;
+}
+
+.statValue {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.72rem;
+  color: var(--foreground);
+  min-width: 2.4rem;
+  text-align: right;
+}

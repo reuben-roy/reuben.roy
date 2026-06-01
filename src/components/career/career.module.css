@@ -49,7 +49,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(to right, #fff7e7, #efb46b);
+  background: linear-gradient(to right, var(--foreground), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -57,14 +57,14 @@
 
 .subtitle {
   font-size: 1rem;
-  color: rgba(238, 229, 212, 0.72);
+  color: var(--muted);
   margin: 0.5rem 0;
   line-height: 1.5;
 }
 
 .subtext {
   font-size: 0.9rem;
-  color: rgba(238, 229, 212, 0.58);
+  color: var(--muted);
   margin-bottom: 1rem;
 }
 
@@ -79,15 +79,15 @@
 
 .skillCategory {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 226, 176, 0.1);
+  border: 1px solid var(--border-subtle);
   border-radius: 1rem;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .skillCategory.open {
-  background: rgba(255, 227, 181, 0.05);
-  border-color: rgba(255, 227, 181, 0.18);
+  background: var(--accent-soft);
+  border-color: var(--border-strong);
 }
 
 .skillHeader {
@@ -98,7 +98,7 @@
   padding: 0.75rem 1rem;
   background: transparent;
   border: none;
-  color: #f2e6d2;
+  color: var(--foreground);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -107,7 +107,7 @@
 }
 
 .skillHeader:hover {
-  background: rgba(255, 227, 181, 0.03);
+  background: var(--accent-soft);
 }
 
 .skillHeaderMeta {
@@ -123,11 +123,11 @@
 }
 
 .skillCount {
-  background: rgba(255, 227, 181, 0.08);
+  background: var(--accent-soft);
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   font-size: 0.8rem;
-  color: rgba(255, 232, 197, 0.74);
+  color: var(--muted);
 }
 
 .skillToggleIcon {
@@ -140,7 +140,7 @@
 .skillToggleIcon::after {
   content: '';
   position: absolute;
-  background-color: rgba(255, 232, 197, 0.72);
+  background-color: var(--muted);
   transition: transform 0.3s ease;
 }
 
@@ -182,20 +182,20 @@
 }
 
 .skillPill {
-  background: rgba(106, 223, 255, 0.07);
-  color: #d9f8ff;
+  background: var(--accent-soft);
+  color: var(--accent);
   padding: 0.35rem 0.68rem;
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 500;
-  border: 1px solid rgba(106, 223, 255, 0.12);
+  border: 1px solid var(--accent-soft);
   transition: all 0.2s;
 }
 
 .skillPill:hover {
-  background: rgba(106, 223, 255, 0.12);
+  background: var(--accent-soft);
   color: #ffffff;
-  border-color: rgba(106, 223, 255, 0.22);
+  border-color: var(--border-strong);
 }
 
 /* Experience Section */
@@ -214,41 +214,41 @@
 .sectionTitle {
   font-family: var(--font-display), var(--font-geist-sans), sans-serif;
   font-size: 1.3rem;
-  color: #fff7e7;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(255, 226, 176, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .experienceCard {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 226, 176, 0.1);
+  border: 1px solid var(--border-subtle);
   border-radius: 1rem;
   padding: 1.3rem;
   transition: all 0.2s ease;
 }
 
 .experienceCard:hover {
-  background: rgba(255, 227, 181, 0.05);
+  background: var(--accent-soft);
   transform: translateY(-2px);
-  border-color: rgba(255, 227, 181, 0.2);
+  border-color: var(--border-strong);
 }
 
 .experienceCard h4 {
   font-size: 1.15rem;
-  color: #fff7e7;
+  color: var(--foreground);
   margin-bottom: 0.35rem;
 }
 
 .experienceDate {
   font-family: var(--font-geist-mono);
-  color: rgba(255, 232, 197, 0.66);
+  color: var(--muted);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
 
 .experienceDescription {
-  color: rgba(238, 229, 212, 0.84);
+  color: var(--foreground);
   line-height: 1.7;
   font-size: 0.95rem;
   margin-bottom: 0.75rem;
@@ -257,14 +257,14 @@
 .jobSkills {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 226, 176, 0.1);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .jobSkillsHeader {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 232, 197, 0.58);
+  color: var(--muted);
   margin-bottom: 0.5rem;
 }
 
@@ -277,7 +277,7 @@
 
 .certCard {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 226, 176, 0.1);
+  border: 1px solid var(--border-subtle);
   border-radius: 0.9rem;
   padding: 1rem;
   transition: all 0.2s ease;
@@ -288,8 +288,8 @@
 }
 
 .certCard:hover {
-  background: rgba(255, 227, 181, 0.05);
-  border-color: rgba(255, 227, 181, 0.2);
+  background: var(--accent-soft);
+  border-color: var(--border-strong);
   transform: translateY(-2px);
 }
 
@@ -297,18 +297,18 @@
 .certCard span {
   font-size: 1rem;
   font-weight: 600;
-  color: #fff7e7;
+  color: var(--foreground);
   margin-bottom: 0.25rem;
   display: block;
 }
 
 .certCard a:hover {
   text-decoration: underline;
-  text-decoration-color: rgba(255, 227, 181, 0.5);
+  text-decoration-color: var(--accent);
 }
 
 .certCard p {
-  color: rgba(238, 229, 212, 0.72);
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
@@ -318,18 +318,18 @@
   background: rgba(255, 255, 255, 0.02);
   border-radius: 1rem;
   padding: 1.3rem;
-  border: 1px solid rgba(255, 226, 176, 0.08);
+  border: 1px solid var(--border-subtle);
 }
 
 .portfolioProject h3 {
   font-family: var(--font-display), var(--font-geist-sans), sans-serif;
   font-size: 1.55rem;
-  color: #fff7e7;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
 }
 
 .portfolioProject p {
-  color: rgba(238, 229, 212, 0.84);
+  color: var(--foreground);
   line-height: 1.65;
   font-size: 0.95rem;
   margin-bottom: 0.25rem;
@@ -337,14 +337,14 @@
 
 .portfolioProject h4 {
   font-size: 1.15rem;
-  color: #fff7e7;
+  color: var(--foreground);
   margin: 1rem 0 0.5rem 0;
 }
 
 .divider {
   border: 0;
   height: 1px;
-  background: rgba(255, 226, 176, 0.1);
+  background: var(--border-subtle);
   margin: 1rem 0;
 }
 
@@ -357,10 +357,10 @@
 
 .featureGroup h5 {
   font-size: 0.95rem;
-  color: #fff7e7;
+  color: var(--foreground);
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid rgba(255, 226, 176, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .featureList {

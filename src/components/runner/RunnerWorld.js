@@ -71,6 +71,11 @@ export default function RunnerWorld({
   const activeDoor = getOverlapDoor(playerWorldX, doors);
   const playerVisualX = reducedMotion ? playerScreenX : playerWorldX - cameraX;
 
+  // Points of interest the player can head toward (doors + frame snap points).
+  const poiXs = [...doors.map((d) => d.x), ...snapPoints.map((p) => p.x)];
+  const hasRight = poiXs.some((x) => x > playerWorldX + 70);
+  const hasLeft = poiXs.some((x) => x < playerWorldX - 70);
+
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -153,6 +158,17 @@ export default function RunnerWorld({
           ) : null}
 
           <div className={styles.hintBar}>{runnerHint}</div>
+
+          {hasLeft ? (
+            <div className={`${styles.edgeArrow} ${styles.edgeArrowLeft}`} aria-hidden="true">
+              ◀
+            </div>
+          ) : null}
+          {hasRight ? (
+            <div className={`${styles.edgeArrow} ${styles.edgeArrowRight}`} aria-hidden="true">
+              ▶
+            </div>
+          ) : null}
 
           {snapPoints.length > 0 ? (
             <div className={styles.snapNav}>

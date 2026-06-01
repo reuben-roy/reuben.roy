@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import styles from './Hero.module.css';
 import BrandMark from '@/components/BrandMark';
 import SocialLinks from '@/components/SocialLinks';
+import SpotifyCard from '@/components/SpotifyCard';
+import HabiticaCard from '@/components/HabiticaCard';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import WallFrame from '@/components/runner/WallFrame';
 import { HOME_CORRIDOR } from '@/data/runnerWorlds';
@@ -71,8 +73,18 @@ function IntroContent() {
   );
 }
 
+function LiveContent() {
+  return (
+    <div className={styles.liveCards}>
+      <SpotifyCard />
+      <HabiticaCard />
+    </div>
+  );
+}
+
 export default function Hero() {
   const intro = HOME_CORRIDOR.introFrame;
+  const live = HOME_CORRIDOR.liveFrame;
 
   return (
     <RunnerWorld
@@ -87,11 +99,15 @@ export default function Hero() {
       mobileContent={
         <div className={styles.mobileIntro}>
           <IntroContent />
+          <LiveContent />
         </div>
       }
     >
       <WallFrame id="intro" label="Reuben Roy" x={intro.x} width={intro.width} height={intro.height}>
         <IntroContent />
+      </WallFrame>
+      <WallFrame id="now" label="Now" x={live.x} width={live.width} height={live.height}>
+        <LiveContent />
       </WallFrame>
     </RunnerWorld>
   );

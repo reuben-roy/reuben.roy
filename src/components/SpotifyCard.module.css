@@ -1,0 +1,31 @@
+.card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.18));
+  padding: 0.85rem 0.95rem;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.65rem;
+}
+
+.icon {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--foreground);
+}
+
+.embed {
+  display: block;
+  border: 0;
+  border-radius: 6px;
+}
