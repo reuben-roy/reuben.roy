@@ -108,8 +108,8 @@ export const PROJECTS = [
         ],
         awards: [],
         techStack: ['React Native', 'Expo', 'TypeScript', 'SQLite', 'Supabase', 'HealthKit', 'Expo Router'],
-        liveUrl: 'https://apps.apple.com/app/side-track/id6755348971',
-        previewPath: '/side-track',
+        liveUrl: 'https://apps.apple.com/us/app/side-track/id6755348971',
+        previewPath: 'https://apps.apple.com/us/app/side-track/id6755348971',
         embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/side-track',
         links: [

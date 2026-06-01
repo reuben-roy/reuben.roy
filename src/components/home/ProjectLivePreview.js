@@ -55,7 +55,6 @@ export default function ProjectLivePreview({ project, defaultExpanded = false })
                             src={previewSrc}
                             title={`${project.title} preview`}
                             loading="lazy"
-                            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                             onError={() => setIframeFailed(true)}
                         />
                     ) : (
