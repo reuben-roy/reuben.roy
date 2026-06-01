@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ProjectLivePreview from '@/components/home/ProjectLivePreview';
 import MermaidDiagram from '@/components/home/MermaidDiagram';
+import DiagramCarousel from '@/components/home/DiagramCarousel';
 import { WhyContent, DetailsContent } from '@/components/home/ProjectDetailPanel';
 import runnerStyles from '@/components/runner/runner.module.css';
 import styles from './ProjectWallGallery.module.css';
@@ -65,7 +66,10 @@ export function ProjectFrameContent({ project, type }) {
   if (type === 'how') {
     return (
       <LazyFrameContent>
-        <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
+        {project.diagrams?.length > 0
+          ? <DiagramCarousel diagrams={project.diagrams} />
+          : <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
+        }
       </LazyFrameContent>
     );
   }

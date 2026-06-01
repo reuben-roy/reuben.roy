@@ -144,21 +144,32 @@ export const PROJECTS = [
     {
         id: 'lofty',
         title: 'Lofty',
-        tagline: 'LLM-powered scheduling rebuild',
+        tagline: 'Real-estate CRM demo with hybrid AI onboarding and full Learning Hub',
         why: [
-            'Exploring how LLMs and modern calendar UX can work together for smarter personal planning.',
-            'Built with Anthropic, FullCalendar, and a Go backend.'
+            'Built as a product-fidelity demo of Lofty\'s real-estate CRM to prove agents can onboard faster and find answers without leaving the app — 40 synthetic leads, dashboard KPIs, calendar seeds, and profile fixtures give stakeholders a complete walkthrough with no real API or auth required.',
+            'The AI assistant is hybrid: a deterministic rule-based guide layer fires first and handles high-confidence setup tasks entirely in the client (no LLM call). When confidence falls below 0.75, it falls back to a RAG pipeline — OpenAI embeddings over FAQ, glossary, tutorial, and guide-flow records — with live Zendesk doc fetching as a last resort.',
+            'Instructions are authored once: the same TypeScript guide catalog drives both the DOM overlay tours and the RAG semantic index, so a change to a flow definition propagates to both the UI walkthrough and the AI answer without maintaining a second index.',
+            'The retrieval algorithm blends two signals: 65% lexical (TF-IDF-style token overlap with title/keyword weighting and a phrase-match bonus) and 35% cosine vector similarity on precomputed OpenAI text-embedding-3-small embeddings. When local content is weak but an official Zendesk article scores strongly, the pipeline promotes doc hits to the answer context and fetches the full body on demand.',
+            'Nine deterministic guide flows cover the core onboarding surface: profile name, email, and photo; account password and 2FA; notification preferences and SMS; CRM contact search and stage filtering. Every flow\'s DOM targets are validated against data-guide selectors at build time — a guide can never point at a non-existent element.',
+            'Embeddings are precomputed at build time via npm run build:rag-corpus so the runtime only embeds the user\'s query, not the entire corpus. Without an OpenAI API key the assistant falls back to lexical-only retrieval, keeping the demo functional at zero API cost.',
         ],
         highlights: [
-            'LLM-assisted scheduling',
-            'FullCalendar integration',
-            'Go backend API'
+            'Hybrid assistant: deterministic guides (≥ 0.75 confidence) skip the LLM entirely',
+            'RAG pipeline: OpenAI embeddings + lexical blend over FAQ, glossary, tutorials, and guide flows',
+            '9 onboarding tour flows with DOM overlay (data-guide targets)',
+            '40 synthetic CRM leads, dashboard KPIs, and calendar fixtures — no auth, no real API',
+            'Full Learning Hub: FAQ, glossary, tutorials, ⌘K command palette, and live Zendesk doc fetch',
+            'Single guide catalog drives both overlay tours and the RAG semantic index',
+            'Retrieval: lexical 65% (token overlap, phrase bonus) + cosine vector 35%',
+            'Build-time embedding precompute — runtime only embeds the query, not the corpus',
+            'Confidence formula: min(0.95, 0.4 + score/25) · ambiguity flag when gap < 1.5',
+            'SSRF-safe doc fetch: help.lofty.com allowlist, 5 s timeout, 4 000-char truncation',
         ],
         awards: [],
-        techStack: ['Next.js', 'Go', 'Anthropic', 'OpenAI', 'FullCalendar', 'TypeScript', 'Tailwind CSS'],
+        techStack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'OpenAI', 'FullCalendar', 'Vercel'],
         liveUrl: 'https://lofty.explosion.fun/',
         previewPath: null,
-        embedAllowed: false,
+        embedAllowed: true,
         githubUrl: 'https://github.com/reuben-roy/blistering-barnacles',
         links: [
             { label: 'Live demo', href: 'https://lofty.explosion.fun/' },
@@ -166,6 +177,166 @@ export const PROJECTS = [
         ],
         mermaid: null,
         architectureFallback: null,
+        diagrams: [
+            {
+                label: 'System Architecture',
+                chart: `flowchart TB
+  subgraph Client["Browser (Client)"]
+    APP["App Shell /app/*"]
+    GP["GuideProvider"]
+    LS["localStorage adapters"]
+  end
+  subgraph Next["Next.js 15 App Router"]
+    RSC["Server Components"]
+    API["POST /api/chat"]
+  end
+  subgraph Lib["lib/ — Core logic"]
+    GUIDE["guide/ resolve · catalog · session"]
+    RAG["rag/ retrieve · corpus · prompt"]
+    HELP["help/ content + docs.raw.json"]
+    FIX["fixtures/ synthetic CRM"]
+  end
+  subgraph External["External (optional)"]
+    OAI["OpenAI Embeddings + Chat"]
+    ZD["Zendesk / help.lofty.com"]
+  end
+  APP --> GP
+  GP -->|"confidence ≥ 0.75"| GUIDE
+  GP -->|"confidence < 0.75"| API
+  API --> RAG
+  RAG --> OAI
+  RAG --> ZD
+  APP --> FIX
+  APP --> HELP
+  GP --> LS
+  RSC --> APP`,
+            },
+            {
+                label: 'RAG Pipeline',
+                chart: `flowchart TB
+  subgraph Build["Build-time"]
+    SRC["Content sources"]
+    MAP["buildAnswerCorpusRecords"]
+    EMB["OpenAI text-embedding-3-small"]
+    ART["local-answer-corpus.generated.json"]
+    SRC --> MAP --> EMB --> ART
+  end
+  subgraph Runtime["Runtime — POST /api/chat"]
+    Q["User question"]
+    QE["createQueryEmbedding"]
+    RET["retrieveLocalContext"]
+    PROMO{"insufficientContext + docHits?"}
+    GPT["createGroundedAnswer + tools"]
+    OUT["RAGResult + source chips"]
+    Q --> QE --> RET --> PROMO
+    PROMO -->|"yes — promote docs"| GPT
+    PROMO -->|no| GPT
+    GPT --> OUT
+  end
+  subgraph Fetch["Live doc enrichment"]
+    FD["fetch_doc_content x3 max"]
+    ZD["Zendesk API / HTML scrape"]
+    FD --> ZD
+  end
+  ART -.->|"load answer records"| RET
+  DOCS["docs.raw.json"] -.->|"runtime doc refs"| RET
+  GPT --> FD`,
+            },
+            {
+                label: 'Instruction Mapping',
+                chart: `flowchart LR
+  subgraph Sources["Authoring sources — one place"]
+    CAT["lib/guide/catalog.ts"]
+    FAQ["lib/help/faq.content.ts"]
+    GLO["lib/help/glossary.content.ts"]
+    TUT["lib/help/tutorials.content.ts"]
+    RAW["lib/help/docs.raw.json"]
+  end
+  subgraph Projector["lib/rag/build.ts"]
+    BAR["buildAnswerCorpusRecords"]
+    BDR["buildDocReferenceRecords"]
+  end
+  subgraph Consumers["Consumers"]
+    RAGIDX["RAG semantic index"]
+    GUIDE["resolveGuideIntent"]
+    OVERLAY["Guide overlay — DOM + routes"]
+  end
+  CAT --> BAR
+  FAQ --> BAR
+  GLO --> BAR
+  TUT --> BAR
+  RAW --> BDR
+  BAR --> RAGIDX
+  CAT --> GUIDE
+  CAT --> OVERLAY
+  RAGIDX --> GPT["Grounded GPT answer"]
+  GUIDE -->|"confidence ≥ 0.75"| OVERLAY
+  GUIDE -->|"confidence < 0.75"| GPT`,
+            },
+            {
+                label: 'Hybrid Finding — Two Tracks',
+                chart: `flowchart TD
+  Q["Natural-language query"]
+  Q --> G["Track A — resolveGuideIntent"]
+  Q --> R["Track B — queryRAG"]
+  G --> GS["scoreGuideFlow on 9 flows"]
+  GS --> GM{"confidence >= 0.75?"}
+  GM -->|yes| GO["Guide overlay + DOM steps"]
+  GM -->|no| R
+  R --> EMB["createQueryEmbedding"]
+  EMB --> RK["rankRecord: lexical 65% + vector 35%"]
+  RK --> TOP["Top 4 answer hits + 3 doc hits"]
+  TOP --> INS{"insufficientContext?"}
+  INS -->|"yes + docs"| PROMO["Promote docHits to answer context"]
+  INS -->|no| CTX["Split answer vs reference docs"]
+  PROMO --> GPT["GPT + fetch_doc_content x3"]
+  CTX --> GPT
+  GPT --> SA["submit_answer"]
+  SA --> RES["Answer + source chips"]`,
+            },
+            {
+                label: 'Assistant Decision Tree',
+                chart: `flowchart TD
+  Q["User submits query"] --> RES["resolveGuideIntent"]
+  RES --> EMPTY{"Empty query?"}
+  EMPTY -->|yes| NM1["no-match + example prompts"]
+  EMPTY -->|no| USER{"Contains username?"}
+  USER -->|yes| AMB1["ambiguous — profile-name at 0.78"]
+  USER -->|no| SCORE["scoreGuideFlow x 9 flows"]
+  SCORE --> LOW{"best score < 5?"}
+  LOW -->|yes| NM2["no-match"]
+  LOW -->|no| GAP{"gap < 1.5 AND best < 10?"}
+  GAP -->|yes| AMB2["ambiguous at ~0.62"]
+  GAP -->|no| MATCH["match — confidence up to 0.95"]
+  MATCH --> TH{"confidence >= 0.75?"}
+  TH -->|yes| GUIDE["Guide reply — no API call"]
+  TH -->|no| RAG["POST /api/chat"]
+  RAG --> ERR{"Error?"}
+  ERR -->|yes| FB["buildSupportFallback"]
+  ERR -->|no| UI["Sources + answer chips"]`,
+            },
+            {
+                label: 'Question Submitted Pipeline',
+                chart: `sequenceDiagram
+  participant U as User
+  participant GP as GuideProvider
+  participant R as resolveGuideIntent
+  participant API as /api/chat
+  participant Q as queryRAG
+  participant O as OpenAI
+  U->>GP: submitQuery
+  GP->>R: sync intent check
+  alt guide confidence >= 0.75
+    GP-->>U: guide message + DOM overlay
+  else RAG path
+    GP->>API: POST + history + onboarding context
+    API->>Q: embed + retrieve + ground
+    Q->>O: chat completion + tool calls
+    Q-->>GP: RAGResult + sourceIds
+    GP-->>U: answer card + source chips
+  end`,
+            },
+        ],
     },
     {
         id: 'kali',

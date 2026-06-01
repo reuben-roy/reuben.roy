@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ProjectSection from './ProjectSection';
 import ProjectLivePreview from './ProjectLivePreview';
 import MermaidDiagram from './MermaidDiagram';
+import DiagramCarousel from './DiagramCarousel';
 import styles from './ProjectDetailPanel.module.css';
 
 const TABS = [
@@ -39,8 +40,11 @@ export default function ProjectDetailPanel({ project, isMobile }) {
                         <ProjectLivePreview project={project} defaultExpanded={false} />
                     </ProjectSection>
 
-                    <ProjectSection title="How it works" defaultOpen={false} teaser="Architecture diagram coming soon">
-                        <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
+                    <ProjectSection title="How it works" defaultOpen={false} teaser="Architecture diagrams">
+                        {project.diagrams?.length > 0
+                            ? <DiagramCarousel diagrams={project.diagrams} />
+                            : <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
+                        }
                     </ProjectSection>
 
                     <ProjectSection
@@ -86,7 +90,9 @@ export default function ProjectDetailPanel({ project, isMobile }) {
                     <ProjectLivePreview project={project} defaultExpanded={true} />
                 )}
                 {activeTab === 'how' && (
-                    <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
+                    project.diagrams?.length > 0
+                        ? <DiagramCarousel diagrams={project.diagrams} />
+                        : <MermaidDiagram chart={project.mermaid} fallback={project.architectureFallback} />
                 )}
                 {activeTab === 'why' && <WhyContent why={project.why} />}
                 {activeTab === 'details' && <DetailsContent project={project} />}

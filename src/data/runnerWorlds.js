@@ -80,7 +80,7 @@ const PROJECT_FRAME_LAYOUT = [
   { type: 'header', label: 'Overview', width: 760, height: 520 },
   { type: 'live', label: 'Live', width: 980, height: 560 },
   { type: 'why', label: 'Why', width: 760, height: 520 },
-  { type: 'how', label: 'How', width: 860, height: 540 },
+  { type: 'how', label: 'How', width: 920, height: 660 },
   { type: 'details', label: 'Details', width: 800, height: 540 },
 ];
 
@@ -93,7 +93,7 @@ export function buildProjectRoomWorld(project) {
   PROJECT_FRAME_LAYOUT.forEach((item) => {
     // Skip the live frame when there's nothing to embed/link.
     if (item.type === 'live' && !project.previewPath && !project.liveUrl) return;
-    if (item.type === 'how' && !project.mermaid && !project.architectureFallback) return;
+    if (item.type === 'how' && !project.mermaid && !project.architectureFallback && !project.diagrams?.length) return;
     frames.push({
       id: `${project.id}-${item.type}`,
       label: item.label,
