@@ -8,6 +8,7 @@ import SpotifyCard from '@/components/SpotifyCard';
 import HabiticaCard from '@/components/HabiticaCard';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import WallFrame from '@/components/runner/WallFrame';
+import GithubMatrix from '@/components/runner/GithubMatrix';
 import { HOME_CORRIDOR, SITE_SECTIONS } from '@/data/runnerWorlds';
 
 const PHRASES = [
@@ -110,6 +111,7 @@ export default function Hero() {
       <WallFrame id="now" label="Now" x={live.x} width={live.width} height={live.height}>
         <LiveContent />
       </WallFrame>
+      <GithubMatrix x={HOME_CORRIDOR.githubMatrixX} />
     </RunnerWorld>
   );
 }

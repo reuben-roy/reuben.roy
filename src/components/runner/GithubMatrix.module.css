@@ -1,0 +1,88 @@
+/* GitHub contribution heatmap rendered as a neon dot matrix on the corridor
+   wall, floating above the doors. Reads the runner accent tokens so it stays on
+   theme. Positioned in world-space (scrolls with the corridor). */
+.matrix {
+  --cell: 9px;
+  --cell-gap: 2px;
+  position: absolute;
+  bottom: calc(var(--floor-h, 15%) + var(--gm-clearance, 16rem));
+  transform: translateX(-50%);
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  user-select: none;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+}
+
+.title {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--runner-accent, #7cffb2);
+  text-shadow: 0 0 10px var(--runner-accent-glow, rgba(124, 255, 178, 0.45));
+}
+
+.total {
+  font-size: 0.5rem;
+  letter-spacing: 0.03em;
+  color: var(--muted, #a1a1aa);
+}
+
+.grid {
+  display: flex;
+  gap: var(--cell-gap);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cell-gap);
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* padding cells (days outside the window) stay invisible */
+.cell[data-empty] {
+  background: transparent;
+}
+
+.cell[data-level='1'] {
+  background: rgba(124, 255, 178, 0.28);
+}
+
+.cell[data-level='2'] {
+  background: rgba(124, 255, 178, 0.5);
+}
+
+.cell[data-level='3'] {
+  background: rgba(124, 255, 178, 0.78);
+}
+
+.cell[data-level='4'] {
+  background: var(--runner-accent, #7cffb2);
+  box-shadow: 0 0 5px var(--runner-accent-glow, rgba(124, 255, 178, 0.45));
+}
+
+@media (max-width: 768px) {
+  .matrix {
+    --cell: 8px;
+    --cell-gap: 2px;
+    padding: 0.55rem 0.6rem;
+  }
+}

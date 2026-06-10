@@ -51,6 +51,8 @@ export const HOME_CORRIDOR = {
   introFrame: { id: 'intro', x: 470, width: 820, height: 560 },
   // A second frame with the live "now" widgets (Spotify + Habitica).
   liveFrame: { id: 'now', x: 1180, width: 470, height: 470 },
+  // GitHub contribution matrix floats on the wall above the door row.
+  githubMatrixX: 1930,
   doors: [
     { id: 'projects', label: 'Projects', href: '/projects', x: 1700 },
     { id: 'career', label: 'Work Experience', href: '/career', x: 2160 },
@@ -80,6 +82,8 @@ export function buildProjectsDoorWorld(projects) {
     returnHref: '/',
     hudLink: { href: '/', label: 'Home' },
     hint: 'Run to a project door and press Enter · run left to go home',
+    // GitHub contribution matrix floats above the first project doors.
+    githubMatrixX: startX + spacing,
     doors: [
       { id: 'projects-home', label: 'Home', href: '/', x: 240, variant: 'return' },
       ...doors,

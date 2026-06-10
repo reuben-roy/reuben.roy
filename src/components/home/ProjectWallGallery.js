@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import RunnerWorld from '@/components/runner/RunnerWorld';
+import GithubMatrix from '@/components/runner/GithubMatrix';
 import { PROJECTS } from '@/data/projects';
 import { buildProjectsDoorWorld, SITE_SECTIONS } from '@/data/runnerWorlds';
 
@@ -21,6 +22,8 @@ export default function ProjectWallGallery() {
       initialX={world.playerStartX}
       runSpeed={world.runSpeed}
       playerScreenRatio={world.playerScreenRatio}
-    />
+    >
+      <GithubMatrix x={world.githubMatrixX} />
+    </RunnerWorld>
   );
 }

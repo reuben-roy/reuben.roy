@@ -111,6 +111,14 @@ Software engineer and generalist creating web solutions. Builds interactive webs
 - Technology stack: Gemini, Go, Gradle, Kotlin, RAG, SQL, SQLite.
 - Link: https://github.com/reuben-roy/window
 
+### Window Extension
+
+- A Chrome extension that turns the browser into a calendar-aware productivity co-pilot: Google Calendar sync, event-specific site whitelisting, distraction blocking during focus sessions, and an OpenClaw-powered assistant for idea capture and evaluation.
+- Monorepo with a Manifest V3 extension (popup, options calendar workspace, blocked page, side panel, service worker) and a self-hosted backend (Fastify API, background worker, PostgreSQL) for auth, persistence, and async AI jobs.
+- Highlights: declarativeNetRequest blocking with per-event allowlists and keyword fallbacks, timed break/snooze handling, idea outbox with background OpenClaw evaluation, focus analytics and activity session tracking, spaced-repetition learning quiz subsystem, cross-device account sync.
+- Technology stack: TypeScript, React, Vite, Chrome Extension Manifest V3, FullCalendar, Fastify, Node.js, Prisma, PostgreSQL, Zod, OpenClaw.
+- Link: https://github.com/reuben-roy/window-extension
+
 ### blistering-barnacles
 
 - A project built with Anthropic, FullCalendar, Go, LLMs, Lucide, and Next.js.
