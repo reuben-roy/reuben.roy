@@ -33,7 +33,6 @@ export default function RunnerWorld({
   worldWidth,
   doors = [],
   children,
-  mobileContent,
   fullPage = false,
   intro,
   pauseLoop = false,
@@ -54,7 +53,6 @@ export default function RunnerWorld({
 
   const {
     playerWorldX,
-    playerScreenX,
     cameraX,
     isMoving,
     direction,
@@ -71,7 +69,7 @@ export default function RunnerWorld({
   });
 
   const activeDoor = getOverlapDoor(playerWorldX, doors);
-  const playerVisualX = reducedMotion ? playerScreenX : playerWorldX - cameraX;
+  const playerVisualX = playerWorldX - cameraX;
 
   // Points of interest the player can head toward (doors + frame snap points).
   const poiXs = [...doors.map((d) => d.x), ...snapPoints.map((p) => p.x)];
@@ -97,7 +95,7 @@ export default function RunnerWorld({
   }, []);
 
   useEffect(() => {
-    if (!activeDoor || reducedMotion) return;
+    if (!activeDoor) return;
     const onKeyDown = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -106,7 +104,7 @@ export default function RunnerWorld({
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [activeDoor, reducedMotion, router]);
+  }, [activeDoor, router]);
 
   const handleRunStart = useCallback(
     (nextDirection) => setHoldDirection(nextDirection),
@@ -117,10 +115,6 @@ export default function RunnerWorld({
   const rootClass = [styles.runnerRoot, fullPage ? styles.runnerRootFullPage : '']
     .filter(Boolean)
     .join(' ');
-
-  const reducedMotionDoors = hudLink
-    ? doors.filter((door) => door.href !== hudLink.href || door.label !== hudLink.label)
-    : doors;
 
   const runnerHint = hint || 'Use ← → or A / D to run · press Enter at a glowing door';
 
@@ -147,30 +141,10 @@ export default function RunnerWorld({
       </nav>
     ) : null;
 
-  // Reduced-motion: drop the animated stage entirely for a readable static layout.
-  if (reducedMotion) {
-    return (
-      <section className={rootClass} aria-label="Interactive corridor" style={toThemeVars(theme)}>
-        {sectionNavEl}
-        {mobileContent ? <div className={styles.mobileContentZone}>{mobileContent}</div> : null}
-        {reducedMotionDoors.length > 0 || hudLink ? (
-          <nav className={styles.reducedMotionNav} aria-label="Quick navigation">
-            {hudLink ? (
-              <a href={hudLink.href} className={styles.doorFallbackLink}>
-                {hudLink.label}
-              </a>
-            ) : null}
-            {reducedMotionDoors.map((door) => (
-              <a key={door.id} href={door.href} className={styles.doorFallbackLink}>
-                {door.label}
-              </a>
-            ))}
-          </nav>
-        ) : null}
-      </section>
-    );
-  }
-
+  // Reduced motion no longer swaps out the game — it only quiets decorative
+  // animation (handled in CSS via the prefers-reduced-motion media query).
+  // The corridor stays playable, and Door still renders static text links so
+  // users who'd rather not run can click straight through.
   return (
     <section className={rootClass} aria-label="Interactive corridor" style={toThemeVars(theme)}>
       <div className={styles.runnerStrip}>

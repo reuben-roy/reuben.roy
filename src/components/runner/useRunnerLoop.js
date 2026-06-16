@@ -54,7 +54,7 @@ export function useRunnerLoop({
   }, []);
 
   useEffect(() => {
-    if (!enabled || reducedMotion) return;
+    if (!enabled) return;
 
     const onKeyDown = (e) => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
@@ -83,10 +83,10 @@ export function useRunnerLoop({
       window.removeEventListener('keyup', onKeyUp);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [enabled, reducedMotion]);
+  }, [enabled]);
 
   useEffect(() => {
-    if (!enabled || reducedMotion || isPaused) {
+    if (!enabled || isPaused) {
       setIsMoving(false);
       return;
     }
@@ -126,7 +126,7 @@ export function useRunnerLoop({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       lastTimeRef.current = null;
     };
-  }, [enabled, reducedMotion, isPaused, runSpeed, worldWidth]);
+  }, [enabled, isPaused, runSpeed, worldWidth]);
 
   const setHoldDirection = useCallback((holdingDirection) => {
     holdDirectionRef.current = holdingDirection;

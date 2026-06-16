@@ -670,8 +670,17 @@
   }
 }
 
+/* Reduced motion keeps the corridor playable but stills the decorative,
+   self-running animations (the nudging edge arrows and the pulsing ENTER
+   prompt). Player movement is input-driven, so it stays. */
 @media (prefers-reduced-motion: reduce) {
   .world {
     will-change: auto;
+  }
+
+  .edgeArrowLeft,
+  .edgeArrowRight,
+  .enterHint {
+    animation: none;
   }
 }

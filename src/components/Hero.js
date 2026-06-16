@@ -98,12 +98,6 @@ export default function Hero() {
       initialX={HOME_CORRIDOR.playerStartX}
       runSpeed={HOME_CORRIDOR.runSpeed}
       playerScreenRatio={HOME_CORRIDOR.playerScreenRatio}
-      mobileContent={
-        <div className={styles.mobileIntro}>
-          <IntroContent />
-          <LiveContent />
-        </div>
-      }
     >
       <WallFrame id="intro" label="Reuben Roy" x={intro.x} width={intro.width} height={intro.height}>
         <IntroContent />
