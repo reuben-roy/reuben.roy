@@ -241,23 +241,6 @@
     color: #ffffff;
 }
 
-/* Gradient Legend */
-.legendGradient {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #94a3b8;
-    font-size: 0.75rem;
-}
-
-.speedGradientBar {
-    width: 100px;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(to right,
-            #30123b, #466be3, #28bbec, #32f298, #a2fc3c, #f2cd5c, #fe812a, #d23105, #7a0403);
-}
-
 /* Responsive */
 @media (max-width: 600px) {
     .playbackControls {

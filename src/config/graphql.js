@@ -105,7 +105,7 @@ const BOOK_NON_FICTION_FIELDS = `
 `;
 
 // Category-specific queries
-export const ANIME_POST_QUERY = `
+const ANIME_POST_QUERY = `
   query GetAnimePost($slug: ID!) {
     post(id: $slug, idType: SLUG) {
       ${BASE_POST_FIELDS}
@@ -114,7 +114,7 @@ export const ANIME_POST_QUERY = `
   }
 `;
 
-export const MOVIE_POST_QUERY = `
+const MOVIE_POST_QUERY = `
   query GetMoviePost($slug: ID!) {
     post(id: $slug, idType: SLUG) {
       ${BASE_POST_FIELDS}
@@ -123,7 +123,7 @@ export const MOVIE_POST_QUERY = `
   }
 `;
 
-export const TV_SERIES_POST_QUERY = `
+const TV_SERIES_POST_QUERY = `
   query GetTVSeriesPost($slug: ID!) {
     post(id: $slug, idType: SLUG) {
       ${BASE_POST_FIELDS}
@@ -132,7 +132,7 @@ export const TV_SERIES_POST_QUERY = `
   }
 `;
 
-export const BOOK_FICTION_POST_QUERY = `
+const BOOK_FICTION_POST_QUERY = `
   query GetFictionBookPost($slug: ID!) {
     post(id: $slug, idType: SLUG) {
       ${BASE_POST_FIELDS}
@@ -141,7 +141,7 @@ export const BOOK_FICTION_POST_QUERY = `
   }
 `;
 
-export const BOOK_NON_FICTION_POST_QUERY = `
+const BOOK_NON_FICTION_POST_QUERY = `
   query GetNonFictionBookPost($slug: ID!) {
     post(id: $slug, idType: SLUG) {
       ${BASE_POST_FIELDS}

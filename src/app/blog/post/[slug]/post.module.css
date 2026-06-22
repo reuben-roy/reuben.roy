@@ -63,7 +63,6 @@
   gap: 0.5rem;
 }
 
-.category,
 .primaryCategory {
   background: var(--pill-bg);
   padding: 0.25rem 0.75rem;
@@ -71,18 +70,6 @@
   font-size: 0.875rem;
   color: var(--pill-text);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.metaInfo {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-}
-
-.date {
-  color: var(--muted);
-  font-size: 0.9rem;
 }
 
 .score {
@@ -103,10 +90,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.author {
-  color: var(--muted);
 }
 
 .imageContainer {

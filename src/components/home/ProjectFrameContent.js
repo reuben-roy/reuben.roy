@@ -8,7 +8,7 @@ import { WhyContent, DetailsContent } from '@/components/home/ProjectDetailPanel
 import runnerStyles from '@/components/runner/runner.module.css';
 import styles from './ProjectWallGallery.module.css';
 
-export function LazyFrameContent({ children }) {
+function LazyFrameContent({ children }) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 

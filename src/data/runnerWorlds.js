@@ -1,7 +1,7 @@
 // Single black + neon "pixel arcade" theme. Everything reads off the global
 // --background / --foreground / --accent tokens; these vars are the per-runner
 // overrides consumed by runner.module.css via toThemeVars().
-export const THEME = {
+const THEME = {
   skyTop: '#050506',
   skyBottom: '#050506',
   wallTop: '#070708',

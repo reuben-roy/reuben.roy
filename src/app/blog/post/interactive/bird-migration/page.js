@@ -6,7 +6,6 @@ import MigrationMap from '@/components/bird-migration/MigrationMap';
 import TimelineControl from '@/components/bird-migration/TimelineControl';
 import BirdCard from '@/components/bird-migration/BirdCard';
 import {
-    parseCSV,
     processLiteData,
     groupByBird,
     getTimeRange,

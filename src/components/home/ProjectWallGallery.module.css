@@ -23,13 +23,3 @@
 .liveFrame {
   min-height: 100%;
 }
-
-.mobileProjectBlock {
-  margin-bottom: 2.2rem;
-  padding-bottom: 1.8rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.mobileProjectBlock:last-child {
-  border-bottom: none;
-}

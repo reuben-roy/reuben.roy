@@ -1,11 +1,11 @@
-export const DEPRECATED_CATEGORIES = [
+const DEPRECATED_CATEGORIES = [
     "Anime",
     "Movies",
     "TV-Series",
     "Manga"
 ];
 
-export const PRIMARY_CATEGORIES = [
+const PRIMARY_CATEGORIES = [
     "Featured",
     "Documenting",
     "Experiment",
@@ -29,7 +29,7 @@ export const PRIMARY_CATEGORIES = [
 
 export const CATEGORIES = [...PRIMARY_CATEGORIES, ...DEPRECATED_CATEGORIES];
 
-export function isDeprecatedCategory(name) {
+function isDeprecatedCategory(name) {
     return DEPRECATED_CATEGORIES.includes(name);
 }
 

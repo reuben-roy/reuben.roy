@@ -27,25 +27,6 @@
     font-size: 14px;
 }
 
-/* Background */
-.background {
-    fill: #050510;
-}
-
-/* Graticule (grid lines) */
-.graticule {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.03);
-    stroke-width: 0.5;
-}
-
-/* Land masses */
-.land {
-    fill: #1a1f2e;
-    stroke: #2d3748;
-    stroke-width: 0.5;
-}
-
 /* Zoom Controls */
 .zoomControls {
     position: absolute;
@@ -97,43 +78,6 @@
     color: #64748b;
     font-size: 11px;
     z-index: 10;
-}
-
-/* Trail Styling */
-.trail {
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    filter: url(#glow);
-    transition: opacity 0.3s ease;
-}
-
-.trail.eric {
-    stroke: #ff9f43;
-}
-
-.trail.nico {
-    stroke: #00d9ff;
-}
-
-.trail.sanne {
-    stroke: #ff6b9d;
-}
-
-/* Current Position Markers */
-.currentPosition {
-    filter: url(#softGlow);
-}
-
-/* No data message */
-.noData {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #64748b;
-    font-size: 1rem;
 }
 
 /* Responsive */

@@ -67,11 +67,6 @@
   pointer-events: none;
 }
 
-/* unused decorative band kept hidden for compatibility */
-.wainscot {
-  display: none;
-}
-
 .floor {
   position: absolute;
   bottom: 0;
@@ -436,11 +431,6 @@
   background: var(--runner-accent);
 }
 
-.frameHang {
-  display: none;
-}
-
-/* thick blocky double pixel border on a near-black mat */
 .frameShell {
   position: relative;
   flex: 1;
@@ -522,10 +512,6 @@
 }
 
 /* ---------- Section intro (career/projects header) ---------- */
-.sectionIntro {
-  display: none;
-}
-
 /* ---------- Mobile controls ---------- */
 .mobileControls {
   display: none;
@@ -552,20 +538,6 @@
 
 .runButton:active {
   background: var(--runner-accent-soft);
-}
-
-/* ---------- Reduced-motion stacked fallback ---------- */
-.mobileContentZone {
-  padding: calc(var(--nav-h) + 1rem) 1rem 1rem;
-}
-
-.reducedMotionNav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  justify-content: center;
-  padding: 1rem;
-  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
 }
 
 .wallFrameMobile {

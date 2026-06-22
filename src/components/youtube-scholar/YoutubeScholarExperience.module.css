@@ -265,8 +265,7 @@
 .signalList,
 .resumeBullets,
 .loyaltyList,
-.toneList,
-.exampleList {
+.toneList {
   display: grid;
   gap: 0.8rem;
 }
@@ -285,7 +284,6 @@
   padding: 0.85rem 0.95rem;
 }
 
-.exampleRow,
 .toneRow,
 .loyaltyHead {
   display: flex;
@@ -294,7 +292,6 @@
   align-items: center;
 }
 
-.exampleRow,
 .toneRow {
   padding: 0.75rem 0.9rem;
   border-radius: 14px;

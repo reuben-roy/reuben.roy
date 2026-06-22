@@ -83,31 +83,9 @@
   overflow: hidden;
 }
 
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .date {
   font-size: 0.75rem;
   color: #71717a;
-}
-
-.readMore {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #60a5fa;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.readMore:hover {
-  text-decoration: underline;
 }
 
 /* Categories in card */

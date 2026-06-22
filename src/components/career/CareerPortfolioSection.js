@@ -1,3 +1,5 @@
+'use client';
+
 import { careerPortfolio } from '@/data/careerPortfolio';
 import styles from './career.module.css';
 

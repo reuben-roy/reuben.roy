@@ -168,11 +168,3 @@
     color: #64748b;
     margin-left: 4px;
 }
-
-/* No Data State */
-.noData {
-    color: #64748b;
-    font-size: 0.9rem;
-    text-align: center;
-    padding: 20px;
-}

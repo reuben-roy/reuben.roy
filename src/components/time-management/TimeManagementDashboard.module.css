@@ -306,12 +306,6 @@
   border-bottom: none;
 }
 
-.insightIcon {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
 .insightContent {
   font-size: 0.95rem;
   color: #c8ced7;

@@ -1,3 +1,5 @@
+'use client';
+
 import { certifications } from '@/data/career';
 import styles from './career.module.css';
 

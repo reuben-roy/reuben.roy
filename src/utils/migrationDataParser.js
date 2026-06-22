@@ -4,39 +4,6 @@
  */
 
 /**
- * Parse CSV text into array of data points
- * @param {string} csvText - Raw CSV text
- * @returns {Array} Array of parsed data objects
- */
-export function parseCSV(csvText) {
-  const lines = csvText.trim().split('\n');
-  const headers = lines[0].split(',');
-
-  const data = [];
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',');
-    if (values.length < 9) continue;
-
-    const timestamp = new Date(values[2]);
-    if (isNaN(timestamp.getTime())) continue;
-
-    data.push({
-      id: parseInt(values[0]) || i,
-      altitude: parseFloat(values[1]) || 0,
-      timestamp,
-      deviceId: parseInt(values[3]) || 0,
-      direction: parseFloat(values[4]) || 0,
-      latitude: parseFloat(values[5]) || 0,
-      longitude: parseFloat(values[6]) || 0,
-      speed: parseFloat(values[7]) || 0,
-      birdName: values[8]?.trim() || 'Unknown'
-    });
-  }
-
-  return data;
-}
-
-/**
  * Process optimized JSON data
  * @param {Object} jsonData - Optimized data object { BirdName: [[t,a,y,x,s],...] }
  * @returns {Array} Flat array of data points with standard structure
@@ -189,7 +156,7 @@ export function getCurrentPositions(birdData, timestamp) {
  * @param {number} t - Interpolation factor (0-1)
  * @returns {Object} Interpolated position { lat, lon }
  */
-export function interpolatePosition(p1, p2, t) {
+function interpolatePosition(p1, p2, t) {
   return {
     lat: p1.lat + (p2.lat - p1.lat) * t,
     lon: p1.lon + (p2.lon - p1.lon) * t
@@ -255,21 +222,6 @@ export function formatDate(date) {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  });
-}
-
-/**
- * Format a date with time
- * @param {Date} date - Date to format
- * @returns {string} Formatted datetime string
- */
-export function formatDateTime(date) {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
   });
 }
 

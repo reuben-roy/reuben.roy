@@ -1,3 +1,5 @@
+'use client';
+
 import { workExperience, internships } from '@/data/career';
 import styles from './career.module.css';
 

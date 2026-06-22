@@ -64,51 +64,6 @@
   line-height: 1.5;
 }
 
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.categoryTag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  color: #a1a1aa;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.categoryTag:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-
-.categoryTag.active {
-  background: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-}
-
-/* Blog List */
-.blogList {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 1.5rem 6rem;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
