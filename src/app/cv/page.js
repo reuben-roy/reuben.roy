@@ -22,6 +22,11 @@ function escapeAttr(value) {
   return escapeHtml(value);
 }
 
+// Applied after escaping, so the captured text is already HTML-safe.
+function formatEmphasis(escaped) {
+  return escaped.replaceAll(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+}
+
 function formatInline(text) {
   const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
   let result = '';
@@ -29,52 +34,78 @@ function formatInline(text) {
   let match;
 
   while ((match = linkPattern.exec(text)) !== null) {
-    result += escapeHtml(text.slice(lastIndex, match.index));
-    result += `<a href="${escapeAttr(match[2])}" target="_blank" rel="noopener noreferrer">${escapeHtml(match[1])}</a>`;
+    result += formatEmphasis(escapeHtml(text.slice(lastIndex, match.index)));
+    result += `<a href="${escapeAttr(match[2])}" target="_blank" rel="noopener noreferrer">${formatEmphasis(escapeHtml(match[1]))}</a>`;
     lastIndex = match.index + match[0].length;
   }
 
-  result += escapeHtml(text.slice(lastIndex));
+  result += formatEmphasis(escapeHtml(text.slice(lastIndex)));
   return result;
 }
+
+// Two spaces of indent per nesting level, matching how the source markdown is written.
+const INDENT_WIDTH = 2;
 
 function cvMarkdownToHtml(markdown) {
   const lines = markdown.split('\n');
   const parts = [];
-  let inList = false;
+  // One entry per open <ul>, holding that list's indent level. A nested list is
+  // emitted inside the <li> that introduced it, so `liOpen` tracks whether the
+  // deepest list currently has an unclosed <li>.
+  const openLists = [];
+  let liOpen = false;
 
-  const closeList = () => {
-    if (inList) {
+  const closeLists = () => {
+    while (openLists.length > 0) {
+      if (liOpen) parts.push('</li>');
+      openLists.pop();
       parts.push('</ul>');
-      inList = false;
+      liOpen = openLists.length > 0;
     }
+    liOpen = false;
   };
 
   for (const line of lines) {
+    const bullet = /^( *)- (.*)$/.exec(line);
+
+    if (bullet) {
+      const level = Math.floor(bullet[1].length / INDENT_WIDTH);
+
+      while (openLists.length > 0 && openLists.at(-1) > level) {
+        if (liOpen) parts.push('</li>');
+        openLists.pop();
+        parts.push('</ul>');
+        liOpen = true;
+      }
+
+      if (openLists.length === 0 || openLists.at(-1) < level) {
+        parts.push('<ul>');
+        openLists.push(level);
+        liOpen = false;
+      } else if (liOpen) {
+        parts.push('</li>');
+        liOpen = false;
+      }
+
+      parts.push(`<li>${formatInline(bullet[2])}`);
+      liOpen = true;
+      continue;
+    }
+
+    closeLists();
+
     if (line.startsWith('# ')) {
-      closeList();
       parts.push(`<h1>${formatInline(line.slice(2))}</h1>`);
     } else if (line.startsWith('## ')) {
-      closeList();
       parts.push(`<h2>${formatInline(line.slice(3))}</h2>`);
     } else if (line.startsWith('### ')) {
-      closeList();
       parts.push(`<h3>${formatInline(line.slice(4))}</h3>`);
-    } else if (line.startsWith('- ')) {
-      if (!inList) {
-        parts.push('<ul>');
-        inList = true;
-      }
-      parts.push(`<li>${formatInline(line.slice(2))}</li>`);
-    } else if (line.trim() === '') {
-      closeList();
-    } else {
-      closeList();
+    } else if (line.trim() !== '') {
       parts.push(`<p>${formatInline(line)}</p>`);
     }
   }
 
-  closeList();
+  closeLists();
   return parts.join('\n');
 }
 

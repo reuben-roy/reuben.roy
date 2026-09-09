@@ -1,10 +1,124 @@
 export const PROJECTS = [
     {
+        id: 'auto-apply',
+        title: 'Auto-Apply',
+        tagline: 'A local-first agent that applies to jobs overnight — and knows when not to',
+        featured: true,
+        featuredOrder: 1,
+        why: [
+            'Job applications are the same twenty questions asked in a thousand different wordings, and the cost of getting one wrong is a real recruiter reading something untrue under my name. So this is not a form-filler bot — it is an agent built around a single inversion: the model never touches the browser and never decides whether to submit. It only answers questions. Everything else is deterministic code carrying an explicit confidence number.',
+            'The form schema is pulled from the ATS\'s own public API rather than scraped from the DOM. Each field is resolved in trust order — my profile (confidence 1.0), a persistent answer cache (0.9), then a local LLM emitting structured JSON with its own confidence. Playwright fills against stable selectors, and a confidence gate decides submit versus hand-to-human. Greenhouse, Lever, Ashby, and Workday are supported; anything unrecognised falls back to a browser-use agent that fills but is structurally incapable of submitting.',
+            'Paired with a companion scraping agent (Hermes) that pulls the day\'s recommended listings from Jobright, it becomes a complete unattended pipeline: discover, resolve, fill, gate, verify, report. It runs on my Mac against local Ollama models while I sleep — nothing about my resume, profile, or answers leaves the machine.',
+            'The hard part was never intelligence, it was honesty. v1 was the obvious thing — a browser-use agent clicking its way through forms — and it was slow, non-reproducible, and could not tell you whether an application had actually been submitted. The rewrite made "submitted" mean verified: the post-click page is classified, and anything unrecognisable is treated as not submitted and stays retryable, but forced into human review so a person clicks the final button. That single rule is what makes an unattended run safe to leave alone.',
+            'Roughly 21,700 lines of Python across 69 modules, held up by 724 tests. Every run — including crashes — writes a structured row to a SQLite run log: the posting snapshot, every question and answer with its source and confidence, fill outcome, submit decision, confirmation state, timeline, issues, and screenshots.',
+        ],
+        highlights: [
+            'Schema-first: form questions come from the ATS public API/GraphQL, not DOM scraping',
+            'Trust-ordered resolution — profile (1.0) → answer cache (0.9) → local LLM (self-reported), gated on mean confidence',
+            'Local RAG: two-tier semantic recall over the answer cache; embeddings as SQLite blobs, no vector DB',
+            'Self-improving: unanswered questions are parked and deduped by frequency; answer once, every future paraphrase fills itself',
+            'Cover letters verified by deterministic code, not an LLM — unsourced claims or invented numerals block attachment',
+            'Tailored resumes select from a corpus (the model never writes a bullet), fit one page by measurement, and are read back through a PDF parser to prove an ATS can read them',
+            '"Submitted" means verified — unverified clicks are treated as not submitted and forced into review, never auto-retried',
+            'Durable on-disk task queue: 3 attempts, exponential backoff, dead-letter queue controllable from a phone',
+            'Consent escalation — background checks, arbitration, drug tests and credit checks are never auto-agreed',
+            'Graceful degradation at every layer: no embeddings → fuzzy matching; no model → keyword ranking; unknown ATS → fill-only fallback',
+            'Patchright + persistent real-Chrome profile for bot-check posture; a challenge that is actually shown is handed to the human, never solved',
+            'Local inference by default (Ollama qwen3.6 + nomic-embed-text); Gmail verification codes via a single read-only OAuth scope',
+        ],
+        awards: [],
+        techStack: ['Python', 'Playwright', 'Patchright', 'Ollama', 'LLMs', 'RAG', 'SQLite', 'browser-use', 'Typer', 'Gmail API', 'Telegram Bot API', 'OpenRouter'],
+        liveUrl: null,
+        previewPath: null,
+        embedAllowed: false,
+        githubUrl: null,
+        links: [
+            { label: 'Full write-up on my CV', href: '/cv' },
+        ],
+        mermaid: null,
+        architectureFallback: null,
+        diagrams: [
+            {
+                label: 'End-to-end flow',
+                chart: `flowchart TD
+  SRC["Hermes scraper — Jobright recommendations"] --> URL([job URL])
+  URL --> DET{Detect ATS}
+  DET -->|Greenhouse / Lever / Ashby| API["Fetch form SCHEMA from public API"]
+  DET -->|Workday| WD["Multi-step session + per-tenant account"]
+  DET -->|unknown| FB["browser-use fallback — fills, never submits"]
+  API --> RES["Resolve every field"]
+  WD --> RES
+  RES --> FILL["Playwright fills real form (deterministic selectors)"]
+  FILL --> GATE{"All required filled?<br/>Mean confidence >= threshold?<br/>No CAPTCHA / login wall?"}
+  GATE -->|yes| SUB["Submit"]
+  GATE -->|no| REV["Screenshot + review report — left for a human"]
+  SUB --> VER["Classify the resulting page"]
+  VER --> OK["Confirmed — record + cache answers"]
+  VER --> UNV["Unverified — treated as NOT submitted, stays retryable"]`,
+            },
+            {
+                label: 'Answer resolution & confidence',
+                chart: `flowchart TD
+  Q([Form field]) --> P{"In profile?"}
+  P -->|yes| P1["value · confidence 1.0"]
+  P -->|no| C{"Answer cache — exact / fuzzy / cosine >= 0.85"}
+  C -->|hit| C1["value · confidence 0.9"]
+  C -->|no| R["Retrieve grey-zone paraphrases (cosine >= 0.55)<br/>+ knowledge topics (>= 0.60)"]
+  R --> L["Local LLM — structured JSON"]
+  L --> M{"Model claims a retrieved answer<br/>or names its knowledge topic?"}
+  M -->|yes| C1
+  M -->|no| G["value · model-reported confidence"]
+  P1 --> GATE["Confidence gate"]
+  C1 --> GATE
+  G --> GATE
+  G --> PEND["Low confidence → parked in pending answers<br/>deduped by times_seen"]
+  PEND --> HUMAN["Answered once by me"]
+  HUMAN --> C`,
+            },
+            {
+                label: 'Failure handling & failover',
+                chart: `flowchart TD
+  A([Run]) --> B{ATS schema fetch}
+  B -->|transient status| B1["Bounded retry budget"] --> B
+  B -->|hard fail| REV["Route to review + issue log"]
+  A --> E{Embedding model present?}
+  E -->|no| E1["Silent fallback to regex / fuzzy"]
+  A --> M{Model reachable & useful?}
+  M -->|no| M1["Resume tailoring degrades to keyword ranking<br/>never to 'no resume'"]
+  A --> V{Cover letter passes deterministic verifier?}
+  V -->|no| V1["Not attached — run continues, or review if required"]
+  A --> P{Resume passes ATS parse-back check?}
+  P -->|no| P1["Static resume PDF sent instead"]
+  A --> W{Wall detected — CAPTCHA / login / email code?}
+  W -->|yes| W1["Classified blocking/warning/info + screenshot → issue log"]
+  A --> Q["Unattended queue"]
+  Q --> Q1["3 attempts · exponential backoff"]
+  Q1 --> Q2["Dead-letter queue — inspect & requeue from phone"]`,
+            },
+            {
+                label: 'Unattended loop',
+                chart: `flowchart TD
+  IN["Job link (Hermes or phone)"] --> Q[("SQLite task queue — on disk")]
+  Q --> D["Daemon"]
+  D --> RUN["Apply (same gate as at the keyboard)"]
+  RUN --> OKR["Applied — reported back"]
+  RUN --> NR["Needs review — screenshot + question sent to phone"]
+  NR --> ANS["I reply once"]
+  ANS --> CACHE[("Answer cache — embedded immediately")]
+  CACHE --> RUN
+  RUN --> DLQ["Dead-lettered with a reason"]
+  D --> PWR{On AC power?}
+  PWR -->|yes| CAF["caffeinate assertion — jobs start in seconds"]
+  PWR -->|no| RTC["Sleep, RTC wake every 15 min to drain backlog"]`,
+            },
+        ],
+    },
+    {
         id: 'explosion-fun',
         title: 'explosion.fun',
         tagline: 'Personal blog, portfolio, and interactive tools hub',
         featured: true,
-        featuredOrder: 1,
+        featuredOrder: 2,
         why: [
             'A creative and interactive portfolio website featuring dynamic visual effects and engaging user experiences.',
             'Demonstrates front-end development capabilities, creative coding, and performance-conscious interactions.'
@@ -33,7 +147,7 @@ export const PROJECTS = [
         title: 'Time Management Analysis',
         tagline: '31 days of screen-time analytics',
         featured: true,
-        featuredOrder: 2,
+        featuredOrder: 3,
         why: [
             'I wanted to understand where my attention actually goes — not where I think it goes.',
             'This D3 dashboard turns raw activity logs into actionable patterns: focus fragmentation, distraction gravity, circadian rhythms, and sleep-productivity correlations.'
@@ -61,7 +175,7 @@ export const PROJECTS = [
         title: 'YouTube Scholar',
         tagline: 'Curiosity velocity from YouTube Takeout data',
         featured: true,
-        featuredOrder: 3,
+        featuredOrder: 4,
         why: [
             'My YouTube history is a map of how I learn — rabbit holes, research spirals, and format-driven curiosity.',
             'This case study turns Takeout data into a dark-theme research dashboard about learning loops and information diet.'
@@ -89,7 +203,7 @@ export const PROJECTS = [
         title: 'Side-Track',
         tagline: 'Local-first iOS workout app with muscle-specific fatigue engine and global leaderboard',
         featured: true,
-        featuredOrder: 4,
+        featuredOrder: 5,
         why: [
             'Generic workout apps don\'t account for muscle-specific fatigue or decision fatigue. The Randomize button solves both — it picks an exercise, weight, and rep target aligned to your training goal and current muscle freshness, filtering out any exercise targeting muscles below 30% capacity.',
             'Every set you log drains muscle capacity using a science-based formula: cost = involvement × C₀ × (%1RM²) × reps × MET. Capacity then recovers exponentially at different rates per muscle size — large muscles like quads at ~1.2%/hour, small muscles like biceps at ~2.5%/hour. Users can override both involvement maps and recovery rates from the settings.',
