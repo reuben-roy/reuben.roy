@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/sync-cv.mjs && next build",
     "start": "next start",
     "lint": "next lint",
     "youtube:data": "node scripts/process-youtube-data.js",
-    "fallow": "fallow dead-code --summary"
+    "fallow": "fallow dead-code --summary",
+    "cv:sync": "node scripts/sync-cv.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

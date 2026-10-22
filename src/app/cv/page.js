@@ -5,7 +5,7 @@ import styles from './cv.module.css';
 
 export const metadata = {
   title: 'CV',
-  description: 'Reuben Roy — software engineer resume, work history, and projects.',
+  description: 'Reuben Roy — software engineer building AI agents, backend systems, and native apps. Updated projects and downloadable PDF CV.',
 };
 
 const cvFilePath = path.join(process.cwd(), 'src', 'content', 'cv.md');
@@ -117,6 +117,10 @@ export default async function CvPage() {
     <div className={styles.page}>
       <Navbar />
       <main className={styles.main}>
+        <div className={styles.toolbar}>
+          <a href="/reuben-roy-cv.pdf" download className={styles.toolbarPrimary}>Download PDF CV</a>
+          <a href="/cv.md" className={styles.toolbarLink}>Machine-readable Markdown</a>
+        </div>
         <article
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: html }}

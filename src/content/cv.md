@@ -1,78 +1,160 @@
 # Reuben Roy
 
-Software Engineer | AI & Agentic Systems | Generalist creating web solutions
+Software Engineer | AI Agents, Backend Systems & Native Apps
+
+Updated October 2026.
 
 ## Links
 
 - Website: https://explosion.fun
+- Projects: https://explosion.fun/projects
 - LinkedIn: https://linkedin.com/in/reuben-roy
 - GitHub: https://github.com/reuben-roy
 
 ## Summary
 
-Software engineer and generalist who builds autonomous, agentic systems on top of production-grade backends. Current focus is applied AI: local-first LLM pipelines, retrieval-augmented answer resolution, and long-running unattended agents that make consequential decisions with explicit confidence gates, verification, and failover rather than optimism. Also builds interactive websites, data visualizations, mobile experiences, and backend microservices at scale. Always learning, always building.
+Software engineer and generalist who builds autonomous, agentic systems on top of production-grade backends. Current focus is applied AI: local-first LLM pipelines, retrieval-augmented answer resolution, and long-running unattended agents that make consequential decisions with explicit confidence gates, verification, and failover rather than optimism. Also builds interactive websites, data visualizations, mobile experiences, and backend microservices at scale. Recent work spans native macOS application automation, a Java/Spring job-feed backend, remote AI task execution, and local voice-driven productivity tools.
 
 ## Education
 
-- Arizona State University (ASU) (2024-2026)
-- National Institute of Technology, Calicut (NITC) (2017-2021)
+- Arizona State University (ASU) — MS in Software Engineering (2024-2026)
+- National Institute of Technology, Calicut (NITC) — B.Tech (2017-2021)
 
 ## Skills
 
 - AI and Agentic Systems: LLM orchestration, Local inference (Ollama), Structured JSON output, RAG, Semantic retrieval and embeddings, Confidence gating, Prompt verification, Browser automation agents (Playwright, Patchright, browser-use), Tool-using agents, Autonomous task queues with retry and dead-lettering, OpenRouter, Anthropic, Gemini, Claude Code
-- Backend Development: Java, Spring Boot, Python, .NET, Microservices, REST APIs, Maven, JUnit5, Mockito, Unit Testing, Fastify, Go, Kotlin, Node.js, Prisma, REST, GraphQL
-- Frontend Development: HTML, CSS, JavaScript, React.js, Three.js, Bootstrap, MUI, D3.js, Next.js, React, React Native, Tailwind CSS, TypeScript, Vite
+- Native and Voice Applications: Swift, SwiftUI, Electron, macOS Keychain, LiveKit Agents, Parakeet, faster-whisper
+- Backend Development: Java, Spring Boot, Python, .NET, C#, Microservices, REST APIs, Maven, JUnit5, Mockito, Unit Testing, FastAPI, Fastify, Go, Kotlin, Node.js, Prisma, GraphQL
+- Frontend Development: HTML, CSS, JavaScript, TypeScript, React.js, React Native, Next.js, Three.js, D3.js, Tailwind CSS, Bootstrap, MUI, Vite
 - Databases: PostgreSQL, Redis, MySQL, SQL, NoSQL, SQLite
 - Cloud and Infrastructure: AWS, Google Cloud, Azure, Docker, Heroku, Vercel, Firebase
-- Version Control and DevOps: Git, GitHub, BitBucket, GitHub Actions
+- Version Control and DevOps: Git, GitHub, BitBucket, GitHub Actions, CI/CD, SonarQube
 - Data Science and Analytics: Data Visualization (D3.js, Matplotlib), Data Mining, Data Modeling, Machine Learning, NumPy, Pandas
 - Project Management: Agile, Jira/Kanban, Confluence, Postman
-- Content Management: WordPress, iText, Poetry
-- Development Tools: VS Code, Postman, SonarQube
-- Soft Skills: Written Communication, Verbal Communication, Problem Solving, Software Development, Web Development
+- Soft Skills: Written Communication, Verbal Communication, Problem Solving, Technical Documentation
 
 ## Work Experience
 
-### Full-Stack Developer, Tata Consultancy Services (IKEA Client Project)
+### AI Engineer (Capstone), Aligned Rewards
 
-- Built the microservices powering the IKEA websites, processing millions of transactions annually.
-- Primary focus on the Quotation Management initiative: created services to generate quotes, manage revisions and approvals, and automatically notify customers and internal stakeholders about order status updates.
-- Also contributed to the 3D "Planner" tool that lets users build their rooms in 3D.
-- Worked closely with cross-functional teams in an agile environment, adopting corporate tooling and processes.
-- Skills: Java, Spring Boot, Python, REST APIs, Microservices, Maven, Gradle, JUnit5, Mockito, Node.js, Express, OAuth, OIDC, JWT, WebSockets, HTML, CSS, JavaScript, React.js, Bootstrap, PostgreSQL, GCP, Docker, CI/CD, GitHub Actions, ESLint, Prettier, SonarQube, Agile/Scrum, Jira, Confluence, Postman
+- Developed production RAG features with LangChain, FastAPI, OpenAI embeddings and Pinecone; implemented dynamic routing and fallbacks between OpenRouter and local Gemma 3 models via Ollama.
+- Designed the provider fallback path so a failed hosted call degrades to a local model instead of failing the request, keeping the feature available without a paid dependency.
+- Built backend interfaces for model steering and reliable AI workflow generation, documenting system behavior and integration decisions for the product team.
+- Skills: Python, LangChain, FastAPI, OpenAI, Pinecone, Ollama, OpenRouter, RAG, Vector Search, Agentic Workflows
 
-### Full-Stack Developer, RCKR Software (CPSI/ Trubridge Client Project)
+### Graduate Teaching Assistant / AI Engineer, Arizona State University
 
-- Developed secure backend systems for the Unify service, following the FHIR specification, allowing hospitals USA wide to exchange information seamlessly, reducing cost of patient care significantly.
-- Skills: .NET, REST APIs, Microservices, FHIR, HL7, Mockito, OAuth, JWT, HTML, CSS, JavaScript, PostgreSQL, Redis, SQL, NoSQL, Azure, Docker, CI/CD, Bitbucket Pipelines, SonarQube, Agile/Scrum, Jira, Confluence, Postman, Performance Optimization
+- Built a privacy-focused AI Auto-Grader integrated with the Canvas API, OpenAI and OpenRouter; engineered a schema-driven rubric engine that generated consistent, detailed feedback from PDF lab results.
+- Kept student work on university infrastructure by routing grading through self-hosted models, so no coursework left the institution's control.
+- Supported a graduate software engineering course, reviewing student submissions and explaining design and testing feedback in office hours.
+- Skills: Python, Structured Output, REST APIs, Ollama, Local LLMs, Privacy Engineering, Code Review
+
+### Software Engineer, RCKR Software (Trubridge / CPSI client project)
+
+- Developed secure backend services for the Unify interoperability product, following the FHIR specification so hospitals across the US could exchange patient records directly, reducing the cost of patient care.
+- Engineered asynchronous C#/.NET services and custom SQL ETL pipelines to migrate 64+ TB of hospital data while supporting secure, HIPAA-compliant FHIR integrations.
+- Optimized PostgreSQL data-access layers with Entity Framework, reducing execution time by 90% for mission-critical reporting and automated data exchange workflows.
+- Introduced Redis caching and asynchronous processing to keep large record-exchange jobs responsive under production load; secured service-to-service access with OAuth and JWT and gated the codebase on SonarQube checks in Bitbucket Pipelines.
+- Skills: .NET, C#, Entity Framework, REST APIs, Microservices, FHIR, HL7, OAuth, JWT, PostgreSQL, Redis, SQL, Azure, Docker, CI/CD, SonarQube, Agile/Scrum
+
+### Full-Stack Developer, Tata Consultancy Services (IKEA client project)
+
+- Built the Java Spring Boot microservices powering the IKEA websites on GCP, on a platform processing millions of transactions annually.
+- Primary focus on the Quotation Management initiative: services to generate quotes, manage revisions and approvals, and automatically notify customers and internal stakeholders about order status updates.
+- Reduced Quote Management System API latency by 70% through Redis caching and SQL index optimization, and implemented multithreaded workers and scheduled jobs for concurrent workloads.
+- Redesigned ReactJS checkout components, saving 1.5 minutes per transaction; also contributed to the 3D "Planner" tool that lets customers lay out their rooms before ordering.
+- Wrote unit tests with JUnit and mocking frameworks and maintained 80%+ code coverage through Maven, Git and CI/CD pipelines.
+- Skills: Java, Spring Boot, Spring MVC, Microservices, REST APIs, Multithreading/Concurrency, Maven, JUnit5, Mockito, React.js, JavaScript, PostgreSQL, Redis, GCP, Docker, CI/CD, Agile/Scrum
 
 ## Internships
 
 ### ElectroBiosonics, Cochin
 
 - Date: December 2018
-- Worked under Dr Cherian for PCB designing using MPLabX and fabrication, electronic equipment assembly, commercial electroplating, transformers and power systems manufacturing, etc.
+- Worked under Dr Cherian on PCB design using MPLabX and fabrication, electronic equipment assembly, commercial electroplating, transformers and power systems manufacturing.
 
 ### Keltron, Thrissur, Kerala
 
 - Date: May 2019
-- Worked with Arduino to make connected devices and electronics to understand more about the internet of things.
+- Worked with Arduino to build connected devices and electronics, learning the internet of things end to end.
 
 ### Geo-Enterprises, Kerala
 
 - Date: December 2020
 - Developed comprehensive e-commerce solutions using the WordPress ecosystem, implementing payment gateways, performance optimization, and digital marketing strategies to drive business growth.
-- Skills: WordPress, WooCommerce, Jetpack, Razorpay Integration, Payment Gateways, HTML, CSS, SEO Optimization, Digital Marketing, Google Analytics, Performance Optimization, Security Implementation, SSL/TLS, REST API Integration, Custom Theme Development, Responsive Design, User Experience Design (UX)
+- Skills: WordPress, WooCommerce, Razorpay Integration, Payment Gateways, SEO Optimization, Google Analytics, Performance Optimization, SSL/TLS, Custom Theme Development, Responsive Design
 
 ## Certifications and Workshops
 
 - [JavaScript Algorithms and Data Structures](https://www.freecodecamp.org/certification/ReubenRoy/javascript-algorithms-and-data-structures) - freeCodeCamp.org
 - [Responsive Web Design](https://www.freecodecamp.org/certification/ReubenRoy/responsive-web-design) - freeCodeCamp.org
 - [Introduction to Data Science in Python](https://www.coursera.org/account/accomplishments/certificate/PP9R2W2SGRXH) - University of Michigan & Coursera
-- [Google AI|Explore ML Workshop](https://drive.google.com/file/d/1-dm9rRxr2olYYuFQeU1J7owzvZSl3wUa/view?usp=sharing) - Google
+- [Google AI | Explore ML Workshop](https://drive.google.com/file/d/1-dm9rRxr2olYYuFQeU1J7owzvZSl3wUa/view?usp=sharing) - Google
 - Astrophysics Workshop Conductor - NIT Calicut
 
 ## Projects
+
+### Job Applicator - Native macOS Application (Development Preview)
+
+- Building a SwiftUI macOS app with a bundled Python application engine for queued Greenhouse and Ashby applications, evolving the Auto-Apply engine into a desktop product.
+- Profile-first answer resolution, reusable answers, per-field submission gates, first-run human review, Keychain-backed provider credentials, and Gmail security-code handling.
+- Supports local and hosted OpenAI-compatible inference; account sign-in uses Auth0 authorization-code PKCE. Cloud features require deployment configuration and validation; this is a development preview.
+- Technology stack: Swift, SwiftUI, Python, Playwright/Patchright, SQLite, Auth0, macOS Keychain.
+
+### Job Applicator API - Backend and Analytics
+
+- Implemented a separate Java 21 / Spring Boot 3 backend with a versioned API, OIDC validation, PostgreSQL account data, Flyway migrations, transactional outbox, telemetry, and a Next.js admin dashboard.
+- Curated-feed synchronization uses cursor-based changes, ETags, compressed page caching, and transaction-scoped advisory locking to preserve commit order.
+- Hosted inference provides an OpenAI-compatible endpoint with key-pool failover and per-user request and token limits. Service extraction is in development; remaining integrations and deployment validation are tracked separately.
+- Technology stack: Java 21, Spring Boot 3, PostgreSQL, Flyway, Auth0/OIDC, Next.js, Docker.
+
+### Job Board Collector - Job Discovery Pipeline
+
+- Built a Python worker that collects public Greenhouse and Ashby postings through shared ATS adapters and per-company TOML configuration, then publishes changes to the Job Applicator feed API.
+- Board discovery and URL harvesting draft new sources; a SQLite journal supports incremental publishing and source diagnostics.
+- Bounded retries, snapshot validation, and two complete missed polls before closing a posting protect against transient upstream failures.
+- Technology stack: Python, SQLite, HTTP APIs, TOML, Docker, pytest, Ruff.
+
+### Hired Gun - Remote AI Task Execution
+
+- Built a remote-help workflow where an operator creates a job and a recipient starts a macOS agent with a one-use code; an operator dashboard shows progress and receives structured completion reports.
+- Model credentials stay on the server behind a per-session inference proxy. Includes a recipient CLI, operator CLI, and portable ChatGPT / Claude Code plugin.
+- Technology stack: TypeScript, Node.js, Hono, PostgreSQL/Neon, PGlite, Vercel.
+
+### NotAnother - Desktop Accountability Companion
+
+- Built an Electron macOS companion with a transparent desktop overlay, menu-bar task list, Markdown task storage, timers, planning tools, and proactive nudges.
+- Tool calling operates on tasks and focus state; a local intent parser supports basic commands without a model key. Optional Google Calendar, Tasks, and Gmail integrations supply context.
+- Technology stack: Electron, TypeScript, Node.js, DeepSeek, Google APIs, Markdown/JSON storage.
+
+### CheckLister - Local Voice Accountability Prototype
+
+- Built a local-first voice agent for task capture, proactive check-ins, and duration estimates that calibrate against actual completion time.
+- Headless prototype combines LiveKit Agents, Ollama, local speech recognition and synthesis, SQLite, and APScheduler; live microphone and menu-bar integration remain in progress.
+- Technology stack: Python, LiveKit Agents, Ollama, faster-whisper, SQLite, APScheduler, macOS speech synthesis.
+
+### Window for macOS - Voice Quiz Utility
+
+- Built a SwiftUI menu-bar quiz app with local speech synthesis, a Parakeet transcription sidecar on Apple Silicon, and a Python answer evaluator.
+- Exact answers short-circuit model evaluation; other answers use Ollama or an optional OpenAI-compatible hosted provider.
+- Technology stack: SwiftUI, AVSpeechSynthesizer, Python, Parakeet, Ollama, Apple Silicon/MPS.
+
+### K2 Horizon - API Benchmarking Experiment
+
+- Created a Python CLI to discover IFM models, run inference through an OpenAI-compatible API, and compare reasoning-effort settings and response latency.
+- Technology stack: Python, OpenAI-compatible SDK, IFM K2 Horizon API.
+
+### Hiring Agent - Open-Source Exploration
+
+- Explored the existing interviewstreet/hiring-agent resume-to-score pipeline: PDF extraction, structured LLM outputs, GitHub enrichment, and evidence-based evaluation with local Ollama or Gemini.
+- Upstream project: [interviewstreet/hiring-agent](https://github.com/interviewstreet/hiring-agent).
+
+### Coding Harness Star Growth - Interactive Data Visualization
+
+- Built an interactive D3 comparison of coding-agent harness repositories, including DeepSeek Harness, with switchable series and illustrative growth scenarios.
+- Published the underlying JSON snapshot and dataset metadata, distinguishing sampled histories from aggregate-based estimates.
+- Technology stack: Next.js, React, D3.js, JSON, schema.org Dataset.
+- Link: [Interactive comparison](https://explosion.fun/projects/agent-star-growth).
 
 ### Auto-Apply — Autonomous Job-Application Agent
 
@@ -99,21 +181,69 @@ Software engineer and generalist who builds autonomous, agentic systems on top o
 - Observability: every run — including crashes — writes a row to a structured SQLite run log capturing the posting snapshot, every question and answer with its source and confidence, fill outcome, submit decision, confirmation state, timeline, issues, and screenshots. Searchable from the CLI and exportable to JSON/CSV.
 - How it was built, and what was hard: v1 was the obvious thing — a browser-use agent on a local model clicking its way through forms. It was slow, non-reproducible, and worst of all could not tell you whether an application had actually been submitted. The rewrite inverted the design: fetch the form schema from the ATS's own API, let the model answer questions only, and make every other step deterministic. From there the hard problems were mostly about honesty and detection rather than intelligence — distinguishing "clicked submit" from "application received"; invisible reCAPTCHA v3 scoring the automation stack, which forced the move to Patchright and a real Chrome profile; CAPTCHA false-positive classification; email-verification walls appearing *after* submit, solved with read-only Gmail matching on server receive time, trusted sender domains, and the current company/role, with any ambiguity refusing to guess; and a long tail of per-ATS behaviour (Greenhouse's location typeahead, Ashby multiselects that only group by id prefix, forms that must be answered the page's own way rather than the walk's). The recurring principle: when the system is unsure, it must fail loudly into a review queue rather than quietly submit something wrong under a real person's name.
 - Technology stack: Python 3.11, Playwright/Patchright, Ollama (qwen3.6, nomic-embed-text), OpenRouter, browser-use, SQLite (7 stores), Typer CLI, Gmail API (read-only OAuth), Telegram Bot API, macOS LaunchAgent, uv, pytest.
+- Full technical write-up: [explosion.fun/projects/auto-apply](https://explosion.fun/projects/auto-apply)
 - Status: private repository — architecture walkthrough and demo available on request.
 
-### Explosion.fun Interactive Website
+### explosion.fun — Interactive Website and Data Lab
 
-- A creative and interactive portfolio website featuring dynamic visual effects and engaging user experiences.
-- Demonstrates front-end development capabilities, creative coding, and performance-conscious interactions.
-- Highlights: Next.js App Router, SSR and SSG, file-based routing, API routes, automatic code splitting, Core Web Vitals optimization, lazy loading, image optimization, ESLint and Prettier, responsive design, CSS Modules, accessible interactions, creative coding demos, Vercel CI/CD, custom domain, preview deployments.
-- Link: https://explosion.fun/
+- A personal publishing platform and quantified-self product studio: a ranked media-review blog on a headless WordPress GraphQL CMS, interactive long-form essays, and shippable mini-products.
+- Highlights: Next.js App Router, static export, GraphQL middleware, Core Web Vitals optimization, lazy loading, image optimization, CSS Modules, accessible interactions, Vercel CI/CD with preview deployments.
+- Links: https://explosion.fun/, https://github.com/reuben-roy/explosion.fun
 
 ### Interactive Visualizations
 
-- A collection of immersive 3D and data visualizations exploring complex concepts through code.
-- Demonstrates proficiency in WebGL (Three.js) and data visualization (D3.js).
-- Technologies: Three.js / React Three Fiber, D3.js and TopoJSON, physics engine integration, SVG animations, performance optimization.
-- Preview links: /blog/post/interactive/bird-migration, /blog/post/interactive/solar-system
+- A collection of immersive 3D and data visualizations exploring complex concepts through code, demonstrating WebGL (Three.js) and data visualization (D3.js) proficiency.
+- Technologies: Three.js / React Three Fiber, D3.js and TopoJSON, physics engine integration, SVG animations, render-loop performance optimization.
+- Preview links: https://explosion.fun/blog/post/interactive/bird-migration, https://explosion.fun/blog/post/interactive/solar-system
+
+### Greatness — Self-Actualization Scoring
+
+- Define your own self-actualization metrics, upload Google Takeout browsing data, and get a composite Greatness Score with a public leaderboard.
+- Technology stack: Next.js, React, Supabase (auth, Postgres, RLS), client-side ingest and scoring pipeline.
+- Link: https://explosion.fun/projects/greatness
+
+### Side-Track
+
+- A React Native iOS weight-training app with a random workout picker, muscle-specific fatigue tracking, local leaderboard rankings, and Apple Health integration. Built a muscle-fatigue recovery engine and predictive polling that cut cloud costs by 50%.
+- Technology stack: React Native, Expo, TypeScript, SQLite, Supabase, Go, PostgreSQL.
+- Links: https://apps.apple.com/app/side-track/id6755348971, https://explosion.fun/side-track
+
+### Window — On-device AI screen summarizer
+
+- An Android app that tracks app usage and scrapes visible UI text, then runs on-device Gemini Nano to summarize digital activity without sending screen contents off the device.
+- Technology stack: Kotlin, Go, Gemini Nano, SQLite, RAG.
+- Link: https://github.com/reuben-roy/window
+
+### Window Extension
+
+- A Chrome extension that turns the browser into a calendar-aware productivity co-pilot: Google Calendar sync, event-specific site whitelisting, distraction blocking during focus sessions, and an assistant for idea capture and evaluation.
+- Monorepo with a Manifest V3 extension (popup, options calendar workspace, blocked page, side panel, service worker) and a self-hosted backend (Fastify API, background worker, PostgreSQL) for auth, persistence, and async AI jobs.
+- Technology stack: TypeScript, React, Vite, Chrome Manifest V3, FullCalendar, Fastify, Node.js, Prisma, PostgreSQL, Zod.
+- Link: https://github.com/reuben-roy/window-extension
+
+### Kali
+
+- A fitness platform that treats physical progression like version control, with a Go and PostgreSQL backend modelling training history and a Next.js front end and waitlist.
+- Technology stack: Go, Next.js, PostgreSQL, React, TypeScript, Tailwind CSS, Vercel.
+- Links: https://github.com/reuben-roy/kali, https://github.com/reuben-roy/Kali-Platform
+
+### Ranker
+
+- A career exploration and ranking app that maps a user's skills, interests, and traits against a dynamic hierarchical job database to surface best-fit roles, over a Go API with OAuth sign-in.
+- Technology stack: Go, React Native, PostgreSQL, OAuth, RAG, TypeScript.
+- Link: https://github.com/reuben-roy/ranker
+
+### Clackinator
+
+- A native macOS menu bar utility that synthesizes and samples mechanical keyboard sound packs with low-latency audio scheduling.
+- Technology stack: Swift, AVAudioEngine.
+- Link: https://github.com/reuben-roy/clackinator
+
+### Job Answer App
+
+- A single-page tool that uses hosted LLMs to generate tailored job-application answers from a resume and a set of writing rules.
+- Technology stack: JavaScript, Node.js, OpenRouter, Vercel.
+- Link: https://github.com/reuben-roy/job-answer-app
 
 ### Freelance E-Commerce Projects
 
@@ -121,49 +251,11 @@ Software engineer and generalist who builds autonomous, agentic systems on top o
 - Highlights: WooCommerce and WordPress, payment gateway integration, SEO optimization, product catalogs, responsive design, image optimization.
 - Links: https://naturabags.com/, https://serahdesign.com/
 
-### Kali
-
-- Landing page and waitlist for Kali, a fitness platform that treats physical progression like version control.
-- Technology stack: Go, Lucide, Next.js, PostgreSQL, React, SQL, Tailwind CSS, TypeScript, Vercel.
-- Links: https://kali.aureole10.com, https://github.com/reuben-roy/kali
-
-### Side-Track
-
-- A React Native iOS weight-training app with a random workout picker, muscle-specific fatigue tracking, local leaderboard rankings, and Apple Health integration.
-- Technology stack: Go, PostgreSQL, RAG, React, React Native, SQL, SQLite, TypeScript.
-- Links: https://apps.apple.com/app/side-track/id6755348971, https://github.com/reuben-roy/side-track
-
-### Window
-
-- An Android app that watches your screen, tracking app usage, scraping visible UI text, and running on-device Gemini Nano AI to summarize your digital activity.
-- Technology stack: Gemini, Go, Gradle, Kotlin, RAG, SQL, SQLite.
-- Link: https://github.com/reuben-roy/window
-
-### Window Extension
-
-- A Chrome extension that turns the browser into a calendar-aware productivity co-pilot: Google Calendar sync, event-specific site whitelisting, distraction blocking during focus sessions, and an OpenClaw-powered assistant for idea capture and evaluation.
-- Monorepo with a Manifest V3 extension (popup, options calendar workspace, blocked page, side panel, service worker) and a self-hosted backend (Fastify API, background worker, PostgreSQL) for auth, persistence, and async AI jobs.
-- Highlights: declarativeNetRequest blocking with per-event allowlists and keyword fallbacks, timed break/snooze handling, idea outbox with background OpenClaw evaluation, focus analytics and activity session tracking, spaced-repetition learning quiz subsystem, cross-device account sync.
-- Technology stack: TypeScript, React, Vite, Chrome Extension Manifest V3, FullCalendar, Fastify, Node.js, Prisma, PostgreSQL, Zod, OpenClaw.
-- Link: https://github.com/reuben-roy/window-extension
-
 ### blistering-barnacles
 
 - A project built with Anthropic, FullCalendar, Go, LLMs, Lucide, and Next.js.
 - Technology stack: Anthropic, FullCalendar, Go, LLMs, Lucide, Next.js, OpenAI, RAG, React, Tailwind CSS, Turbopack, TypeScript.
 - Links: http://lofty.explosion.fun/, https://github.com/reuben-roy/blistering-barnacles
-
-### Clackinator
-
-- A native macOS menu bar utility that plays satisfying mechanical keyboard sounds as you type.
-- Technology stack: AVAudioEngine, Swift.
-- Link: https://github.com/reuben-roy/clackinator
-
-### Ranker
-
-- A career exploration and ranking app that maps your skills, interests, and traits against a dynamic hierarchical job database to surface the best-fit roles.
-- Technology stack: Go, Lucide, OAuth, PostgreSQL, RAG, React, React Native, SQL, Tailwind CSS, TypeScript, Vite.
-- Link: https://github.com/reuben-roy/ranker
 
 ### Switch-Market
 
@@ -176,9 +268,3 @@ Software engineer and generalist who builds autonomous, agentic systems on top o
 - Personal portfolio, blog, and interactive tools hub built with Next.js, a digital playground for data-driven storytelling.
 - Technology stack: D3.js, Firebase, Go, GraphQL, Next.js, PostHog, React, Three.js, Turbopack, Vercel, WordPress.
 - Links: https://auto.explosion.fun, https://github.com/reuben-roy/Auto-Explosion
-
-### Job Answer App
-
-- A single-page tool that uses Google Gemini to generate tailored job-application answers from your resume and writing rules.
-- Technology stack: Gemini, Go, Java, JavaScript, LLMs, Node.js, OpenAI, Vercel.
-- Links: https://answers.explosion.fun, https://github.com/reuben-roy/job-answer-app
