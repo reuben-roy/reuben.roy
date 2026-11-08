@@ -68,8 +68,8 @@ function drawFigure(octx, cycle, isMoving) {
   const lean = isMoving ? 2 : 0.5;
   const bodyX = cx + lean;
 
-  octx.strokeStyle = '#f4f4f5';
-  octx.fillStyle = '#f4f4f5';
+  octx.strokeStyle = '#1a1a1e';
+  octx.fillStyle = '#1a1a1e';
   octx.lineCap = 'round';
   octx.lineJoin = 'round';
 
@@ -104,7 +104,7 @@ function drawFigure(octx, cycle, isMoving) {
   octx.fill();
 
   // Accent visor
-  octx.fillStyle = '#7cffb2';
+  octx.fillStyle = '#ff5229';
   octx.fillRect(bodyX, headY - 1.5, headR, 2.4);
 }
 

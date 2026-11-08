@@ -1,45 +1,41 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { RUNNER_DEFAULTS } from '@/data/runnerWorlds';
 import styles from './runner.module.css';
 
-export default function Door({ door, isActive, reducedMotion }) {
-  const router = useRouter();
-  const { label, href, x, blurb, variant = 'entry' } = door;
-  const width =
-    door.width ||
-    (variant === 'return' ? RUNNER_DEFAULTS.returnDoorWidth : RUNNER_DEFAULTS.doorWidth);
+export default function Door({ door, isActive }) {
+  const { label, href, x, blurb, external = false } = door;
+  const width = door.width || RUNNER_DEFAULTS.doorWidth;
   const height = door.height || RUNNER_DEFAULTS.doorHeight;
-  const isReturn = variant === 'return';
-
-  const enter = () => router.push(href);
+  const Frame = external ? 'a' : Link;
 
   return (
     <div
-      className={`${styles.door} ${isReturn ? styles.doorReturn : ''} ${isActive ? styles.doorActive : ''}`}
-      style={{ left: x - width / 2, width, height }}
+      className={`${styles.door} ${isActive ? styles.doorActive : ''}`}
+      style={{ left: x - width / 2, width, '--door-height': `${height}px` }}
     >
-      <div className={styles.doorSign}>{label}</div>
-      {blurb ? <div className={styles.doorBlurb}>{blurb}</div> : null}
-      <button
-        type="button"
+      <span className={styles.doorSign}>{label}</span>
+
+      <Frame
+        href={href}
         className={styles.doorFrame}
-        onClick={enter}
-        aria-label={`${isReturn ? 'Return to' : 'Enter'} ${label}`}
+        aria-label={external ? `Open ${label} at explosion.fun` : `Open ${label}`}
       >
-        <span className={styles.doorArch} />
-        <span className={styles.doorOpening}>{isReturn ? '◂' : '▸'}</span>
-      </button>
+        <span className={styles.doorArrow} aria-hidden="true">
+          {external ? '↗' : '→'}
+        </span>
+        <span className={styles.doorAction} aria-hidden="true">
+          Open
+        </span>
+        <span className={styles.doorHandle} aria-hidden="true" />
+      </Frame>
+
+      {blurb ? <span className={styles.doorBlurb}>{blurb}</span> : null}
       {isActive ? (
-        <button type="button" className={styles.enterHint} onClick={enter}>
-          {isReturn ? '◂ ENTER' : 'ENTER ▸'}
-        </button>
-      ) : null}
-      {reducedMotion ? (
-        <a href={href} className={styles.doorFallbackLink}>
-          {isReturn ? `Back to ${label}` : `Go to ${label}`}
-        </a>
+        <span className={styles.enterHint} aria-hidden="true">
+          Enter ↵
+        </span>
       ) : null}
     </div>
   );

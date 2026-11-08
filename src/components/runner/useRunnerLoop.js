@@ -10,11 +10,11 @@ export function useRunnerLoop({
   initialX = RUNNER_DEFAULTS.playerStartX,
   runSpeed = RUNNER_DEFAULTS.runSpeed,
   playerScreenRatio = RUNNER_DEFAULTS.playerScreenRatio,
+  keyTargetRef,
 }) {
   const [playerWorldX, setPlayerWorldX] = useState(initialX);
   const [isMoving, setIsMoving] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
   const [direction, setDirection] = useState(1);
 
   const keysRef = useRef({ left: false, right: false });
@@ -24,12 +24,12 @@ export function useRunnerLoop({
   const playerWorldXRef = useRef(initialX);
   const directionRef = useRef(1);
 
-  const playerScreenX = Math.max(80, viewportWidth * playerScreenRatio);
-
-  // Round to whole pixels: a fractional translateX on the world blurs frame
-  // text, especially at high mobile device-pixel ratios.
+  const playerScreenX = Math.max(72, viewportWidth * playerScreenRatio);
   const cameraX = Math.round(
-    Math.max(0, Math.min(playerWorldX - playerScreenX, Math.max(0, worldWidth - viewportWidth)))
+    Math.max(
+      0,
+      Math.min(playerWorldX - playerScreenX, Math.max(0, worldWidth - viewportWidth)),
+    ),
   );
 
   useEffect(() => {
@@ -46,44 +46,53 @@ export function useRunnerLoop({
   }, [direction]);
 
   useEffect(() => {
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const updateMotion = () => setReducedMotion(motionQuery.matches);
-    updateMotion();
-    motionQuery.addEventListener('change', updateMotion);
-    return () => motionQuery.removeEventListener('change', updateMotion);
-  }, []);
-
-  useEffect(() => {
     if (!enabled) return;
 
-    const onKeyDown = (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+    const target = keyTargetRef?.current;
+    if (!target) return;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
         keysRef.current.left = true;
-        e.preventDefault();
+        event.preventDefault();
       }
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+      if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
         keysRef.current.right = true;
-        e.preventDefault();
+        event.preventDefault();
       }
     };
 
-    const onKeyUp = (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keysRef.current.left = false;
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keysRef.current.right = false;
+    const onKeyUp = (event) => {
+      if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
+        keysRef.current.left = false;
+      }
+      if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
+        keysRef.current.right = false;
+      }
+    };
+
+    const onBlur = (event) => {
+      if (event.relatedTarget && target.contains(event.relatedTarget)) return;
+
+      keysRef.current.left = false;
+      keysRef.current.right = false;
+      holdDirectionRef.current = 0;
     };
 
     const onVisibility = () => setIsPaused(document.hidden);
 
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    target.addEventListener('keydown', onKeyDown);
+    target.addEventListener('keyup', onKeyUp);
+    target.addEventListener('blur', onBlur);
     document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      target.removeEventListener('keydown', onKeyDown);
+      target.removeEventListener('keyup', onKeyUp);
+      target.removeEventListener('blur', onBlur);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [enabled]);
+  }, [enabled, keyTargetRef]);
 
   useEffect(() => {
     if (!enabled || isPaused) {
@@ -110,7 +119,10 @@ export function useRunnerLoop({
       }
 
       if (inputDirection !== 0) {
-        const next = Math.max(40, Math.min(worldWidth - 40, playerWorldXRef.current + inputDirection * runSpeed * delta));
+        const next = Math.max(
+          40,
+          Math.min(worldWidth - 40, playerWorldXRef.current + inputDirection * runSpeed * delta),
+        );
         const didMove = Math.abs(next - playerWorldXRef.current) > 0.1;
         setIsMoving(didMove);
         playerWorldXRef.current = next;
@@ -132,23 +144,11 @@ export function useRunnerLoop({
     holdDirectionRef.current = holdingDirection;
   }, []);
 
-  const moveTo = useCallback(
-    (x) => {
-      const clamped = Math.max(40, Math.min(worldWidth - 40, x));
-      playerWorldXRef.current = clamped;
-      setPlayerWorldX(clamped);
-    },
-    [worldWidth]
-  );
-
   return {
     playerWorldX,
-    playerScreenX,
     cameraX,
     isMoving,
     direction,
-    reducedMotion,
     setHoldDirection,
-    moveTo,
   };
 }

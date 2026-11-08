@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import StickFigure from './StickFigure';
 import Door from './Door';
 import { useRunnerLoop } from './useRunnerLoop';
@@ -10,44 +11,25 @@ import styles from './runner.module.css';
 
 function getOverlapDoor(playerWorldX, doors) {
   if (!doors?.length) return null;
-  const halfWidth = RUNNER_DEFAULTS.figureWidth;
-  return doors.find((door) => {
-    const doorWidth =
-      door.width ||
-      (door.variant === 'return' ? RUNNER_DEFAULTS.returnDoorWidth : RUNNER_DEFAULTS.doorWidth);
-    const doorLeft = door.x - doorWidth / 2;
-    const doorRight = door.x + doorWidth / 2;
-    return playerWorldX + halfWidth > doorLeft && playerWorldX - halfWidth < doorRight;
-  });
-}
 
-function toThemeVars(theme = {}) {
-  const vars = {};
-  if (theme.background) vars['--background'] = theme.background;
-  if (theme.foreground) vars['--foreground'] = theme.foreground;
-  if (theme.accent) vars['--accent'] = theme.accent;
-  return vars;
+  return doors.find((door) => {
+    const width = door.width || RUNNER_DEFAULTS.doorWidth;
+    const left = door.x - width / 2;
+    const right = door.x + width / 2;
+    return playerWorldX + RUNNER_DEFAULTS.figureWidth > left && playerWorldX - RUNNER_DEFAULTS.figureWidth < right;
+  });
 }
 
 export default function RunnerWorld({
   worldWidth,
   doors = [],
-  children,
-  fullPage = false,
-  intro,
-  pauseLoop = false,
-  snapPoints = [],
-  theme,
-  hudLink,
   hint,
   initialX,
   runSpeed,
   playerScreenRatio,
-  sectionNav = [],
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const viewportRef = useRef(null);
+  const router = useRouter();
   const [viewportWidth, setViewportWidth] = useState(800);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -56,188 +38,163 @@ export default function RunnerWorld({
     cameraX,
     isMoving,
     direction,
-    reducedMotion,
     setHoldDirection,
-    moveTo,
   } = useRunnerLoop({
     worldWidth,
     viewportWidth,
-    enabled: !pauseLoop,
     initialX,
     runSpeed,
     playerScreenRatio,
+    keyTargetRef: viewportRef,
   });
 
   const activeDoor = getOverlapDoor(playerWorldX, doors);
   const playerVisualX = playerWorldX - cameraX;
-
-  // Points of interest the player can head toward (doors + frame snap points).
-  const poiXs = [...doors.map((d) => d.x), ...snapPoints.map((p) => p.x)];
-  const hasRight = poiXs.some((x) => x > playerWorldX + 70);
-  const hasLeft = poiXs.some((x) => x < playerWorldX - 70);
+  const hasRight = doors.some((door) => door.x > playerWorldX + 70);
+  const hasLeft = doors.some((door) => door.x < playerWorldX - 70);
 
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
+
     const update = () => setViewportWidth(viewport.clientWidth || 800);
     update();
-    const ro = new ResizeObserver(update);
-    ro.observe(viewport);
-    return () => ro.disconnect();
-  }, [reducedMotion]);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
+    const observer = new ResizeObserver(update);
+    observer.observe(viewport);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!activeDoor) return;
-    const onKeyDown = (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        router.push(activeDoor.href);
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [activeDoor, router]);
+    const query = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   const handleRunStart = useCallback(
     (nextDirection) => setHoldDirection(nextDirection),
-    [setHoldDirection]
+    [setHoldDirection],
   );
+
   const handleRunEnd = useCallback(() => setHoldDirection(0), [setHoldDirection]);
 
-  const rootClass = [styles.runnerRoot, fullPage ? styles.runnerRootFullPage : '']
-    .filter(Boolean)
-    .join(' ');
+  const handleKeyDown = (event) => {
+    if (event.key !== 'Enter' || !activeDoor) return;
+    if (event.target !== event.currentTarget) return;
 
-  const runnerHint = hint || 'Use ← → or A / D to run · press Enter at a glowing door';
+    event.preventDefault();
 
-  const isSectionActive = (href) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+    if (activeDoor.external) {
+      window.location.assign(activeDoor.href);
+      return;
+    }
 
-  const sectionNavEl =
-    sectionNav.length > 0 ? (
-      <nav className={styles.sectionNav} aria-label="Site sections">
-        {sectionNav.map((item) => {
-          const active = isSectionActive(item.href);
-          return (
-            <button
-              key={item.id || item.href}
-              type="button"
-              className={`${styles.sectionNavBtn} ${active ? styles.sectionNavBtnActive : ''}`}
-              onClick={() => router.push(item.href)}
-              aria-current={active ? 'page' : undefined}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </nav>
-    ) : null;
+    router.push(activeDoor.href);
+  };
 
-  // Reduced motion no longer swaps out the game — it only quiets decorative
-  // animation (handled in CSS via the prefers-reduced-motion media query).
-  // The corridor stays playable, and Door still renders static text links so
-  // users who'd rather not run can click straight through.
+  const runnerHint = hint || 'Run with ← → or the buttons. Stop at a door to open it.';
+
   return (
-    <section className={rootClass} aria-label="Interactive corridor" style={toThemeVars(theme)}>
-      <div className={styles.runnerStrip}>
-        <div className={styles.viewport} ref={viewportRef}>
-          <div className={styles.topFade} aria-hidden="true" />
+    <div className={styles.runnerRoot}>
+      <div
+        ref={viewportRef}
+        className={styles.viewport}
+        tabIndex={0}
+        role="region"
+        aria-label="Interactive index: run to a door to open it"
+        aria-describedby="runner-hint"
+        onKeyDown={handleKeyDown}
+        onPointerDown={() => viewportRef.current?.focus({ preventScroll: true })}
+      >
+        <p className={styles.hintBar} id="runner-hint">
+          {runnerHint}
+        </p>
 
-          {hudLink ? (
-            <a href={hudLink.href} className={styles.hudLink}>
-              ◂ {hudLink.label}
-            </a>
-          ) : null}
+        {hasLeft ? (
+          <span className={`${styles.edgeArrow} ${styles.edgeArrowLeft}`} aria-hidden="true">
+            ←
+          </span>
+        ) : null}
+        {hasRight ? (
+          <span className={`${styles.edgeArrow} ${styles.edgeArrowRight}`} aria-hidden="true">
+            →
+          </span>
+        ) : null}
 
-          <div className={styles.hintBar}>{runnerHint}</div>
+        <div
+          className={styles.world}
+          style={{ width: worldWidth, transform: `translateX(${-cameraX}px)` }}
+        >
+          <div className={styles.wall} aria-hidden="true" />
+          <div className={styles.floor} aria-hidden="true" />
 
-          {sectionNavEl}
+          {doors.map((door) => (
+            <Door key={door.id} door={door} isActive={activeDoor?.id === door.id} />
+          ))}
+        </div>
 
-          {hasLeft ? (
-            <div className={`${styles.edgeArrow} ${styles.edgeArrowLeft}`} aria-hidden="true">
-              ◀
-            </div>
-          ) : null}
-          {hasRight ? (
-            <div className={`${styles.edgeArrow} ${styles.edgeArrowRight}`} aria-hidden="true">
-              ▶
-            </div>
-          ) : null}
+        <div className={styles.playerSlot} style={{ left: playerVisualX - 42 }}>
+          <StickFigure isMoving={isMoving} direction={direction} className={styles.stickCanvas} />
+        </div>
 
-          {snapPoints.length > 0 ? (
-            <div className={styles.snapNav}>
-              {snapPoints.map((point) => (
-                <button
-                  key={point.id}
-                  type="button"
-                  className={styles.projectNavBtn}
-                  onClick={() => moveTo(point.x)}
-                >
-                  {point.label}
-                </button>
-              ))}
-            </div>
-          ) : null}
-
-          <div
-            className={styles.world}
-            style={{ width: worldWidth, transform: `translateX(${-cameraX}px)` }}
-          >
-            <div className={styles.wall} />
-            <div className={styles.parallaxGlow} />
-            <div className={styles.floor} />
-            <div className={styles.floorLane} />
-
-            {doors.map((door) => (
-              <Door
-                key={door.id}
-                door={door}
-                isActive={activeDoor?.id === door.id}
-                reducedMotion={reducedMotion}
-              />
-            ))}
-
-            {children}
+        {isMobile ? (
+          <div className={styles.mobileControls}>
+            <button
+              type="button"
+              className={styles.runButton}
+              aria-label="Run left"
+              onPointerDown={(event) => {
+                event.preventDefault();
+                handleRunStart(-1);
+              }}
+              onPointerUp={handleRunEnd}
+              onPointerLeave={handleRunEnd}
+              onPointerCancel={handleRunEnd}
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              className={`${styles.runButton} ${styles.runButtonAccent}`}
+              aria-label="Run right"
+              onPointerDown={(event) => {
+                event.preventDefault();
+                handleRunStart(1);
+              }}
+              onPointerUp={handleRunEnd}
+              onPointerLeave={handleRunEnd}
+              onPointerCancel={handleRunEnd}
+            >
+              →
+            </button>
           </div>
+        ) : null}
 
-          <div className={styles.playerSlot} style={{ left: playerVisualX - 42 }}>
-            <StickFigure isMoving={isMoving} direction={direction} className={styles.stickCanvas} />
-          </div>
+        <span className="srOnly" aria-live="polite">
+          {activeDoor ? `At the ${activeDoor.label} door.` : ''}
+        </span>
+      </div>
 
-          {isMobile ? (
-            <div className={styles.mobileControls}>
-              <button
-                type="button"
-                className={styles.runButton}
-                onPointerDown={() => handleRunStart(-1)}
-                onPointerUp={handleRunEnd}
-                onPointerLeave={handleRunEnd}
-                onPointerCancel={handleRunEnd}
-              >
-                ◂
-              </button>
-              <button
-                type="button"
-                className={`${styles.runButton} ${styles.runButtonAccent}`}
-                onPointerDown={() => handleRunStart(1)}
-                onPointerUp={handleRunEnd}
-                onPointerLeave={handleRunEnd}
-                onPointerCancel={handleRunEnd}
-              >
-                ▸
-              </button>
-            </div>
-          ) : null}
+      <div className={styles.directory}>
+        <span className={styles.directoryLabel}>Or jump straight there</span>
+        <div className={styles.directoryLinks}>
+          {doors.map((door) =>
+            door.external ? (
+              <a key={door.id} href={door.href} className={styles.directoryLink}>
+                {door.label}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <Link key={door.id} href={door.href} className={styles.directoryLink}>
+                {door.label}
+                <span aria-hidden="true">→</span>
+              </Link>
+            ),
+          )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

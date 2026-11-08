@@ -1,54 +1,69 @@
-import { Geist, Geist_Mono, Space_Grotesk, Press_Start_2P } from 'next/font/google';
+import { Inter, Space_Grotesk, Space_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const sans = Inter({
+  variable: '--font-sans',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const displayFont = Space_Grotesk({
+const display = Space_Grotesk({
   variable: '--font-display',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-const pixelFont = Press_Start_2P({
-  variable: '--font-pixel',
-  weight: '400',
+const mono = Space_Mono({
+  variable: '--font-mono',
+  weight: ['400', '700'],
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata = {
-  metadataBase: new URL('https://reuben.roy'),
+  metadataBase: new URL('https://reuben-roy.explosion.fun'),
   title: {
-    default: 'Reuben Roy | Interactive Portfolio',
-    template: '%s | Reuben Roy',
+    default: 'Reuben Roy — Generalist software engineer',
+    template: '%s — Reuben Roy',
   },
-  description: 'Generalist software engineer building interactive products, visualizations, and mobile tools.',
-  applicationName: 'reuben.roy',
+  description:
+    'Reuben Roy is a generalist software engineer building agentic systems, data products, and native apps.',
+  applicationName: 'Reuben Roy',
+  authors: [{ name: 'Reuben Roy', url: 'https://www.explosion.fun' }],
+  creator: 'Reuben Roy',
   openGraph: {
-    title: 'Reuben Roy | Interactive Portfolio',
-    description: 'Run through projects, work history, and experiments in a retro-inspired portfolio world.',
-    siteName: 'reuben.roy',
+    title: 'Reuben Roy — Generalist software engineer',
+    description:
+      'Agentic systems, data products, and native apps. The interactive portfolio of Reuben Roy.',
+    siteName: 'Reuben Roy',
     type: 'website',
+    url: '/',
   },
   twitter: {
     card: 'summary',
-    title: 'Reuben Roy | Interactive Portfolio',
-    description: 'Generalist software engineer building interactive products, visualizations, and mobile tools.',
+    title: 'Reuben Roy — Generalist software engineer',
+    description:
+      'Agentic systems, data products, and native apps. The interactive portfolio of Reuben Roy.',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${displayFont.variable} ${pixelFont.variable}`}>
-        {children}
+      <body id="top" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+        <a href="#main" className="skipLink">
+          Skip to content
+        </a>
+        <Navbar />
+        <main id="main">{children}</main>
+        <Footer />
         <Analytics />
       </body>
     </html>

@@ -1,658 +1,422 @@
-/* Black + neon pixel runner. All colors read off the global --background /
-   --foreground / --accent tokens (overridden per-runner via toThemeVars). */
 .runnerRoot {
-  --runner-bg: var(--background, #050506);
-  --runner-fg: var(--foreground, #f4f4f5);
-  --runner-accent: var(--accent, #7cffb2);
-  --runner-accent-soft: var(--accent-soft, rgba(124, 255, 178, 0.16));
-  --runner-accent-glow: var(--accent-glow, rgba(124, 255, 178, 0.45));
-  --runner-grid: rgba(255, 255, 255, 0.03);
-  --nav-h: 64px;
-  --floor-h: 15%;
-
-  position: relative;
-  width: 100%;
+  --runner-wall: var(--background-alt);
+  --runner-line: rgba(26, 26, 30, 0.055);
+  --runner-floor: var(--background-deep);
+  --runner-height: clamp(360px, 44vw, 470px);
   overflow: hidden;
-  background: var(--runner-bg);
-  color: var(--runner-fg);
-}
-
-.runnerRootFullPage {
-  height: calc(100svh - var(--nav-h));
-  margin-top: var(--nav-h);
-}
-
-.runnerStrip {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+  background: var(--background);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
 }
 
 .viewport {
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: var(--runner-height);
   overflow: hidden;
-  background: var(--runner-bg);
+  outline: none;
+  touch-action: pan-y;
+}
+
+.viewport:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: -2px;
+}
+
+.hintBar {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 6;
+  max-width: calc(100% - 88px);
+  padding: 7px 9px;
+  background: rgba(251, 251, 248, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.55rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.edgeArrow {
+  position: absolute;
+  top: 48%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--background);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--foreground-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.edgeArrowLeft {
+  left: 14px;
+}
+
+.edgeArrowRight {
+  right: 14px;
 }
 
 .world {
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   height: 100%;
   will-change: transform;
-  transition: none;
 }
 
-/* faint pixel grid on the wall */
 .wall {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: var(--floor-h);
-  background:
-    repeating-linear-gradient(0deg, var(--runner-grid) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, var(--runner-grid) 0 1px, transparent 1px 40px),
-    var(--runner-bg);
+  inset: 0;
+  background-color: var(--runner-wall);
+  background-image:
+    linear-gradient(to right, var(--runner-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--runner-line) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
 
-.parallaxGlow {
+.wall::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 8%, var(--runner-accent-soft), transparent 38%);
-  opacity: 0.5;
-  pointer-events: none;
+  right: 0;
+  bottom: 92px;
+  left: 0;
+  height: 1px;
+  background: var(--border-strong);
 }
 
 .floor {
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  height: var(--floor-h);
-  background: var(--runner-bg);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  height: 92px;
+  background: var(--runner-floor);
+  border-top: 1px solid var(--border-strong);
 }
 
-.floorLane {
+.floor::after {
+  content: '';
   position: absolute;
-  left: 0;
   right: 0;
-  bottom: var(--floor-h);
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--runner-accent), transparent);
-  box-shadow: 0 0 16px var(--runner-accent-glow);
-  opacity: 0.85;
+  bottom: 45px;
+  left: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--orange) 0 14px,
+    transparent 14px 28px
+  );
+  opacity: 0.55;
 }
 
-/* blends the top of the stage into solid black so the page top merges in */
-.topFade {
+.door {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 34%;
-  background: linear-gradient(180deg, var(--runner-bg) 0%, transparent 100%);
+  bottom: 86px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.doorSign {
+  padding: 4px 7px;
+  background: var(--background);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  color: var(--foreground);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.doorFrame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  height: var(--door-height, 208px);
+  background: var(--orange);
+  border: 1px solid var(--black);
+  border-radius: 3px 3px 0 0;
+  transition:
+    background-color 140ms ease,
+    transform 140ms ease;
+}
+
+.doorFrame::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(16, 16, 19, 0.28);
+  border-radius: 2px;
   pointer-events: none;
-  z-index: 22;
+}
+
+.doorFrame:hover {
+  background: var(--orange-strong);
+  transform: translateY(-2px);
+}
+
+.doorFrame:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
+}
+
+.doorArrow {
+  color: var(--black);
+  font-family: var(--font-mono), monospace;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.doorAction {
+  color: var(--black);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.doorHandle {
+  position: absolute;
+  top: 52%;
+  right: 12px;
+  width: 6px;
+  height: 14px;
+  background: var(--black);
+  border-radius: 1px;
+}
+
+.doorBlurb {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.doorActive .doorSign {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--cream);
+}
+
+.doorActive .doorFrame {
+  background: var(--orange-strong);
+  transform: translateY(-2px);
+}
+
+.enterHint {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  z-index: 2;
+  padding: 5px 7px;
+  background: var(--black);
+  border-radius: 3px;
+  color: var(--cream);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 .playerSlot {
   position: absolute;
-  bottom: calc(var(--floor-h) - 4%);
+  bottom: 86px;
+  z-index: 2;
   width: 84px;
-  height: 120px;
-  z-index: 24;
+  height: 118px;
   pointer-events: none;
 }
 
 .stickCanvas {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 0 10px var(--runner-accent-glow));
+  image-rendering: pixelated;
 }
 
-/* ---------- HUD ---------- */
-.hudLink {
-  position: absolute;
-  top: 0.95rem;
-  right: 0.95rem;
-  z-index: 35;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 40px;
-  padding: 0.5rem 0.85rem;
-  border: 1px solid var(--runner-accent);
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--runner-fg);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(8px);
-}
-
-.hintBar {
-  position: absolute;
-  top: 0.95rem;
-  left: 0.95rem;
-  z-index: 30;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  line-height: 1.5;
-  color: var(--runner-fg);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  backdrop-filter: blur(8px);
-  max-width: 16rem;
-}
-
-/* ---------- Primary section nav (cross-page) ---------- */
-.sectionNav {
-  position: absolute;
-  top: 0.95rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 40;
-  display: flex;
-  gap: 0.35rem;
-  max-width: min(60rem, calc(100% - 2rem));
-  padding: 0.35rem;
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--runner-accent);
-  box-shadow: 0 0 18px var(--runner-accent-glow);
-  backdrop-filter: blur(10px);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.sectionNav::-webkit-scrollbar {
-  display: none;
-}
-
-.sectionNavBtn {
-  flex: 0 0 auto;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.04em;
-  padding: 0.55rem 0.8rem;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--runner-fg);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.sectionNavBtn:hover {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
-}
-
-.sectionNavBtnActive,
-.sectionNavBtnActive:hover {
-  background: var(--runner-accent);
-  border-color: var(--runner-accent);
-  color: #050506;
-}
-
-.snapNav {
-  position: absolute;
-  top: 5.6rem;
-  left: 0.95rem;
-  right: 0.95rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  z-index: 20;
-  max-height: 5rem;
-  overflow-y: auto;
-}
-
-.projectNavBtn {
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.52rem;
-  padding: 0.42rem 0.6rem;
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--runner-accent);
-  color: var(--runner-accent);
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: inset 0 0 12px rgba(124, 255, 178, 0.08);
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-}
-
-.projectNavBtn:hover {
-  background: var(--runner-accent);
-  border-color: var(--runner-accent);
-  color: #050506;
-}
-
-/* ---------- Directional edge arrows ---------- */
-.edgeArrow {
-  position: absolute;
-  top: 50%;
-  z-index: 28;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--runner-accent);
-  text-shadow: 0 0 14px var(--runner-accent-glow);
-  pointer-events: none;
-}
-
-.edgeArrowLeft {
-  left: 0.7rem;
-  animation: arrowNudgeLeft 1s ease-in-out infinite;
-}
-
-.edgeArrowRight {
-  right: 0.7rem;
-  animation: arrowNudgeRight 1s ease-in-out infinite;
-}
-
-@keyframes arrowNudgeRight {
-  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
-  50% { transform: translate(8px, -50%); opacity: 1; }
-}
-
-@keyframes arrowNudgeLeft {
-  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
-  50% { transform: translate(-8px, -50%); opacity: 1; }
-}
-
-/* ---------- Doors ---------- */
-.door {
-  position: absolute;
-  bottom: var(--floor-h);
-  z-index: 12;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.doorSign {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 0.7rem;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.02em;
-  text-align: center;
-  color: var(--runner-fg);
-  background: rgba(0, 0, 0, 0.85);
-  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.4;
-  max-width: 18ch;
-}
-
-/* brief project explainer shown under the title, above the door */
-.doorBlurb {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.5rem;
-  line-height: 1.45;
-  text-align: center;
-  color: var(--muted, #a1a1aa);
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  padding: 0.35rem 0.5rem;
-  max-width: 160px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.doorActive .doorBlurb {
-  border-color: var(--runner-accent);
-  color: var(--runner-fg);
-}
-
-.doorFrame {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* the blocky neon-outlined jamb/arch */
-.doorArch {
-  position: absolute;
-  inset: 0;
-  border: 6px solid var(--runner-fg);
-  border-bottom: none;
-  background: #000;
-  box-shadow:
-    inset 0 0 0 2px #000,
-    inset 0 0 0 4px rgba(255, 255, 255, 0.06);
-}
-
-/* dark interior opening with the direction arrow */
-.doorOpening {
-  position: absolute;
-  inset: 14px 14px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), #000 60%);
-  color: rgba(255, 255, 255, 0.35);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 1.4rem;
-}
-
-.doorReturn .doorArch {
-  border-color: var(--muted, #a1a1aa);
-}
-
-.doorActive .doorArch {
-  border-color: var(--runner-accent);
-  box-shadow:
-    inset 0 0 0 2px #000,
-    inset 0 0 24px var(--runner-accent-soft),
-    0 0 28px var(--runner-accent-glow);
-}
-
-.doorActive .doorOpening {
-  color: var(--runner-accent);
-  background: linear-gradient(180deg, var(--runner-accent-soft), #000 60%);
-}
-
-.doorActive .doorSign {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
-}
-
-.enterHint {
-  position: absolute;
-  bottom: -2.4rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.04em;
-  color: #000;
-  background: var(--runner-accent);
-  border: none;
-  padding: 0.4rem 0.6rem;
-  white-space: nowrap;
-  cursor: pointer;
-  animation: enterPulse 1s steps(2, end) infinite;
-}
-
-@keyframes enterPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.doorFallbackLink {
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  color: var(--runner-accent);
-  border: 1px solid var(--runner-accent);
-  padding: 0.5rem 0.7rem;
-  margin-top: 0.5rem;
-}
-
-/* ---------- Frames ---------- */
-.wallFrame {
-  --frame-w: var(--frame-w-base, 760px);
-  position: absolute;
-  bottom: var(--floor-h);
-  z-index: 8;
-  left: calc(var(--frame-x) - var(--frame-w) / 2);
-  width: var(--frame-w);
-  height: min(78svh, var(--frame-h));
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.framePlaque {
-  align-self: flex-start;
-  margin: 0 0 0.5rem 0;
-  padding: 0.5rem 0.8rem;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.02em;
-  color: #000;
-  background: var(--runner-accent);
-}
-
-.frameShell {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  padding: 6px;
-  background: #000;
-  border: 4px solid var(--runner-fg);
-  box-shadow:
-    0 0 0 2px #000,
-    0 0 0 6px rgba(255, 255, 255, 0.08),
-    0 0 40px rgba(0, 0, 0, 0.6);
-}
-
-/* corner accents */
-.frameShell::before,
-.frameShell::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 3px solid var(--runner-accent);
-  z-index: 2;
-}
-
-.frameShell::before {
-  top: -4px;
-  left: -4px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.frameShell::after {
-  bottom: -4px;
-  right: -4px;
-  border-left: none;
-  border-top: none;
-}
-
-.frameMat {
-  height: 100%;
-  padding: 4px;
-  background: #050506;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.frameInner {
-  height: 100%;
-  background: var(--runner-bg);
-  padding: 1rem 1.15rem;
-  overflow: auto;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--runner-fg);
-  scrollbar-width: thin;
-}
-
-.frameScroll {
-  height: 100%;
-  overflow-y: auto;
-  font-size: 0.95rem;
-  color: inherit;
-  scrollbar-width: thin;
-}
-
-.frameScroll section {
-  margin-bottom: 0 !important;
-  padding: 0 !important;
-}
-
-.frameScroll h2 {
-  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
-  font-size: 1.3rem !important;
-  margin-bottom: 0.7rem !important;
-}
-
-.frameScroll h3,
-.frameScroll h4 {
-  font-size: 1rem !important;
-}
-
-/* ---------- Section intro (career/projects header) ---------- */
-/* ---------- Mobile controls ---------- */
 .mobileControls {
-  display: none;
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
 }
 
 .runButton {
-  flex: 1;
-  min-height: 52px;
-  padding: 0.78rem;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
-  color: var(--runner-fg);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
-  touch-action: manipulation;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 42px;
+  background: var(--background);
+  border: 1px solid var(--black);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--black);
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 1rem;
+  touch-action: none;
   user-select: none;
-  backdrop-filter: blur(8px);
-}
-
-.runButtonAccent {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
 }
 
 .runButton:active {
-  background: var(--runner-accent-soft);
+  box-shadow: none;
+  transform: translateY(1px);
 }
 
-.wallFrameMobile {
-  margin-bottom: 1.75rem;
+.runButtonAccent {
+  background: var(--orange);
 }
 
-.wallFrameMobile .framePlaque {
-  margin-bottom: 0.5rem;
+.directory {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--background);
+  border-top: 1px solid var(--border);
 }
 
-.wallFrameMobile .frameShell {
-  flex: none;
+.directoryLabel {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.wallFrameMobile .frameInner {
-  height: auto;
-  max-height: none;
+.directoryLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
-/* ---------- Mobile playable ---------- */
+.directoryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--foreground-soft);
+  font-size: 0.76rem;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.directoryLink span {
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7em;
+}
+
+.directoryLink:hover {
+  background: var(--background-alt);
+  border-color: var(--border-strong);
+}
+
 @media (max-width: 768px) {
   .runnerRoot {
-    /* taller floor keeps doors (and their ENTER button) above the bottom
-       control dock so the two never overlap */
-    --floor-h: 24%;
-  }
-
-  .mobileControls {
-    display: flex;
-    gap: 0.6rem;
-    position: absolute;
-    bottom: 0.6rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    z-index: 25;
-  }
-
-  .wallFrame {
-    --frame-w: min(92vw, 540px);
-    height: min(80svh, var(--frame-h));
-  }
-
-  .frameInner {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  /* section nav becomes a full-width scrollable strip at the very top */
-  .sectionNav {
-    top: 0.6rem;
-    left: 0.6rem;
-    right: 0.6rem;
-    transform: none;
-    max-width: none;
-    gap: 0.3rem;
-    padding: 0.3rem;
-    -webkit-overflow-scrolling: touch;
+    --runner-height: 400px;
   }
 
   .hintBar {
-    top: 3.3rem;
-    left: 0.6rem;
-    right: 0.6rem;
-    max-width: none;
-  }
-
-  /* back-link is redundant on mobile — the section nav covers it */
-  .hudLink {
-    display: none;
-  }
-
-  /* keep the door's ENTER button tight to the door, clear of the dock */
-  .enterHint {
-    bottom: -1.5rem;
-  }
-
-  .snapNav {
-    top: auto;
-    bottom: 4.4rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    flex-wrap: nowrap;
-    gap: 0.4rem;
-    max-height: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 0.2rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .snapNav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .projectNavBtn {
-    flex: 0 0 auto;
-  }
-
-  .doorSign {
+    top: 10px;
+    left: 10px;
+    max-width: calc(100% - 72px);
     font-size: 0.5rem;
+  }
+
+  .edgeArrow {
+    top: 40%;
+    width: 26px;
+    height: 26px;
+  }
+
+  .edgeArrowLeft {
+    left: 10px;
+  }
+
+  .edgeArrowRight {
+    right: 10px;
+  }
+
+  .directory {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
-/* Reduced motion keeps the corridor playable but stills the decorative,
-   self-running animations (the nudging edge arrows and the pulsing ENTER
-   prompt). Player movement is input-driven, so it stays. */
+@media (max-width: 480px) {
+  .runnerRoot {
+    --runner-height: 360px;
+  }
+
+  .door {
+    bottom: 78px;
+  }
+
+  .floor {
+    height: 84px;
+  }
+
+  .floor::after {
+    bottom: 40px;
+  }
+
+  .wall::after {
+    bottom: 84px;
+  }
+
+  .playerSlot {
+    bottom: 78px;
+    width: 72px;
+    height: 102px;
+  }
+
+  .mobileControls {
+    bottom: 10px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .world {
     will-change: auto;
   }
 
-  .edgeArrowLeft,
-  .edgeArrowRight,
-  .enterHint {
-    animation: none;
+  .doorFrame,
+  .doorSign,
+  .doorActive .doorFrame {
+    transform: none;
   }
 }
