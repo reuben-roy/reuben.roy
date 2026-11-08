@@ -1,14 +1,28 @@
+export const SITE_URL = 'https://reuben-roy.explosion.fun';
+export const SITE_DOMAIN = 'reuben-roy.explosion.fun';
+export const MAIN_SITE = 'https://www.explosion.fun';
+export const PROJECTS_URL = `${MAIN_SITE}/projects/`;
+export const BLOG_URL = `${MAIN_SITE}/blog/`;
+export const ABOUT_URL = `${MAIN_SITE}/about/`;
+export const CV_URL = `${MAIN_SITE}/cv/`;
+const SIDE_TRACK_URL = `${MAIN_SITE}/side-track/`;
+export const CONTACT_EMAIL = 'hello@explosion.fun';
+export const CONTACT_HREF = `mailto:${CONTACT_EMAIL}`;
+const GITHUB_URL = 'https://github.com/reuben-roy';
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/reuben-roy';
+const YOUTUBE_URL = 'https://www.youtube.com/@reubenroy';
+
 export const NAV_LINKS = [
-  { label: 'Work', href: 'https://www.explosion.fun/projects/', external: true },
-  { label: 'Career', href: '/career', external: false },
-  { label: 'Writing', href: 'https://www.explosion.fun/blog/', external: true },
-  { label: 'About', href: 'https://www.explosion.fun/about/', external: true },
+  { label: 'Work', href: PROJECTS_URL },
+  { label: 'Career', href: '/career' },
+  { label: 'Writing', href: BLOG_URL },
+  { label: 'About', href: ABOUT_URL },
 ];
 
 export const SOCIAL_LINKS = [
-  { label: 'GitHub', href: 'https://github.com/reuben-roy' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/reuben-roy' },
-  { label: 'YouTube', href: 'https://www.youtube.com/@reubenroy' },
+  { label: 'GitHub', href: GITHUB_URL },
+  { label: 'LinkedIn', href: LINKEDIN_URL },
+  { label: 'YouTube', href: YOUTUBE_URL },
 ];
 
 export const SELECTED_WORK = [
@@ -18,7 +32,7 @@ export const SELECTED_WORK = [
     category: 'Agentic AI',
     description:
       'A local-first agent that fills and verifies job applications overnight, and stops when it is not sure.',
-    href: 'https://www.explosion.fun/projects/auto-apply/',
+    href: `${PROJECTS_URL}auto-apply/`,
   },
   {
     index: '02',
@@ -26,7 +40,7 @@ export const SELECTED_WORK = [
     category: 'Data app',
     description:
       'Self-actualization scoring built from your own browsing data, with a public leaderboard.',
-    href: 'https://www.explosion.fun/projects/greatness/',
+    href: `${PROJECTS_URL}greatness/`,
   },
   {
     index: '03',
@@ -34,7 +48,7 @@ export const SELECTED_WORK = [
     category: 'Visualisation',
     description:
       'An interactive D3 audit of years of watch history: curiosity velocity, channel loyalty, and rabbit holes.',
-    href: 'https://www.explosion.fun/projects/youtube-scholar/',
+    href: `${PROJECTS_URL}youtube-scholar/`,
   },
   {
     index: '04',
@@ -42,7 +56,7 @@ export const SELECTED_WORK = [
     category: 'iOS app',
     description:
       'A lifting tracker with a random workout picker, fatigue tracking, and local rankings.',
-    href: 'https://www.explosion.fun/side-track/',
+    href: SIDE_TRACK_URL,
   },
 ];
 

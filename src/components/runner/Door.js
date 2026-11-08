@@ -1,14 +1,14 @@
 'use client';
 
-import Link from 'next/link';
+import SiteLink, { isExternalHref } from '@/components/SiteLink';
 import { RUNNER_DEFAULTS } from '@/data/runnerWorlds';
 import styles from './runner.module.css';
 
 export default function Door({ door, isActive }) {
-  const { label, href, x, blurb, external = false } = door;
+  const { label, href, x, blurb } = door;
   const width = door.width || RUNNER_DEFAULTS.doorWidth;
   const height = door.height || RUNNER_DEFAULTS.doorHeight;
-  const Frame = external ? 'a' : Link;
+  const external = isExternalHref(href);
 
   return (
     <div
@@ -17,11 +17,7 @@ export default function Door({ door, isActive }) {
     >
       <span className={styles.doorSign}>{label}</span>
 
-      <Frame
-        href={href}
-        className={styles.doorFrame}
-        aria-label={external ? `Open ${label} at explosion.fun` : `Open ${label}`}
-      >
+      <SiteLink href={href} className={styles.doorFrame} aria-label={`Open ${label}`}>
         <span className={styles.doorArrow} aria-hidden="true">
           {external ? '↗' : '→'}
         </span>
@@ -29,7 +25,7 @@ export default function Door({ door, isActive }) {
           Open
         </span>
         <span className={styles.doorHandle} aria-hidden="true" />
-      </Frame>
+      </SiteLink>
 
       {blurb ? <span className={styles.doorBlurb}>{blurb}</span> : null}
       {isActive ? (

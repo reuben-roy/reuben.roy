@@ -1,3 +1,5 @@
+import { ABOUT_URL, BLOG_URL, PROJECTS_URL } from './site';
+
 export const RUNNER_DEFAULTS = {
   playerStartX: 200,
   runSpeed: 520,
@@ -18,8 +20,7 @@ export const HOME_CORRIDOR = {
       id: 'work',
       label: 'Work',
       blurb: 'The project index',
-      href: 'https://www.explosion.fun/projects/',
-      external: true,
+      href: PROJECTS_URL,
       x: 560,
     },
     {
@@ -27,23 +28,20 @@ export const HOME_CORRIDOR = {
       label: 'Career',
       blurb: 'The long version',
       href: '/career',
-      external: false,
       x: 900,
     },
     {
       id: 'writing',
       label: 'Writing',
       blurb: 'Essays & reviews',
-      href: 'https://www.explosion.fun/blog/',
-      external: true,
+      href: BLOG_URL,
       x: 1240,
     },
     {
       id: 'about',
       label: 'About',
       blurb: 'The story',
-      href: 'https://www.explosion.fun/about/',
-      external: true,
+      href: ABOUT_URL,
       x: 1580,
     },
   ],

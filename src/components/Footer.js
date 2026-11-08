@@ -1,25 +1,30 @@
-import Link from 'next/link';
 import BrandMark from './BrandMark';
+import SiteLink, { isExternalHref } from './SiteLink';
+import {
+  ABOUT_URL,
+  BLOG_URL,
+  CONTACT_EMAIL,
+  CONTACT_HREF,
+  CV_URL,
+  PROJECTS_URL,
+  SITE_DOMAIN,
+  SOCIAL_LINKS,
+} from '@/data/site';
 import styles from './Footer.module.css';
 
 const EXPLORE_LINKS = [
-  { label: 'Work', href: 'https://www.explosion.fun/projects/', external: true },
-  { label: 'Writing', href: 'https://www.explosion.fun/blog/', external: true },
-  { label: 'About', href: 'https://www.explosion.fun/about/', external: true },
-  { label: 'CV', href: 'https://www.explosion.fun/cv/', external: true },
+  { label: 'Work', href: PROJECTS_URL },
+  { label: 'Writing', href: BLOG_URL },
+  { label: 'About', href: ABOUT_URL },
+  { label: 'CV', href: CV_URL },
 ];
 
 const SITE_LINKS = [
-  { label: 'Home', href: '/', external: false },
-  { label: 'Career', href: '/career', external: false },
+  { label: 'Home', href: '/' },
+  { label: 'Career', href: '/career' },
 ];
 
-const ELSEWHERE_LINKS = [
-  { label: 'GitHub', href: 'https://github.com/reuben-roy', external: true },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/reuben-roy', external: true },
-  { label: 'YouTube', href: 'https://www.youtube.com/@reubenroy', external: true },
-  { label: 'Email', href: 'mailto:hello@explosion.fun', external: false },
-];
+const ELSEWHERE_LINKS = [...SOCIAL_LINKS, { label: 'Email', href: CONTACT_HREF }];
 
 function FooterColumn({ title, links }) {
   return (
@@ -28,16 +33,10 @@ function FooterColumn({ title, links }) {
       <ul className={styles.list}>
         {links.map((link) => (
           <li key={link.label}>
-            {link.external ? (
-              <a href={link.href} className={styles.link}>
-                {link.label}
-                <span aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <Link href={link.href} className={styles.link}>
-                {link.label}
-              </Link>
-            )}
+            <SiteLink href={link.href} className={styles.link}>
+              {link.label}
+              {isExternalHref(link.href) ? <span aria-hidden="true">↗</span> : null}
+            </SiteLink>
           </li>
         ))}
       </ul>
@@ -55,8 +54,8 @@ export default function Footer() {
             A small subdomain for the career-and-contact layer. The projects, writing, and
             experiments live at explosion.fun.
           </p>
-          <a href="mailto:hello@explosion.fun" className={styles.email}>
-            hello@explosion.fun
+          <a href={CONTACT_HREF} className={styles.email}>
+            {CONTACT_EMAIL}
             <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -68,7 +67,7 @@ export default function Footer() {
 
       <div className={`container ${styles.bottom}`}>
         <p>© {new Date().getFullYear()} Reuben Roy</p>
-        <p>Built with Next.js. Hosted at reuben-roy.explosion.fun.</p>
+        <p>Built with Next.js. Hosted at {SITE_DOMAIN}.</p>
         <a href="#top" className={styles.backToTop}>
           Back to top <span aria-hidden="true">↑</span>
         </a>

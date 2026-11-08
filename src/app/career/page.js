@@ -1,17 +1,12 @@
 import Link from 'next/link';
-import {
-  CERTIFICATIONS,
-  EDUCATION,
-  EXPERIENCE,
-  INTERNSHIPS,
-  SKILL_GROUPS,
-} from '@/data/career';
+import { EXPERIENCE, SKILL_GROUPS } from '@/data/career';
+import { CV_URL, PROJECTS_URL } from '@/data/site';
 import styles from './career.module.css';
 
 export const metadata = {
   title: 'Career',
   description:
-    'The long version of Reuben Roy’s career: AI engineering, backend systems, native apps, and the work between.',
+    'A short tour of Reuben Roy’s career: AI engineering, backend systems, native apps, and the tools behind them. The full CV lives at explosion.fun.',
   alternates: {
     canonical: '/career',
   },
@@ -23,20 +18,20 @@ export default function CareerPage() {
       <header className={styles.header}>
         <div className="container">
           <div className={styles.headerTop}>
-            <p className="eyebrow">Career / The long version</p>
+            <p className="eyebrow">Career / Field notes</p>
             <p className={styles.updated}>Updated 2026</p>
           </div>
           <h1 className={styles.title}>A generalist&apos;s tour of shipped software.</h1>
           <p className={styles.lede}>
-            AI engineering, backend services, and product interfaces — often in the same week.
-            Below is the work, the tools, and the proof that it shipped.
+            AI engineering, backend services, and product interfaces — often in the same week. A
+            short tour of the roles and tools; the full CV lives at explosion.fun.
           </p>
           <div className={styles.headerActions}>
-            <a href="https://www.explosion.fun/cv/" className={styles.primary}>
+            <a href={CV_URL} className={styles.primary}>
               View CV
               <span aria-hidden="true">↗</span>
             </a>
-            <a href="https://www.explosion.fun/projects/" className={styles.secondary}>
+            <a href={PROJECTS_URL} className={styles.secondary}>
               Project index
               <span aria-hidden="true">↗</span>
             </a>
@@ -63,11 +58,6 @@ export default function CareerPage() {
                   <span className={styles.period}>{role.period}</span>
                 </div>
                 <p className={styles.summary}>{role.summary}</p>
-                <ul className={styles.highlights}>
-                  {role.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
                 <ul className={styles.stack} aria-label={`${role.role} tools`}>
                   {role.stack.map((item) => (
                     <li key={item}>{item}</li>
@@ -101,76 +91,6 @@ export default function CareerPage() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={`container ${styles.sectionGrid}`}>
-          <div className={styles.sectionLabel}>
-            <p className="eyebrow">03 / Education</p>
-            <h2 className={styles.labelTitle}>The formal part.</h2>
-          </div>
-
-          <div className={styles.educationList}>
-            {EDUCATION.map((entry) => (
-              <div key={entry.school} className={styles.educationItem}>
-                <div>
-                  <h3 className={styles.educationSchool}>{entry.school}</h3>
-                  <p className={styles.educationQualification}>{entry.qualification}</p>
-                </div>
-                <span className={styles.period}>{entry.period}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={`${styles.section} ${styles.sectionAlt}`}>
-        <div className={`container ${styles.sectionGrid}`}>
-          <div className={styles.sectionLabel}>
-            <p className="eyebrow">04 / Certifications</p>
-            <h2 className={styles.labelTitle}>The paper trail.</h2>
-          </div>
-
-          <ul className={styles.certList}>
-            {CERTIFICATIONS.map((certification) => (
-              <li key={certification.title} className={styles.certItem}>
-                <div>
-                  <h3 className={styles.certTitle}>{certification.title}</h3>
-                  <p className={styles.certOrg}>{certification.organization}</p>
-                </div>
-                {certification.href ? (
-                  <a href={certification.href} className={styles.certLink}>
-                    View
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                ) : (
-                  <span className={styles.certMuted}>Workshop</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={`container ${styles.sectionGrid}`}>
-          <div className={styles.sectionLabel}>
-            <p className="eyebrow">05 / Internships</p>
-            <h2 className={styles.labelTitle}>Before the first full-time role.</h2>
-          </div>
-
-          <div className={styles.internGrid}>
-            {INTERNSHIPS.map((internship) => (
-              <article key={internship.organization} className={styles.internItem}>
-                <p className={styles.internPeriod}>
-                  {internship.period} · {internship.location}
-                </p>
-                <h3 className={styles.internOrg}>{internship.organization}</h3>
-                <p className={styles.internCopy}>{internship.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className={styles.cta}>
         <div className={`container ${styles.ctaInner}`}>
           <div>
@@ -178,7 +98,7 @@ export default function CareerPage() {
             <h2 className={styles.ctaTitle}>See the work behind the résumé.</h2>
           </div>
           <div className={styles.ctaActions}>
-            <a href="https://www.explosion.fun/projects/" className={styles.ctaPrimary}>
+            <a href={PROJECTS_URL} className={styles.ctaPrimary}>
               Browse projects
               <span aria-hidden="true">↗</span>
             </a>

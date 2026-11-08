@@ -2,6 +2,7 @@ import { Inter, Space_Grotesk, Space_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { MAIN_SITE, SITE_URL } from '@/data/site';
 import './globals.css';
 
 const sans = Inter({
@@ -24,7 +25,7 @@ const mono = Space_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL('https://reuben-roy.explosion.fun'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Reuben Roy — Generalist software engineer',
     template: '%s — Reuben Roy',
@@ -32,7 +33,7 @@ export const metadata = {
   description:
     'Reuben Roy is a generalist software engineer building agentic systems, data products, and native apps.',
   applicationName: 'Reuben Roy',
-  authors: [{ name: 'Reuben Roy', url: 'https://www.explosion.fun' }],
+  authors: [{ name: 'Reuben Roy', url: MAIN_SITE }],
   creator: 'Reuben Roy',
   openGraph: {
     title: 'Reuben Roy — Generalist software engineer',

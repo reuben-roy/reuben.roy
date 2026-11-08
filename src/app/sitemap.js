@@ -1,13 +1,15 @@
+import { SITE_URL } from '@/data/site';
+
 export default function sitemap() {
   return [
     {
-      url: 'https://reuben-roy.explosion.fun',
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: 'https://reuben-roy.explosion.fun/career',
+      url: `${SITE_URL}/career`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,

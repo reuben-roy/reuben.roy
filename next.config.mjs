@@ -9,8 +9,14 @@ const nextConfig = {
       { source: '/about/:path*', destination: `${EXPLOSION}/about/`, permanent: true },
       { source: '/cv', destination: `${EXPLOSION}/cv/`, permanent: true },
       { source: '/cv/:path*', destination: `${EXPLOSION}/cv/`, permanent: true },
+      {
+        source: '/reuben-roy-cv.pdf',
+        destination: `${EXPLOSION}/reuben-roy-cv.pdf`,
+        permanent: true,
+      },
+      { source: '/cv.md', destination: `${EXPLOSION}/cv.md`, permanent: true },
       { source: '/blog', destination: `${EXPLOSION}/blog/`, permanent: true },
-      { source: '/blog/:path*', destination: `${EXPLOSION}/blog/`, permanent: true },
+      { source: '/blog/:path*', destination: `${EXPLOSION}/blog/:path*/`, permanent: true },
       { source: '/side-track', destination: `${EXPLOSION}/side-track/`, permanent: true },
       {
         source: '/side-track/changelog',

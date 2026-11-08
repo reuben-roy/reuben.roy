@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import SiteLink, { isExternalHref } from '@/components/SiteLink';
 import StickFigure from './StickFigure';
 import Door from './Door';
 import { useRunnerLoop } from './useRunnerLoop';
@@ -24,7 +24,7 @@ export default function RunnerWorld({
   worldWidth,
   doors = [],
   hint,
-  initialX,
+  playerStartX,
   runSpeed,
   playerScreenRatio,
 }) {
@@ -42,7 +42,7 @@ export default function RunnerWorld({
   } = useRunnerLoop({
     worldWidth,
     viewportWidth,
-    initialX,
+    initialX: playerStartX,
     runSpeed,
     playerScreenRatio,
     keyTargetRef: viewportRef,
@@ -86,7 +86,7 @@ export default function RunnerWorld({
 
     event.preventDefault();
 
-    if (activeDoor.external) {
+    if (isExternalHref(activeDoor.href)) {
       window.location.assign(activeDoor.href);
       return;
     }
@@ -180,19 +180,12 @@ export default function RunnerWorld({
       <div className={styles.directory}>
         <span className={styles.directoryLabel}>Or jump straight there</span>
         <div className={styles.directoryLinks}>
-          {doors.map((door) =>
-            door.external ? (
-              <a key={door.id} href={door.href} className={styles.directoryLink}>
-                {door.label}
-                <span aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <Link key={door.id} href={door.href} className={styles.directoryLink}>
-                {door.label}
-                <span aria-hidden="true">→</span>
-              </Link>
-            ),
-          )}
+          {doors.map((door) => (
+            <SiteLink key={door.id} href={door.href} className={styles.directoryLink}>
+              {door.label}
+              <span aria-hidden="true">{isExternalHref(door.href) ? '↗' : '→'}</span>
+            </SiteLink>
+          ))}
         </div>
       </div>
     </div>

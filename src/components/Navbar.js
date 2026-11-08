@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import BrandMark from './BrandMark';
-import { NAV_LINKS } from '@/data/site';
+import SiteLink, { isExternalHref } from './SiteLink';
+import { CONTACT_HREF, CV_URL, NAV_LINKS } from '@/data/site';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -35,42 +36,37 @@ export default function Navbar() {
 
         <nav className={styles.desktopNav} aria-label="Primary">
           {NAV_LINKS.map((link) => {
-            const active = !link.external && pathname === link.href;
-
-            if (link.external) {
-              return (
-                <a key={link.label} href={link.href} className={styles.link}>
-                  {link.label}
-                  <span className={styles.arrow} aria-hidden="true">
-                    ↗
-                  </span>
-                </a>
-              );
-            }
+            const external = isExternalHref(link.href);
+            const active = !external && pathname === link.href;
 
             return (
-              <Link
+              <SiteLink
                 key={link.label}
                 href={link.href}
                 className={`${styles.link} ${active ? styles.active : ''}`}
                 aria-current={active ? 'page' : undefined}
               >
                 {link.label}
-              </Link>
+                {external ? (
+                  <span className={styles.arrow} aria-hidden="true">
+                    ↗
+                  </span>
+                ) : null}
+              </SiteLink>
             );
           })}
         </nav>
 
         <div className={styles.actions}>
-          <a href="https://www.explosion.fun/cv/" className={styles.cv}>
+          <SiteLink href={CV_URL} className={styles.cv}>
             CV
             <span className={styles.arrow} aria-hidden="true">
               ↗
             </span>
-          </a>
-          <a href="mailto:hello@explosion.fun" className={styles.cta}>
+          </SiteLink>
+          <SiteLink href={CONTACT_HREF} className={styles.cta}>
             Say hello
-          </a>
+          </SiteLink>
         </div>
 
         <button
@@ -91,37 +87,31 @@ export default function Navbar() {
       {open && (
         <div className={styles.mobilePanel} id="mobile-menu">
           <nav className={styles.mobileNav} aria-label="Mobile primary">
-            {NAV_LINKS.map((link) =>
-              link.external ? (
-                <a
+            {NAV_LINKS.map((link) => {
+              const external = isExternalHref(link.href);
+              const active = !external && pathname === link.href;
+
+              return (
+                <SiteLink
                   key={link.label}
                   href={link.href}
                   className={styles.mobileLink}
                   onClick={() => setOpen(false)}
+                  aria-current={active ? 'page' : undefined}
                 >
                   {link.label}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              ) : (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={styles.mobileLink}
-                  onClick={() => setOpen(false)}
-                  aria-current={pathname === link.href ? 'page' : undefined}
-                >
-                  {link.label}
-                </Link>
-              ),
-            )}
+                  {external ? <span aria-hidden="true">↗</span> : null}
+                </SiteLink>
+              );
+            })}
           </nav>
           <div className={styles.mobileActions}>
-            <a href="https://www.explosion.fun/cv/" className={styles.mobileSecondary}>
+            <SiteLink href={CV_URL} className={styles.mobileSecondary}>
               View CV <span aria-hidden="true">↗</span>
-            </a>
-            <a href="mailto:hello@explosion.fun" className={styles.mobileCta}>
+            </SiteLink>
+            <SiteLink href={CONTACT_HREF} className={styles.mobileCta}>
               Say hello
-            </a>
+            </SiteLink>
           </div>
         </div>
       )}

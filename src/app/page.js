@@ -3,7 +3,14 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import SocialLinks from '@/components/SocialLinks';
 import RunnerWorld from '@/components/runner/RunnerWorld';
 import { HOME_CORRIDOR } from '@/data/runnerWorlds';
-import { RECENT_ROLES, SELECTED_WORK } from '@/data/site';
+import {
+  CONTACT_EMAIL,
+  CONTACT_HREF,
+  LINKEDIN_URL,
+  PROJECTS_URL,
+  RECENT_ROLES,
+  SELECTED_WORK,
+} from '@/data/site';
 import styles from './page.module.css';
 
 const TICKER = [
@@ -33,7 +40,7 @@ export default function Home() {
               cannot.
             </p>
             <div className={styles.actions}>
-              <a href="https://www.explosion.fun/projects/" className={styles.primary}>
+              <a href={PROJECTS_URL} className={styles.primary}>
                 See the work
                 <span aria-hidden="true">↗</span>
               </a>
@@ -85,7 +92,7 @@ export default function Home() {
               <p className="eyebrow">Selected work / 01</p>
               <h2 className={styles.sectionTitle}>Shipped, not shelved.</h2>
             </div>
-            <a href="https://www.explosion.fun/projects/" className={styles.textLink}>
+            <a href={PROJECTS_URL} className={styles.textLink}>
               All projects
               <span aria-hidden="true">↗</span>
             </a>
@@ -136,8 +143,8 @@ export default function Home() {
               Equal parts backend, interface, and shipped.
             </h2>
             <p className={styles.careerCopy}>
-              Four roles across healthcare data, retail platforms, university teaching, and
-              production AI. The through-line is systems that stay understandable after launch.
+              Roles across production AI, university teaching, and healthcare data. The
+              through-line is systems that stay understandable after launch.
             </p>
             <Link href="/career" className={styles.textLink}>
               Read the full career
@@ -175,14 +182,11 @@ export default function Home() {
               Open to roles, collaborations, and hard problems. The fastest way in is email.
             </p>
             <div className={styles.contactActions}>
-              <a href="mailto:hello@explosion.fun" className={styles.contactCta}>
-                hello@explosion.fun
+              <a href={CONTACT_HREF} className={styles.contactCta}>
+                {CONTACT_EMAIL}
                 <span aria-hidden="true">↗</span>
               </a>
-              <a
-                href="https://www.linkedin.com/in/reuben-roy"
-                className={styles.contactLink}
-              >
+              <a href={LINKEDIN_URL} className={styles.contactLink}>
                 LinkedIn
                 <span aria-hidden="true">↗</span>
               </a>

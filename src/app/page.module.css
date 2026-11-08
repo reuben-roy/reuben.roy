@@ -402,7 +402,7 @@
 }
 
 .contactEyebrow {
-  color: #a1a1aa;
+  color: var(--on-dark-muted);
 }
 
 .contactTitle {
@@ -421,7 +421,7 @@
 
 .contactCopy {
   max-width: 26rem;
-  color: #c9c9c4;
+  color: var(--on-dark-soft);
   font-size: 0.94rem;
   line-height: 1.65;
 }
@@ -456,13 +456,13 @@
 }
 
 .contactLink {
-  border: 1px solid #3d3d43;
+  border: 1px solid var(--on-dark-border);
   color: var(--cream);
 }
 
 .contactLink:hover {
   border-color: var(--cream);
-  background: #1a1a1e;
+  background: var(--foreground);
 }
 
 .contactCta span,

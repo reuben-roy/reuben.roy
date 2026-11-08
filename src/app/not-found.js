@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PROJECTS_URL } from '@/data/site';
 import styles from './not-found.module.css';
 
 export default function NotFound() {
@@ -16,7 +17,7 @@ export default function NotFound() {
             Back home
             <span aria-hidden="true">→</span>
           </Link>
-          <a href="https://www.explosion.fun/projects/" className={styles.secondary}>
+          <a href={PROJECTS_URL} className={styles.secondary}>
             Browse projects
             <span aria-hidden="true">↗</span>
           </a>

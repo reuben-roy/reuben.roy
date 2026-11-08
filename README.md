@@ -9,18 +9,20 @@ Those live at explosion.fun. Old URLs are permanently redirected (see `next.conf
 
 ## Routes
 
-| Route     | What it is                                                        |
-| --------- | ----------------------------------------------------------------- |
-| `/`       | Editorial home, selected work, interactive corridor, contact      |
-| `/career` | Full career page: experience, toolkit, education, certifications  |
+| Route     | What it is                                                            |
+| --------- | --------------------------------------------------------------------- |
+| `/`       | Editorial home, selected work, interactive corridor, contact          |
+| `/career` | Short career narrative: roles and toolkit. The full CV lives on the main site. |
 
 Everything else redirects:
 
 | Old path                       | New home                                  |
 | ------------------------------ | ----------------------------------------- |
 | `/about`                       | `https://www.explosion.fun/about/`        |
-| `/blog`, `/blog/*`             | `https://www.explosion.fun/blog/`         |
+| `/blog`, `/blog/*`             | `https://www.explosion.fun/blog/` (deep paths keep their path) |
 | `/cv`                          | `https://www.explosion.fun/cv/`           |
+| `/reuben-roy-cv.pdf`           | `https://www.explosion.fun/reuben-roy-cv.pdf` |
+| `/cv.md`                       | `https://www.explosion.fun/cv.md`         |
 | `/side-track`, `/side-track/*` | `https://www.explosion.fun/side-track/`   |
 | `/projects`, `/projects/*`     | `https://www.explosion.fun/projects/`     |
 
@@ -58,14 +60,27 @@ npm run start
 | ----------------- | --------- | ------------------------------------ |
 | `--background`    | `#fbfbf8` | Page surface                         |
 | `--background-alt`| `#f5f4ef` | Alternating sections                 |
+| `--background-deep`| `#ebe9e0` | Deeper neutral surfaces             |
 | `--foreground`    | `#1a1a1e` | Primary text                         |
+| `--foreground-soft`| `#3d3d43` | Body copy on light surfaces         |
 | `--muted`         | `#6d6d78` | Secondary text                       |
 | `--border`        | `#e4e3de` | Hairlines                            |
+| `--border-strong` | `#c9c9c4` | Emphasized rules and chips           |
 | `--orange`        | `#ff5229` | CTAs, markers, the runner            |
+| `--orange-strong` | `#fa500f` | Orange borders and hover surfaces    |
+| `--orange-ink`    | `#c43d14` | Orange text that must meet contrast  |
+| `--orange-soft`   | `#fff0eb` | Tinted surfaces                      |
+| `--cream`         | `#fafaf4` | Text on dark surfaces                |
 | `--black`         | `#101013` | Contact band, inverted surfaces      |
+| `--black-soft`    | `#27272b` | Hover state on black surfaces        |
+| `--on-dark-muted` | `#a1a1aa` | Eyebrows on dark surfaces            |
+| `--on-dark-soft`  | `#c9c9c4` | Body copy on dark surfaces           |
+| `--on-dark-border`| `#3d3d43` | Borders on dark surfaces             |
 
-Typography pairs Space Grotesk display headlines with Inter body copy and Space Mono
-labels. The pixel mark in `src/components/BrandMark.js` is a 2×2 orange/black checker.
+Spacing, radii, container width, and the nav height are also tokens in
+`src/app/globals.css`. Typography pairs Space Grotesk display headlines with Inter body
+copy and Space Mono labels. The pixel mark in `src/components/BrandMark.js` is a 2×2
+orange/black checker.
 
 ## Structure
 
@@ -81,9 +96,10 @@ src/
 │   ├── BrandMark.js
 │   ├── Footer.js
 │   ├── Navbar.js
+│   ├── SiteLink.js
 │   └── SocialLinks.js
 └── data/
-    ├── career.js        # Experience, skills, education, certifications
+    ├── career.js        # Experience summaries and skill groups
     ├── runnerWorlds.js  # Corridor doors and dimensions
     └── site.js          # Nav, socials, selected work, recent roles
 ```

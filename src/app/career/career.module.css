@@ -174,31 +174,6 @@
   line-height: 1.65;
 }
 
-.highlights {
-  display: grid;
-  gap: 0.5rem;
-  max-width: 52rem;
-  margin-top: 1rem;
-  list-style: none;
-}
-
-.highlights li {
-  display: grid;
-  grid-template-columns: 0.85rem minmax(0, 1fr);
-  gap: 0.4rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-.highlights li::before {
-  content: '—';
-  color: var(--orange-ink);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  line-height: 1.7;
-}
-
 .stack {
   display: flex;
   flex-wrap: wrap;
@@ -256,121 +231,6 @@
   color: var(--foreground-soft);
 }
 
-.educationList {
-  display: grid;
-  border-top: 1px solid var(--border-strong);
-}
-
-.educationItem {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-block: 1.4rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.educationSchool {
-  font-size: clamp(1.2rem, 2vw, 1.6rem);
-  letter-spacing: -0.03em;
-}
-
-.educationQualification {
-  margin-top: 0.3rem;
-  color: var(--muted);
-  font-size: 0.88rem;
-}
-
-.certList {
-  list-style: none;
-  border-top: 1px solid var(--border-strong);
-}
-
-.certItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-block: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.certTitle {
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.35;
-}
-
-.certOrg {
-  margin-top: 0.25rem;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.certLink,
-.certMuted {
-  flex: none;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.certLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding-bottom: 0.15rem;
-  border-bottom: 1px solid var(--border-strong);
-}
-
-.certLink:hover {
-  color: var(--orange-ink);
-  border-color: var(--orange-ink);
-}
-
-.certMuted {
-  color: var(--muted);
-}
-
-.internGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.internItem {
-  padding: 1.1rem;
-  background: var(--background);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
-.internPeriod {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.internOrg {
-  margin-top: 0.7rem;
-  font-size: 1.15rem;
-  letter-spacing: -0.025em;
-}
-
-.internCopy {
-  margin-top: 0.6rem;
-  color: var(--foreground-soft);
-  font-size: 0.84rem;
-  line-height: 1.55;
-}
-
 .cta {
   padding-block: clamp(3.5rem, 7vw, 5.5rem);
   background: var(--orange);
@@ -421,8 +281,8 @@
 }
 
 .ctaPrimary:hover {
-  background: #27272b;
-  border-color: #27272b;
+  background: var(--black-soft);
+  border-color: var(--black-soft);
 }
 
 .ctaSecondary {
@@ -455,10 +315,6 @@
     max-width: 22ch;
   }
 
-  .internGrid {
-    grid-template-columns: 1fr;
-  }
-
   .ctaInner {
     align-items: flex-start;
     flex-direction: column;
@@ -478,18 +334,6 @@
   .skillGroups {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-
-  .educationItem {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .certItem {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.6rem;
   }
 
   .ctaActions {
