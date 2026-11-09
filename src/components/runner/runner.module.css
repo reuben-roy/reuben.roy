@@ -1,422 +1,501 @@
-.runnerRoot {
-  --runner-wall: var(--background-alt);
-  --runner-line: rgba(26, 26, 30, 0.055);
-  --runner-floor: var(--background-deep);
-  --runner-height: clamp(360px, 44vw, 470px);
-  overflow: hidden;
+/* The corridor: a cream pixel world on a Mistral-style block floor. */
+
+.root {
+  --hud: 64px;
+  --plaque: 30px;
+  --ground: 48px;
+  --lift: 112px;
+  --rail: 56px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - var(--nav-height));
+  min-height: 560px;
+  max-height: 1040px;
   background: var(--background);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
+  border-bottom: 1px solid var(--border);
 }
 
 .viewport {
   position: relative;
-  height: var(--runner-height);
+  flex: 1;
   overflow: hidden;
-  outline: none;
+  overflow: clip;
   touch-action: pan-y;
+  user-select: none;
 }
 
-.viewport:focus-visible {
-  outline: 2px solid var(--orange);
-  outline-offset: -2px;
-}
-
-.hintBar {
+.backdrop {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 6;
-  max-width: calc(100% - 88px);
-  padding: 7px 9px;
-  background: rgba(251, 251, 248, 0.92);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  color: var(--muted);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.55rem;
-  line-height: 1.4;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  pointer-events: none;
+  inset: 0;
+  background-color: var(--background);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position-y: calc(100% - var(--ground));
 }
 
-.edgeArrow {
+.backdrop::after {
+  content: '';
   position: absolute;
-  top: 48%;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  background: var(--background);
+  left: -30vmax;
+  bottom: calc(var(--ground) - 30vmax);
+  width: 70vmax;
+  height: 70vmax;
   border: 1px solid var(--border-strong);
   border-radius: 50%;
-  color: var(--foreground-soft);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  pointer-events: none;
-}
-
-.edgeArrowLeft {
-  left: 14px;
-}
-
-.edgeArrowRight {
-  right: 14px;
+  opacity: 0.55;
 }
 
 .world {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  height: 100%;
+  inset: 0 auto 0 0;
   will-change: transform;
 }
 
-.wall {
-  position: absolute;
-  inset: 0;
-  background-color: var(--runner-wall);
-  background-image:
-    linear-gradient(to right, var(--runner-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--runner-line) 1px, transparent 1px);
-  background-size: 56px 56px;
+.root:not([data-ready]) .world,
+.root:not([data-ready]) .player {
+  opacity: 0;
 }
 
-.wall::after {
-  content: '';
+/* Frames: exhibits hung on the wall */
+
+.frame {
   position: absolute;
-  right: 0;
-  bottom: 92px;
+  top: calc(var(--hud) + var(--plaque));
+  bottom: calc(var(--ground) + var(--lift));
+  z-index: 2;
+  user-select: text;
+}
+
+.plaque {
+  position: absolute;
+  bottom: 100%;
   left: 0;
-  height: 1px;
-  background: var(--border-strong);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: var(--plaque);
+  padding-bottom: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
-.floor {
+.plaqueIndex {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 20px;
+  padding-inline: 5px;
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 700;
+}
+
+.frameCurrent .plaqueIndex {
+  background: var(--orange-strong);
+  color: var(--black);
+}
+
+.frameBody {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  container: frame / size;
+  scrollbar-width: thin;
+}
+
+.frameCurrent .frameBody {
+  border-color: var(--foreground);
+}
+
+/* Props and floor */
+
+.prop {
   position: absolute;
+  bottom: var(--ground);
+  z-index: 1;
+  width: 48px;
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.ground {
+  position: absolute;
+  left: 0;
   right: 0;
   bottom: 0;
-  left: 0;
-  height: 92px;
-  background: var(--runner-floor);
-  border-top: 1px solid var(--border-strong);
+  height: var(--ground);
+  background: url('/ground.svg') repeat-x left top / auto 100%;
 }
 
-.floor::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 45px;
-  left: 0;
-  height: 1px;
-  background: repeating-linear-gradient(
-    to right,
-    var(--orange) 0 14px,
-    transparent 14px 28px
-  );
-  opacity: 0.55;
-}
+/* Doors */
 
 .door {
   position: absolute;
-  bottom: 86px;
-  z-index: 3;
+  bottom: var(--ground);
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  width: 140px;
+  transform: translateX(-50%);
 }
 
 .doorSign {
-  padding: 4px 7px;
-  background: var(--background);
-  border: 1px solid var(--border-strong);
-  border-radius: 3px;
-  color: var(--foreground);
+  padding: 6px 10px;
+  background: var(--foreground);
+  color: var(--background);
   font-family: var(--font-mono), monospace;
-  font-size: 0.6rem;
-  line-height: 1;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  transition:
-    background-color 140ms ease,
-    border-color 140ms ease,
-    color 140ms ease;
+}
+
+.doorBlurb {
+  order: -1;
+  margin-bottom: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .doorFrame {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  width: 100%;
-  height: var(--door-height, 208px);
-  background: var(--orange);
-  border: 1px solid var(--black);
-  border-radius: 3px 3px 0 0;
-  transition:
-    background-color 140ms ease,
-    transform 140ms ease;
-}
-
-.doorFrame::before {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(16, 16, 19, 0.28);
-  border-radius: 2px;
-  pointer-events: none;
-}
-
-.doorFrame:hover {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  width: 112px;
+  height: clamp(150px, 26vh, 212px);
+  margin-top: 10px;
+  padding: 26px 16px 18px;
   background: var(--orange-strong);
-  transform: translateY(-2px);
+  clip-path: polygon(
+    0 16px, 8px 16px, 8px 8px, 16px 8px, 16px 0,
+    calc(100% - 16px) 0, calc(100% - 16px) 8px, calc(100% - 8px) 8px, calc(100% - 8px) 16px, 100% 16px,
+    100% 100%, 0 100%
+  );
+  transition: background-color 160ms ease;
 }
 
-.doorFrame:focus-visible {
-  outline: 2px solid var(--black);
-  outline-offset: 2px;
+.doorPanel {
+  border: 4px solid var(--px-red);
+}
+
+.doorKnob {
+  position: absolute;
+  right: 22px;
+  top: 52%;
+  width: 8px;
+  height: 8px;
+  background: var(--px-yellow);
 }
 
 .doorArrow {
-  color: var(--black);
-  font-family: var(--font-mono), monospace;
-  font-size: 1.35rem;
-  line-height: 1;
-}
-
-.doorAction {
-  color: var(--black);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.doorHandle {
   position: absolute;
-  top: 52%;
-  right: 12px;
-  width: 6px;
-  height: 14px;
-  background: var(--black);
-  border-radius: 1px;
-}
-
-.doorBlurb {
-  color: var(--muted);
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 8px;
+  color: var(--background);
   font-family: var(--font-mono), monospace;
-  font-size: 0.52rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  font-size: 1.8rem;
+  opacity: 0;
+  transition: opacity 160ms ease;
 }
 
-.doorActive .doorSign {
-  background: var(--black);
-  border-color: var(--black);
-  color: var(--cream);
-}
-
+.doorFrame:hover,
+.doorFrame:focus-visible,
 .doorActive .doorFrame {
-  background: var(--orange-strong);
-  transform: translateY(-2px);
+  background: var(--foreground);
+}
+
+.doorFrame:hover .doorPanel,
+.doorFrame:focus-visible .doorPanel,
+.doorActive .doorPanel,
+.doorFrame:hover .doorKnob,
+.doorFrame:focus-visible .doorKnob,
+.doorActive .doorKnob {
+  opacity: 0;
+}
+
+.doorFrame:hover .doorArrow,
+.doorFrame:focus-visible .doorArrow,
+.doorActive .doorArrow {
+  opacity: 1;
 }
 
 .enterHint {
   position: absolute;
-  top: -32px;
-  left: 50%;
-  z-index: 2;
-  padding: 5px 7px;
-  background: var(--black);
-  border-radius: 3px;
-  color: var(--cream);
+  bottom: calc(100% + 10px);
+  padding: 5px 8px;
+  background: var(--px-yellow);
+  color: var(--black);
   font-family: var(--font-mono), monospace;
-  font-size: 0.52rem;
+  font-size: 0.66rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
-  transform: translateX(-50%);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
 }
 
-.playerSlot {
+.doorActive .enterHint {
+  opacity: 1;
+  transform: translateY(0);
+  animation: bob 1.1s steps(2) infinite;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Player */
+
+.player {
   position: absolute;
-  bottom: 86px;
-  z-index: 2;
-  width: 84px;
-  height: 118px;
+  left: 0;
+  bottom: var(--ground);
+  z-index: 4;
+  width: 52px;
+  height: 74px;
   pointer-events: none;
+  will-change: transform;
 }
 
-.stickCanvas {
+.figure {
   width: 100%;
   height: 100%;
   image-rendering: pixelated;
 }
 
-.mobileControls {
+/* HUD */
+
+.hud {
   position: absolute;
-  bottom: 14px;
-  left: 50%;
-  z-index: 6;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
   display: flex;
-  gap: 8px;
-  transform: translateX(-50%);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--hud);
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-soft);
+}
+
+.keys {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.keys kbd {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 0.72rem;
+}
+
+.hintTouch {
+  display: none;
+}
+
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.counterTotal {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Stop rail */
+
+.rail {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr) var(--rail);
+  height: var(--rail);
+  background: var(--background);
+  border-top: 1px solid var(--border);
+}
+
+.chapters {
+  display: flex;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.chapter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 100%;
+  padding-inline: 1.15rem;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--foreground-soft);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.chapter:hover {
+  background: var(--background-alt);
+  color: var(--foreground);
+}
+
+.chapter[aria-current='step'] {
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.chapter[aria-current='step']::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 3px;
+  background: var(--orange-strong);
+}
+
+.chapterIndex {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
 }
 
 .runButton {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 42px;
   background: var(--background);
-  border: 1px solid var(--black);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 var(--black);
-  cursor: pointer;
+  border: 0;
+  border-right: 1px solid var(--border);
   font-family: var(--font-mono), monospace;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
   touch-action: none;
   user-select: none;
 }
 
-.runButton:active {
-  box-shadow: none;
-  transform: translateY(1px);
+.runButton:hover {
+  background: var(--background-alt);
 }
 
 .runButtonAccent {
-  background: var(--orange);
+  border-right: 0;
+  border-left: 1px solid var(--border);
+  background: var(--foreground);
+  color: var(--background);
 }
 
-.directory {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem 1rem;
-  padding: 0.7rem 0.9rem;
-  background: var(--background);
-  border-top: 1px solid var(--border);
+.runButtonAccent:hover {
+  background: var(--black-soft);
 }
 
-.directoryLabel {
-  color: var(--muted);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.directoryLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.directoryLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.3rem 0.45rem;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  color: var(--foreground-soft);
-  font-size: 0.76rem;
-  transition:
-    background-color 140ms ease,
-    border-color 140ms ease;
-}
-
-.directoryLink span {
-  color: var(--muted);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.7em;
-}
-
-.directoryLink:hover {
-  background: var(--background-alt);
-  border-color: var(--border-strong);
-}
-
-@media (max-width: 768px) {
-  .runnerRoot {
-    --runner-height: 400px;
+@media (hover: none) {
+  .hintDesktop {
+    display: none;
   }
 
-  .hintBar {
-    top: 10px;
-    left: 10px;
-    max-width: calc(100% - 72px);
-    font-size: 0.5rem;
-  }
-
-  .edgeArrow {
-    top: 40%;
-    width: 26px;
-    height: 26px;
-  }
-
-  .edgeArrowLeft {
-    left: 10px;
-  }
-
-  .edgeArrowRight {
-    right: 10px;
-  }
-
-  .directory {
-    align-items: flex-start;
-    flex-direction: column;
+  .hintTouch {
+    display: inline;
   }
 }
 
-@media (max-width: 480px) {
-  .runnerRoot {
-    --runner-height: 360px;
+@media (max-height: 860px) {
+  .root {
+    --hud: 54px;
+    --lift: 92px;
+  }
+}
+
+@media (max-width: 640px) {
+  .root {
+    --hud: 52px;
+    --lift: 92px;
+    --rail: 52px;
+    min-height: 600px;
+  }
+
+  .hint {
+    font-size: 0.6rem;
+  }
+
+  .chapter {
+    padding-inline: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .door {
-    bottom: 78px;
+    width: 120px;
   }
 
-  .floor {
-    height: 84px;
+  .doorFrame {
+    width: 96px;
   }
 
-  .floor::after {
-    bottom: 40px;
-  }
-
-  .wall::after {
-    bottom: 84px;
-  }
-
-  .playerSlot {
-    bottom: 78px;
-    width: 72px;
-    height: 102px;
-  }
-
-  .mobileControls {
-    bottom: 10px;
+  .prop {
+    width: 38px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .world {
-    will-change: auto;
-  }
-
-  .doorFrame,
-  .doorSign,
-  .doorActive .doorFrame {
-    transform: none;
+  .doorActive .enterHint {
+    animation: none;
   }
 }
