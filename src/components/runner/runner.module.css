@@ -1,658 +1,501 @@
-/* Black + neon pixel runner. All colors read off the global --background /
-   --foreground / --accent tokens (overridden per-runner via toThemeVars). */
-.runnerRoot {
-  --runner-bg: var(--background, #050506);
-  --runner-fg: var(--foreground, #f4f4f5);
-  --runner-accent: var(--accent, #7cffb2);
-  --runner-accent-soft: var(--accent-soft, rgba(124, 255, 178, 0.16));
-  --runner-accent-glow: var(--accent-glow, rgba(124, 255, 178, 0.45));
-  --runner-grid: rgba(255, 255, 255, 0.03);
-  --nav-h: 64px;
-  --floor-h: 15%;
+/* The corridor: a cream pixel world on a Mistral-style block floor. */
 
+.root {
+  --hud: 64px;
+  --plaque: 30px;
+  --ground: 48px;
+  --lift: 112px;
+  --rail: 56px;
   position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: var(--runner-bg);
-  color: var(--runner-fg);
-}
-
-.runnerRootFullPage {
-  height: calc(100svh - var(--nav-h));
-  margin-top: var(--nav-h);
-}
-
-.runnerStrip {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - var(--nav-height));
+  min-height: 560px;
+  max-height: 1040px;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
 }
 
 .viewport {
   position: relative;
-  width: 100%;
-  height: 100%;
+  flex: 1;
   overflow: hidden;
-  background: var(--runner-bg);
+  overflow: clip;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--background);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position-y: calc(100% - var(--ground));
+}
+
+.backdrop::after {
+  content: '';
+  position: absolute;
+  left: -30vmax;
+  bottom: calc(var(--ground) - 30vmax);
+  width: 70vmax;
+  height: 70vmax;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  opacity: 0.55;
 }
 
 .world {
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
+  inset: 0 auto 0 0;
   will-change: transform;
-  transition: none;
 }
 
-/* faint pixel grid on the wall */
-.wall {
+.root:not([data-ready]) .world,
+.root:not([data-ready]) .player {
+  opacity: 0;
+}
+
+/* Frames: exhibits hung on the wall */
+
+.frame {
   position: absolute;
-  top: 0;
+  top: calc(var(--hud) + var(--plaque));
+  bottom: calc(var(--ground) + var(--lift));
+  z-index: 2;
+  user-select: text;
+}
+
+.plaque {
+  position: absolute;
+  bottom: 100%;
   left: 0;
-  right: 0;
-  bottom: var(--floor-h);
-  background:
-    repeating-linear-gradient(0deg, var(--runner-grid) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, var(--runner-grid) 0 1px, transparent 1px 40px),
-    var(--runner-bg);
-}
-
-.parallaxGlow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 8%, var(--runner-accent-soft), transparent 38%);
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.floor {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: var(--floor-h);
-  background: var(--runner-bg);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.floorLane {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: var(--floor-h);
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--runner-accent), transparent);
-  box-shadow: 0 0 16px var(--runner-accent-glow);
-  opacity: 0.85;
-}
-
-/* blends the top of the stage into solid black so the page top merges in */
-.topFade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 34%;
-  background: linear-gradient(180deg, var(--runner-bg) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 22;
-}
-
-.playerSlot {
-  position: absolute;
-  bottom: calc(var(--floor-h) - 4%);
-  width: 84px;
-  height: 120px;
-  z-index: 24;
-  pointer-events: none;
-}
-
-.stickCanvas {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 10px var(--runner-accent-glow));
-}
-
-/* ---------- HUD ---------- */
-.hudLink {
-  position: absolute;
-  top: 0.95rem;
-  right: 0.95rem;
-  z-index: 35;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  min-height: 40px;
-  padding: 0.5rem 0.85rem;
-  border: 1px solid var(--runner-accent);
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--runner-fg);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(8px);
+  gap: 0.55rem;
+  height: var(--plaque);
+  padding-bottom: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
-.hintBar {
-  position: absolute;
-  top: 0.95rem;
-  left: 0.95rem;
-  z-index: 30;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  line-height: 1.5;
-  color: var(--runner-fg);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  backdrop-filter: blur(8px);
-  max-width: 16rem;
+.plaqueIndex {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 20px;
+  padding-inline: 5px;
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 700;
 }
 
-/* ---------- Primary section nav (cross-page) ---------- */
-.sectionNav {
+.frameCurrent .plaqueIndex {
+  background: var(--orange-strong);
+  color: var(--black);
+}
+
+.frameBody {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  container: frame / size;
+  scrollbar-width: thin;
+}
+
+.frameCurrent .frameBody {
+  border-color: var(--foreground);
+}
+
+/* Props and floor */
+
+.prop {
   position: absolute;
-  top: 0.95rem;
-  left: 50%;
+  bottom: var(--ground);
+  z-index: 1;
+  width: 48px;
+  height: auto;
   transform: translateX(-50%);
-  z-index: 40;
-  display: flex;
-  gap: 0.35rem;
-  max-width: min(60rem, calc(100% - 2rem));
-  padding: 0.35rem;
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--runner-accent);
-  box-shadow: 0 0 18px var(--runner-accent-glow);
-  backdrop-filter: blur(10px);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
-.sectionNav::-webkit-scrollbar {
-  display: none;
-}
-
-.sectionNavBtn {
-  flex: 0 0 auto;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.04em;
-  padding: 0.55rem 0.8rem;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--runner-fg);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.sectionNavBtn:hover {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
-}
-
-.sectionNavBtnActive,
-.sectionNavBtnActive:hover {
-  background: var(--runner-accent);
-  border-color: var(--runner-accent);
-  color: #050506;
-}
-
-.snapNav {
+.ground {
   position: absolute;
-  top: 5.6rem;
-  left: 0.95rem;
-  right: 0.95rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  z-index: 20;
-  max-height: 5rem;
-  overflow-y: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ground);
+  background: url('/ground.svg') repeat-x left top / auto 100%;
 }
 
-.projectNavBtn {
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.52rem;
-  padding: 0.42rem 0.6rem;
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--runner-accent);
-  color: var(--runner-accent);
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: inset 0 0 12px rgba(124, 255, 178, 0.08);
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-}
+/* Doors */
 
-.projectNavBtn:hover {
-  background: var(--runner-accent);
-  border-color: var(--runner-accent);
-  color: #050506;
-}
-
-/* ---------- Directional edge arrows ---------- */
-.edgeArrow {
-  position: absolute;
-  top: 50%;
-  z-index: 28;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--runner-accent);
-  text-shadow: 0 0 14px var(--runner-accent-glow);
-  pointer-events: none;
-}
-
-.edgeArrowLeft {
-  left: 0.7rem;
-  animation: arrowNudgeLeft 1s ease-in-out infinite;
-}
-
-.edgeArrowRight {
-  right: 0.7rem;
-  animation: arrowNudgeRight 1s ease-in-out infinite;
-}
-
-@keyframes arrowNudgeRight {
-  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
-  50% { transform: translate(8px, -50%); opacity: 1; }
-}
-
-@keyframes arrowNudgeLeft {
-  0%, 100% { transform: translate(0, -50%); opacity: 0.55; }
-  50% { transform: translate(-8px, -50%); opacity: 1; }
-}
-
-/* ---------- Doors ---------- */
 .door {
   position: absolute;
-  bottom: var(--floor-h);
-  z-index: 12;
+  bottom: var(--ground);
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  width: 140px;
+  transform: translateX(-50%);
 }
 
 .doorSign {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 0.7rem;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.02em;
-  text-align: center;
-  color: var(--runner-fg);
-  background: rgba(0, 0, 0, 0.85);
-  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.4;
-  max-width: 18ch;
+  padding: 6px 10px;
+  background: var(--foreground);
+  color: var(--background);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* brief project explainer shown under the title, above the door */
 .doorBlurb {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.5rem;
-  line-height: 1.45;
-  text-align: center;
-  color: var(--muted, #a1a1aa);
-  background: rgba(0, 0, 0, 0.72);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  padding: 0.35rem 0.5rem;
-  max-width: 160px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.doorActive .doorBlurb {
-  border-color: var(--runner-accent);
-  color: var(--runner-fg);
+  order: -1;
+  margin-bottom: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .doorFrame {
   position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  width: 112px;
+  height: clamp(150px, 26vh, 212px);
+  margin-top: 10px;
+  padding: 26px 16px 18px;
+  background: var(--orange-strong);
+  clip-path: polygon(
+    0 16px, 8px 16px, 8px 8px, 16px 8px, 16px 0,
+    calc(100% - 16px) 0, calc(100% - 16px) 8px, calc(100% - 8px) 8px, calc(100% - 8px) 16px, 100% 16px,
+    100% 100%, 0 100%
+  );
+  transition: background-color 160ms ease;
 }
 
-/* the blocky neon-outlined jamb/arch */
-.doorArch {
+.doorPanel {
+  border: 4px solid var(--px-red);
+}
+
+.doorKnob {
+  position: absolute;
+  right: 22px;
+  top: 52%;
+  width: 8px;
+  height: 8px;
+  background: var(--px-yellow);
+}
+
+.doorArrow {
   position: absolute;
   inset: 0;
-  border: 6px solid var(--runner-fg);
-  border-bottom: none;
-  background: #000;
-  box-shadow:
-    inset 0 0 0 2px #000,
-    inset 0 0 0 4px rgba(255, 255, 255, 0.06);
+  display: grid;
+  place-items: center;
+  padding-top: 8px;
+  color: var(--background);
+  font-family: var(--font-mono), monospace;
+  font-size: 1.8rem;
+  opacity: 0;
+  transition: opacity 160ms ease;
 }
 
-/* dark interior opening with the direction arrow */
-.doorOpening {
-  position: absolute;
-  inset: 14px 14px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), #000 60%);
-  color: rgba(255, 255, 255, 0.35);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 1.4rem;
+.doorFrame:hover,
+.doorFrame:focus-visible,
+.doorActive .doorFrame {
+  background: var(--foreground);
 }
 
-.doorReturn .doorArch {
-  border-color: var(--muted, #a1a1aa);
+.doorFrame:hover .doorPanel,
+.doorFrame:focus-visible .doorPanel,
+.doorActive .doorPanel,
+.doorFrame:hover .doorKnob,
+.doorFrame:focus-visible .doorKnob,
+.doorActive .doorKnob {
+  opacity: 0;
 }
 
-.doorActive .doorArch {
-  border-color: var(--runner-accent);
-  box-shadow:
-    inset 0 0 0 2px #000,
-    inset 0 0 24px var(--runner-accent-soft),
-    0 0 28px var(--runner-accent-glow);
-}
-
-.doorActive .doorOpening {
-  color: var(--runner-accent);
-  background: linear-gradient(180deg, var(--runner-accent-soft), #000 60%);
-}
-
-.doorActive .doorSign {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
+.doorFrame:hover .doorArrow,
+.doorFrame:focus-visible .doorArrow,
+.doorActive .doorArrow {
+  opacity: 1;
 }
 
 .enterHint {
   position: absolute;
-  bottom: -2.4rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.04em;
-  color: #000;
-  background: var(--runner-accent);
-  border: none;
-  padding: 0.4rem 0.6rem;
-  white-space: nowrap;
-  cursor: pointer;
-  animation: enterPulse 1s steps(2, end) infinite;
-}
-
-@keyframes enterPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.doorFallbackLink {
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.56rem;
-  color: var(--runner-accent);
-  border: 1px solid var(--runner-accent);
-  padding: 0.5rem 0.7rem;
-  margin-top: 0.5rem;
-}
-
-/* ---------- Frames ---------- */
-.wallFrame {
-  --frame-w: var(--frame-w-base, 760px);
-  position: absolute;
-  bottom: var(--floor-h);
-  z-index: 8;
-  left: calc(var(--frame-x) - var(--frame-w) / 2);
-  width: var(--frame-w);
-  height: min(78svh, var(--frame-h));
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.framePlaque {
-  align-self: flex-start;
-  margin: 0 0 0.5rem 0;
-  padding: 0.5rem 0.8rem;
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
+  bottom: calc(100% + 10px);
+  padding: 5px 8px;
+  background: var(--px-yellow);
+  color: var(--black);
+  font-family: var(--font-mono), monospace;
   font-size: 0.66rem;
-  letter-spacing: 0.02em;
-  color: #000;
-  background: var(--runner-accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
 }
 
-.frameShell {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  padding: 6px;
-  background: #000;
-  border: 4px solid var(--runner-fg);
-  box-shadow:
-    0 0 0 2px #000,
-    0 0 0 6px rgba(255, 255, 255, 0.08),
-    0 0 40px rgba(0, 0, 0, 0.6);
+.doorActive .enterHint {
+  opacity: 1;
+  transform: translateY(0);
+  animation: bob 1.1s steps(2) infinite;
 }
 
-/* corner accents */
-.frameShell::before,
-.frameShell::after {
-  content: '';
+@keyframes bob {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Player */
+
+.player {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 3px solid var(--runner-accent);
-  z-index: 2;
+  left: 0;
+  bottom: var(--ground);
+  z-index: 4;
+  width: 52px;
+  height: 74px;
+  pointer-events: none;
+  will-change: transform;
 }
 
-.frameShell::before {
-  top: -4px;
-  left: -4px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.frameShell::after {
-  bottom: -4px;
-  right: -4px;
-  border-left: none;
-  border-top: none;
-}
-
-.frameMat {
+.figure {
+  width: 100%;
   height: 100%;
-  padding: 4px;
-  background: #050506;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  image-rendering: pixelated;
 }
 
-.frameInner {
-  height: 100%;
-  background: var(--runner-bg);
-  padding: 1rem 1.15rem;
-  overflow: auto;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--runner-fg);
-  scrollbar-width: thin;
+/* HUD */
+
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--hud);
+  padding-inline: var(--gutter);
+  pointer-events: none;
 }
 
-.frameScroll {
-  height: 100%;
-  overflow-y: auto;
-  font-size: 0.95rem;
-  color: inherit;
-  scrollbar-width: thin;
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--foreground-soft);
 }
 
-.frameScroll section {
-  margin-bottom: 0 !important;
-  padding: 0 !important;
+.keys {
+  display: inline-flex;
+  gap: 3px;
 }
 
-.frameScroll h2 {
-  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
-  font-size: 1.3rem !important;
-  margin-bottom: 0.7rem !important;
+.keys kbd {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 0.72rem;
 }
 
-.frameScroll h3,
-.frameScroll h4 {
-  font-size: 1rem !important;
-}
-
-/* ---------- Section intro (career/projects header) ---------- */
-/* ---------- Mobile controls ---------- */
-.mobileControls {
+.hintTouch {
   display: none;
 }
 
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.counterTotal {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Stop rail */
+
+.rail {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr) var(--rail);
+  height: var(--rail);
+  background: var(--background);
+  border-top: 1px solid var(--border);
+}
+
+.chapters {
+  display: flex;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.chapter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 100%;
+  padding-inline: 1.15rem;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--foreground-soft);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.chapter:hover {
+  background: var(--background-alt);
+  color: var(--foreground);
+}
+
+.chapter[aria-current='step'] {
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.chapter[aria-current='step']::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 3px;
+  background: var(--orange-strong);
+}
+
+.chapterIndex {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
 .runButton {
-  flex: 1;
-  min-height: 52px;
-  padding: 0.78rem;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid var(--border-strong, rgba(255, 255, 255, 0.16));
-  color: var(--runner-fg);
-  font-family: var(--font-pixel), var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
-  touch-action: manipulation;
+  display: grid;
+  place-items: center;
+  background: var(--background);
+  border: 0;
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono), monospace;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: none;
   user-select: none;
-  backdrop-filter: blur(8px);
+}
+
+.runButton:hover {
+  background: var(--background-alt);
 }
 
 .runButtonAccent {
-  border-color: var(--runner-accent);
-  color: var(--runner-accent);
+  border-right: 0;
+  border-left: 1px solid var(--border);
+  background: var(--foreground);
+  color: var(--background);
 }
 
-.runButton:active {
-  background: var(--runner-accent-soft);
+.runButtonAccent:hover {
+  background: var(--black-soft);
 }
 
-.wallFrameMobile {
-  margin-bottom: 1.75rem;
-}
-
-.wallFrameMobile .framePlaque {
-  margin-bottom: 0.5rem;
-}
-
-.wallFrameMobile .frameShell {
-  flex: none;
-}
-
-.wallFrameMobile .frameInner {
-  height: auto;
-  max-height: none;
-}
-
-/* ---------- Mobile playable ---------- */
-@media (max-width: 768px) {
-  .runnerRoot {
-    /* taller floor keeps doors (and their ENTER button) above the bottom
-       control dock so the two never overlap */
-    --floor-h: 24%;
-  }
-
-  .mobileControls {
-    display: flex;
-    gap: 0.6rem;
-    position: absolute;
-    bottom: 0.6rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    z-index: 25;
-  }
-
-  .wallFrame {
-    --frame-w: min(92vw, 540px);
-    height: min(80svh, var(--frame-h));
-  }
-
-  .frameInner {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  /* section nav becomes a full-width scrollable strip at the very top */
-  .sectionNav {
-    top: 0.6rem;
-    left: 0.6rem;
-    right: 0.6rem;
-    transform: none;
-    max-width: none;
-    gap: 0.3rem;
-    padding: 0.3rem;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .hintBar {
-    top: 3.3rem;
-    left: 0.6rem;
-    right: 0.6rem;
-    max-width: none;
-  }
-
-  /* back-link is redundant on mobile — the section nav covers it */
-  .hudLink {
+@media (hover: none) {
+  .hintDesktop {
     display: none;
   }
 
-  /* keep the door's ENTER button tight to the door, clear of the dock */
-  .enterHint {
-    bottom: -1.5rem;
-  }
-
-  .snapNav {
-    top: auto;
-    bottom: 4.4rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    flex-wrap: nowrap;
-    gap: 0.4rem;
-    max-height: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 0.2rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .snapNav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .projectNavBtn {
-    flex: 0 0 auto;
-  }
-
-  .doorSign {
-    font-size: 0.5rem;
+  .hintTouch {
+    display: inline;
   }
 }
 
-/* Reduced motion keeps the corridor playable but stills the decorative,
-   self-running animations (the nudging edge arrows and the pulsing ENTER
-   prompt). Player movement is input-driven, so it stays. */
+@media (max-height: 860px) {
+  .root {
+    --hud: 54px;
+    --lift: 92px;
+  }
+}
+
+@media (max-width: 640px) {
+  .root {
+    --hud: 52px;
+    --lift: 92px;
+    --rail: 52px;
+    min-height: 600px;
+  }
+
+  .hint {
+    font-size: 0.6rem;
+  }
+
+  .chapter {
+    padding-inline: 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .door {
+    width: 120px;
+  }
+
+  .doorFrame {
+    width: 96px;
+  }
+
+  .prop {
+    width: 38px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .world {
-    will-change: auto;
-  }
-
-  .edgeArrowLeft,
-  .edgeArrowRight,
-  .enterHint {
+  .doorActive .enterHint {
     animation: none;
   }
 }

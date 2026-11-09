@@ -1,10 +1,339 @@
-/* Global & Container */
-.container {
-  min-height: 100svh;
-  height: 100svh;
-  background: #090b0d;
-  color: var(--foreground);
-  font-family: var(--font-geist-sans);
-  overflow-x: hidden;
-  overflow-y: hidden;
+.work,
+.career {
+  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.sectionTitle {
+  margin-top: 0.8rem;
+  font-size: clamp(2.3rem, 4.6vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-strong);
+  font-size: 0.86rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.textLink:hover {
+  color: var(--orange-ink);
+  border-color: var(--orange-ink);
+}
+
+.textLink span {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8em;
+}
+
+.careerGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+}
+
+.careerIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.careerCopy {
+  max-width: 30rem;
+  margin-top: 1.4rem;
+  margin-bottom: 1.6rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.roles {
+  list-style: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+.role {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.9rem;
+  padding-block: 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.roleIndex {
+  padding-top: 0.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  color: var(--orange-ink);
+}
+
+.roleName {
+  font-size: 1.18rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.roleCompany {
+  margin-top: 0.3rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.roleNote {
+  margin-top: 0.55rem;
+  color: var(--foreground-soft);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.contact {
+  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  background: var(--black);
+  color: var(--cream);
+}
+
+.contactInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  align-items: end;
+  gap: clamp(2.5rem, 6vw, 6rem);
+}
+
+.contactEyebrow {
+  color: var(--on-dark-muted);
+}
+
+.contactTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.contactSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.contactCopy {
+  max-width: 26rem;
+  color: var(--on-dark-soft);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.contactActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.contactCta,
+.contactLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contactCta {
+  background: var(--orange);
+  border: 1px solid var(--orange);
+  color: var(--black);
+}
+
+.contactCta:hover {
+  background: var(--orange-strong);
+  border-color: var(--orange-strong);
+}
+
+.contactLink {
+  border: 1px solid var(--on-dark-border);
+  color: var(--cream);
+}
+
+.contactLink:hover {
+  border-color: var(--cream);
+  background: var(--foreground);
+}
+
+.contactCta span,
+.contactLink span {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8em;
+}
+
+@media (max-width: 960px) {
+  .careerGrid,
+  .contactInner {
+    grid-template-columns: 1fr;
+  }
+
+  .careerIntro {
+    max-width: 40rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .sectionHead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contactActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .contactCta,
+  .contactLink {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* The work, as a list, for visitors who skip the corridor. */
+
+.workList {
+  list-style: none;
+  border-top: 1px solid var(--foreground);
+}
+
+.workRow {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 0.9fr) minmax(0, 1.3fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.workThumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.workMosaic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.workSprite {
+  position: relative;
+  width: 58%;
+  height: auto;
+  filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff)
+    drop-shadow(0 -2px 0 #fff);
+}
+
+.workMeta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.workFlag {
+  margin-right: 0.5rem;
+  padding: 2px 6px;
+  background: var(--orange-strong);
+  color: var(--black);
+  font-weight: 700;
+}
+
+.workTitle {
+  margin-top: 0.45rem;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  line-height: 1;
+}
+
+.workPitch {
+  color: var(--foreground-soft);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.workLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.workLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 2px;
+}
+
+.workLink:hover {
+  border-color: var(--orange-strong);
+}
+
+.workLink span {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82em;
+}
+
+@media (max-width: 860px) {
+  .workRow {
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .workThumb {
+    width: 72px;
+  }
+
+  .workPitch,
+  .workLinks {
+    grid-column: 2;
+  }
+
+  .workLinks {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+  }
 }

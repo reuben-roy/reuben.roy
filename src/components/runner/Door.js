@@ -1,46 +1,25 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { RUNNER_DEFAULTS } from '@/data/runnerWorlds';
+import SiteLink, { isExternalHref } from '@/components/SiteLink';
 import styles from './runner.module.css';
 
-export default function Door({ door, isActive, reducedMotion }) {
-  const router = useRouter();
-  const { label, href, x, blurb, variant = 'entry' } = door;
-  const width =
-    door.width ||
-    (variant === 'return' ? RUNNER_DEFAULTS.returnDoorWidth : RUNNER_DEFAULTS.doorWidth);
-  const height = door.height || RUNNER_DEFAULTS.doorHeight;
-  const isReturn = variant === 'return';
-
-  const enter = () => router.push(href);
+export default function Door({ door, isActive }) {
+  const { label, href, x, blurb } = door;
+  const external = isExternalHref(href);
 
   return (
-    <div
-      className={`${styles.door} ${isReturn ? styles.doorReturn : ''} ${isActive ? styles.doorActive : ''}`}
-      style={{ left: x - width / 2, width, height }}
-    >
-      <div className={styles.doorSign}>{label}</div>
-      {blurb ? <div className={styles.doorBlurb}>{blurb}</div> : null}
-      <button
-        type="button"
-        className={styles.doorFrame}
-        onClick={enter}
-        aria-label={`${isReturn ? 'Return to' : 'Enter'} ${label}`}
-      >
-        <span className={styles.doorArch} />
-        <span className={styles.doorOpening}>{isReturn ? '◂' : '▸'}</span>
-      </button>
-      {isActive ? (
-        <button type="button" className={styles.enterHint} onClick={enter}>
-          {isReturn ? '◂ ENTER' : 'ENTER ▸'}
-        </button>
-      ) : null}
-      {reducedMotion ? (
-        <a href={href} className={styles.doorFallbackLink}>
-          {isReturn ? `Back to ${label}` : `Go to ${label}`}
-        </a>
-      ) : null}
+    <div className={`${styles.door} ${isActive ? styles.doorActive : ''}`} style={{ left: x }}>
+      <span className={styles.doorSign}>{label}</span>
+      <SiteLink href={href} className={styles.doorFrame} aria-label={`${label}: ${blurb}`}>
+        <span className={styles.doorPanel} aria-hidden="true" />
+        <span className={styles.doorPanel} aria-hidden="true" />
+        <span className={styles.doorKnob} aria-hidden="true" />
+        <span className={styles.doorArrow} aria-hidden="true">
+          {external ? '↗' : '→'}
+        </span>
+      </SiteLink>
+      <span className={styles.doorBlurb}>{blurb}</span>
+      <span className={styles.enterHint} aria-hidden="true">
+        Enter ↵
+      </span>
     </div>
   );
 }
