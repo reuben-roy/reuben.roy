@@ -11,7 +11,7 @@ Those live at explosion.fun. Old URLs are permanently redirected (see `next.conf
 
 | Route     | What it is                                                            |
 | --------- | --------------------------------------------------------------------- |
-| `/`       | Editorial home, selected work, interactive corridor, contact          |
+| `/`       | Playable corridor of project exhibits, then the work as a list, career, contact |
 | `/career` | Short career narrative: roles and toolkit. The full CV lives on the main site. |
 
 Everything else redirects:
@@ -76,11 +76,32 @@ npm run start
 | `--on-dark-muted` | `#a1a1aa` | Eyebrows on dark surfaces            |
 | `--on-dark-soft`  | `#c9c9c4` | Body copy on dark surfaces           |
 | `--on-dark-border`| `#3d3d43` | Borders on dark surfaces             |
+| `--surface`       | `#ffffff` | Frames, cards, active chips          |
+| `--grid-line`     | `rgba(26,26,30,.05)` | Corridor backdrop grid    |
+| `--px-red`        | `#e10500` | Pixel art and floor blocks           |
+| `--px-orange`     | `#ff8205` | Pixel art and floor blocks           |
+| `--px-amber`      | `#ffaf00` | Pixel art and floor blocks           |
+| `--px-yellow`     | `#ffd800` | Pixel art and floor blocks           |
 
 Spacing, radii, container width, and the nav height are also tokens in
 `src/app/globals.css`. Typography pairs Space Grotesk display headlines with Inter body
 copy and Space Mono labels. The pixel mark in `src/components/BrandMark.js` is a 2×2
 orange/black checker.
+
+## The corridor
+
+The home page opens on a side-scrolling corridor (`src/components/runner/`). Frames on the
+wall are project exhibits; doors at the end lead to the projects index, career, writing, and
+about. Visitors can run with ← → or A / D, hold the on-screen arrows, swipe, use a horizontal
+trackpad gesture, or jump straight to a stop from the rail along the bottom. Tabbing into a
+frame moves the camera to it, and everything in the corridor is repeated as a plain list
+below it for visitors who would rather scroll.
+
+- `src/components/home/HomeCorridor.js` lists the stops in order.
+- `src/data/work.js` holds the flagship and exhibit copy, stats, and links.
+- `src/data/pixelArt.js` holds the hand-drawn sprites (one character per pixel), rendered
+  by `src/components/pixel/PixelArt.js` over a `PixelMosaic` backdrop.
+- `public/ground.svg` is the block floor tile.
 
 ## Structure
 
@@ -92,16 +113,18 @@ src/
 │   ├── page.js          # Home
 │   └── globals.css      # Design tokens and base styles
 ├── components/
-│   ├── runner/          # Home corridor: canvas figure, doors, game loop
+│   ├── home/            # Corridor stops: intro, exhibits, activity, contact
+│   ├── pixel/           # Sprite and mosaic renderers
+│   ├── runner/          # Corridor engine: layout, game loop, figure, doors
 │   ├── BrandMark.js
 │   ├── Footer.js
 │   ├── Navbar.js
-│   ├── SiteLink.js
-│   └── SocialLinks.js
+│   └── SiteLink.js
 └── data/
     ├── career.js        # Experience summaries and skill groups
-    ├── runnerWorlds.js  # Corridor doors and dimensions
-    └── site.js          # Nav, socials, selected work, recent roles
+    ├── pixelArt.js      # Sprites and palette
+    ├── site.js          # URLs, nav, socials, recent roles
+    └── work.js          # Flagship and exhibit copy
 ```
 
 ## License

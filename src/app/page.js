@@ -1,145 +1,70 @@
 import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import SocialLinks from '@/components/SocialLinks';
-import RunnerWorld from '@/components/runner/RunnerWorld';
-import { HOME_CORRIDOR } from '@/data/runnerWorlds';
-import {
-  CONTACT_EMAIL,
-  CONTACT_HREF,
-  LINKEDIN_URL,
-  PROJECTS_URL,
-  RECENT_ROLES,
-  SELECTED_WORK,
-} from '@/data/site';
+import HomeCorridor from '@/components/home/HomeCorridor';
+import PixelArt from '@/components/pixel/PixelArt';
+import PixelMosaic from '@/components/pixel/PixelMosaic';
+import { CONTACT_EMAIL, CONTACT_HREF, LINKEDIN_URL, PROJECTS_URL, RECENT_ROLES } from '@/data/site';
+import { EXHIBITS, FLAGSHIP } from '@/data/work';
 import styles from './page.module.css';
 
-const TICKER = [
-  'Agentic systems',
-  'Data products',
-  'Native apps',
-  'Backend services',
-  'Interactive interfaces',
-  'Technical writing',
-];
+const WORK = [{ ...FLAGSHIP, flagship: true }, ...EXHIBITS];
 
 export default function Home() {
   return (
     <>
       <SpeedInsights />
 
-      <section className={styles.hero}>
-        <div className={`container ${styles.heroGrid}`}>
-          <div className={styles.heroCopy}>
-            <p className={`eyebrow ${styles.heroEyebrow}`}>Reuben Roy / Generalist software engineer</p>
-            <h1 className={styles.title}>
-              I build agents, interfaces, and the data stories between them.
-            </h1>
-            <p className={styles.lede}>
-              Full-stack engineer working across agentic systems, backend services, and native
-              apps. I care about software that can explain what it did — and fail loudly when it
-              cannot.
-            </p>
-            <div className={styles.actions}>
-              <a href={PROJECTS_URL} className={styles.primary}>
-                See the work
-                <span aria-hidden="true">↗</span>
-              </a>
-              <Link href="/career" className={styles.secondary}>
-                Career, in detail
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-            <SocialLinks />
-          </div>
+      <HomeCorridor />
 
-          <aside className={styles.notes} aria-label="At a glance">
-            <div className={styles.notesHead}>
-              <span className="eyebrow">At a glance</span>
-              <span className={styles.notesDot} aria-hidden="true" />
-            </div>
-            <dl className={styles.facts}>
-              <div className={styles.fact}>
-                <dt>Focus</dt>
-                <dd>Agentic systems, data products, and native apps.</dd>
-              </div>
-              <div className={styles.fact}>
-                <dt>Now</dt>
-                <dd>MS Software Engineering, Arizona State University.</dd>
-              </div>
-              <div className={styles.fact}>
-                <dt>Approach</dt>
-                <dd>Build the failure path first, then make the happy path obvious.</dd>
-              </div>
-            </dl>
-          </aside>
-        </div>
-      </section>
-
-      <div className={styles.ticker} aria-hidden="true">
-        <div className={`container ${styles.tickerInner}`}>
-          {TICKER.map((item) => (
-            <span key={item} className={styles.tickerItem}>
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <section className={styles.work}>
+      <section className={styles.work} id="work" aria-labelledby="work-title">
         <div className="container">
           <div className={styles.sectionHead}>
             <div>
-              <p className="eyebrow">Selected work / 01</p>
-              <h2 className={styles.sectionTitle}>Shipped, not shelved.</h2>
+              <p className="eyebrow">Prefer to scroll? / 01</p>
+              <h2 className={styles.sectionTitle} id="work-title">
+                The work, in a list.
+              </h2>
             </div>
             <a href={PROJECTS_URL} className={styles.textLink}>
-              All projects
+              All 16 projects
               <span aria-hidden="true">↗</span>
             </a>
           </div>
 
-          <div className={styles.workGrid}>
-            {SELECTED_WORK.map((project) => (
-              <a key={project.title} href={project.href} className={styles.card}>
-                <div className={styles.cardTop}>
-                  <span className={styles.cardIndex}>{project.index}</span>
-                  <span className={styles.cardCategory}>{project.category}</span>
+          <ol className={styles.workList}>
+            {WORK.map((item) => (
+              <li key={item.id} className={styles.workRow}>
+                <div className={styles.workThumb}>
+                  <PixelMosaic tone={item.tone} seed={item.id} cols={6} rows={6} className={styles.workMosaic} />
+                  <PixelArt name={item.art} className={styles.workSprite} />
                 </div>
-                <h3 className={styles.cardTitle}>{project.title}</h3>
-                <p className={styles.cardCopy}>{project.description}</p>
-                <span className={styles.cardLink}>
-                  Open project
-                  <span aria-hidden="true">↗</span>
-                </span>
-              </a>
+                <div>
+                  <p className={styles.workMeta}>
+                    {item.flagship ? <span className={styles.workFlag}>Flagship</span> : null}
+                    {item.category}
+                  </p>
+                  <h3 className={styles.workTitle}>{item.title}</h3>
+                </div>
+                <p className={styles.workPitch}>{item.pitch}</p>
+                <div className={styles.workLinks}>
+                  {item.links.map((link) => (
+                    <a key={link.href} href={link.href} className={styles.workLink}>
+                      {link.label}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ))}
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      <section className={styles.corridorSection}>
-        <div className="container">
-          <div className={styles.corridorHead}>
-            <div>
-              <p className="eyebrow">The index / 02</p>
-              <h2 className={styles.sectionTitle}>Pick a door.</h2>
-            </div>
-            <p className={styles.corridorCopy}>
-              A small index you can run through. Use the arrow keys, or take the direct links.
-              Every door leads somewhere real.
-            </p>
-          </div>
-          <div className={styles.corridorBody}>
-            <RunnerWorld {...HOME_CORRIDOR} />
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.career}>
+      <section className={styles.career} aria-labelledby="career-title">
         <div className={`container ${styles.careerGrid}`}>
           <div className={styles.careerIntro}>
-            <p className="eyebrow">Career / 03</p>
-            <h2 className={styles.sectionTitle}>
+            <p className="eyebrow">Career / 02</p>
+            <h2 className={styles.sectionTitle} id="career-title">
               Equal parts backend, interface, and shipped.
             </h2>
             <p className={styles.careerCopy}>
@@ -167,11 +92,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.contact}>
+      <section className={styles.contact} aria-labelledby="contact-title">
         <div className={`container ${styles.contactInner}`}>
           <div>
-            <p className={`eyebrow ${styles.contactEyebrow}`}>Contact / 04</p>
-            <h2 className={styles.contactTitle}>
+            <p className={`eyebrow ${styles.contactEyebrow}`}>Contact / 03</p>
+            <h2 className={styles.contactTitle} id="contact-title">
               Have a strange idea?
               <br />
               Let&apos;s build it.

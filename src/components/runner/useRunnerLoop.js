@@ -1,154 +1,164 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { RUNNER_DEFAULTS } from '@/data/runnerWorlds';
 
+const LEFT_KEYS = new Set(['ArrowLeft', 'a', 'A']);
+const RIGHT_KEYS = new Set(['ArrowRight', 'd', 'D']);
+
+function isTypingTarget(target) {
+  if (!target || !(target instanceof HTMLElement)) return false;
+  return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName);
+}
+
+// Drives the corridor: keyboard runs the player, `glideTo` walks it to a
+// station (chapter rail, focus), and `nudge` moves it directly (swipe, wheel).
+// Keys are read at window level while `isActiveRef` says the corridor owns them.
 export function useRunnerLoop({
   worldWidth,
   viewportWidth,
-  enabled = true,
-  initialX = RUNNER_DEFAULTS.playerStartX,
-  runSpeed = RUNNER_DEFAULTS.runSpeed,
-  playerScreenRatio = RUNNER_DEFAULTS.playerScreenRatio,
-  keyTargetRef,
+  initialX,
+  runSpeed,
+  playerScreenRatio,
+  isActiveRef,
 }) {
   const [playerWorldX, setPlayerWorldX] = useState(initialX);
   const [isMoving, setIsMoving] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState(1);
 
   const keysRef = useRef({ left: false, right: false });
   const holdDirectionRef = useRef(0);
-  const rafRef = useRef(null);
-  const lastTimeRef = useRef(null);
-  const playerWorldXRef = useRef(initialX);
+  const targetRef = useRef(null);
+  const xRef = useRef(initialX);
   const directionRef = useRef(1);
+  const worldRef = useRef(worldWidth);
+  worldRef.current = worldWidth;
 
   const playerScreenX = Math.max(72, viewportWidth * playerScreenRatio);
-  const cameraX = Math.round(
-    Math.max(
-      0,
-      Math.min(playerWorldX - playerScreenX, Math.max(0, worldWidth - viewportWidth)),
-    ),
-  );
+  const maxCamera = Math.max(0, worldWidth - viewportWidth);
+  const cameraX = Math.round(Math.max(0, Math.min(playerWorldX - playerScreenX, maxCamera)));
+
+  const clamp = useCallback((x) => Math.max(40, Math.min(worldRef.current - 40, x)), []);
+
+  const face = useCallback((next) => {
+    if (next === 0 || directionRef.current === next) return;
+    directionRef.current = next;
+    setDirection(next);
+  }, []);
 
   useEffect(() => {
-    playerWorldXRef.current = playerWorldX;
-  }, [playerWorldX]);
-
-  useEffect(() => {
-    setPlayerWorldX(initialX);
-    playerWorldXRef.current = initialX;
-  }, [initialX]);
-
-  useEffect(() => {
-    directionRef.current = direction;
-  }, [direction]);
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    const target = keyTargetRef?.current;
-    if (!target) return;
-
     const onKeyDown = (event) => {
-      if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
-        keysRef.current.left = true;
-        event.preventDefault();
-      }
-      if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
-        keysRef.current.right = true;
-        event.preventDefault();
-      }
+      if (!isActiveRef.current?.() || isTypingTarget(event.target)) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (LEFT_KEYS.has(event.key)) keysRef.current.left = true;
+      else if (RIGHT_KEYS.has(event.key)) keysRef.current.right = true;
+      else return;
+      targetRef.current = null;
+      event.preventDefault();
     };
 
     const onKeyUp = (event) => {
-      if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
-        keysRef.current.left = false;
-      }
-      if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
-        keysRef.current.right = false;
-      }
+      if (LEFT_KEYS.has(event.key)) keysRef.current.left = false;
+      if (RIGHT_KEYS.has(event.key)) keysRef.current.right = false;
     };
 
-    const onBlur = (event) => {
-      if (event.relatedTarget && target.contains(event.relatedTarget)) return;
-
-      keysRef.current.left = false;
-      keysRef.current.right = false;
+    const release = () => {
+      keysRef.current = { left: false, right: false };
       holdDirectionRef.current = 0;
     };
 
-    const onVisibility = () => setIsPaused(document.hidden);
-
-    target.addEventListener('keydown', onKeyDown);
-    target.addEventListener('keyup', onKeyUp);
-    target.addEventListener('blur', onBlur);
-    document.addEventListener('visibilitychange', onVisibility);
-
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('blur', release);
     return () => {
-      target.removeEventListener('keydown', onKeyDown);
-      target.removeEventListener('keyup', onKeyUp);
-      target.removeEventListener('blur', onBlur);
-      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('blur', release);
     };
-  }, [enabled, keyTargetRef]);
+  }, [isActiveRef]);
 
   useEffect(() => {
-    if (!enabled || isPaused) {
-      setIsMoving(false);
-      return;
-    }
+    let frame = null;
+    let last = null;
 
     const tick = (time) => {
-      rafRef.current = requestAnimationFrame(tick);
+      frame = requestAnimationFrame(tick);
+      const delta = last === null ? 0 : Math.min((time - last) / 1000, 0.05);
+      last = time;
 
-      const delta =
-        lastTimeRef.current === null
-          ? 0
-          : Math.min((time - lastTimeRef.current) / 1000, 0.05);
-      lastTimeRef.current = time;
+      const keyDirection = (keysRef.current.right ? 1 : 0) - (keysRef.current.left ? 1 : 0);
+      const input = holdDirectionRef.current || keyDirection;
+      let next = xRef.current;
 
-      const keyboardDirection =
-        (keysRef.current.right ? 1 : 0) - (keysRef.current.left ? 1 : 0);
-      const inputDirection = holdDirectionRef.current || keyboardDirection;
-
-      if (inputDirection !== 0 && directionRef.current !== inputDirection) {
-        directionRef.current = inputDirection;
-        setDirection(inputDirection);
+      if (input !== 0) {
+        targetRef.current = null;
+        face(input);
+        next = clamp(xRef.current + input * runSpeed * delta);
+      } else if (targetRef.current !== null) {
+        const distance = targetRef.current - xRef.current;
+        const step = Math.max(runSpeed * 1.8, Math.abs(distance) * 2.4) * delta;
+        face(Math.sign(distance));
+        if (Math.abs(distance) <= step) {
+          next = targetRef.current;
+          targetRef.current = null;
+        } else {
+          next = xRef.current + Math.sign(distance) * step;
+        }
       }
 
-      if (inputDirection !== 0) {
-        const next = Math.max(
-          40,
-          Math.min(worldWidth - 40, playerWorldXRef.current + inputDirection * runSpeed * delta),
-        );
-        const didMove = Math.abs(next - playerWorldXRef.current) > 0.1;
-        setIsMoving(didMove);
-        playerWorldXRef.current = next;
+      const moved = Math.abs(next - xRef.current) > 0.1;
+      setIsMoving(moved);
+      if (moved) {
+        xRef.current = next;
         setPlayerWorldX(next);
-      } else {
-        setIsMoving(false);
       }
     };
 
-    rafRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      lastTimeRef.current = null;
+    const start = () => {
+      if (frame === null) frame = requestAnimationFrame(tick);
     };
-  }, [enabled, isPaused, runSpeed, worldWidth]);
+    const stop = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      last = null;
+    };
+    const onVisibility = () => (document.hidden ? stop() : start());
 
-  const setHoldDirection = useCallback((holdingDirection) => {
-    holdDirectionRef.current = holdingDirection;
+    start();
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [clamp, face, runSpeed]);
+
+  const setHoldDirection = useCallback((next) => {
+    holdDirectionRef.current = next;
+    if (next !== 0) targetRef.current = null;
   }, []);
 
-  return {
-    playerWorldX,
-    cameraX,
-    isMoving,
-    direction,
-    setHoldDirection,
-  };
+  const glideTo = useCallback(
+    (x, { instant = false } = {}) => {
+      const target = clamp(x);
+      if (instant) {
+        targetRef.current = null;
+        xRef.current = target;
+        setPlayerWorldX(target);
+        return;
+      }
+      targetRef.current = target;
+    },
+    [clamp],
+  );
+
+  const nudge = useCallback(
+    (dx) => {
+      targetRef.current = null;
+      face(Math.sign(dx));
+      xRef.current = clamp(xRef.current + dx);
+      setPlayerWorldX(xRef.current);
+    },
+    [clamp, face],
+  );
+
+  return { playerWorldX, cameraX, playerScreenX, isMoving, direction, setHoldDirection, glideTo, nudge };
 }
